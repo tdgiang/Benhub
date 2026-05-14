@@ -259,10 +259,10 @@ function FeaturedProductCard({
         </div>
 
         <a
-          href="#register"
+          href="/doi-tac"
           className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-orange-600"
         >
-          Tìm hiểu ứng dụng
+          Hợp tác triển khai
           <ArrowRight className="h-4 w-4" />
         </a>
       </div>

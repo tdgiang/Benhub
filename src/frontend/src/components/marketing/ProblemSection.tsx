@@ -102,7 +102,7 @@ export function ProblemSection() {
             >
               Một ngành rất lớn
               <br />
-              <span className="text-slate-400">
+              <span className="text-orange-400">
                 đang vận hành bằng niềm tin.
               </span>
             </h2>

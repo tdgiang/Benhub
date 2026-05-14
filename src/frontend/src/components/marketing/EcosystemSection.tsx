@@ -21,7 +21,7 @@ const tabs: { id: TabId; icon: typeof Truck; label: string }[] = [
 
 const content: Record<
   TabId,
-  { headline: string; sub: string; benefits: string[]; cta: string }
+  { headline: string; sub: string; benefits: string[]; cta: string; href: string }
 > = {
   fleet: {
     headline: "Có việc đều. Quản lý dễ. Thu nhập tăng.",
@@ -34,6 +34,7 @@ const content: Record<
       "Tiếp cận BenHub Finance khi cần vốn vận hành",
     ],
     cta: "Đăng ký đội xe ngay →",
+    href: "/doi-tac",
   },
   driver: {
     headline: "Cuốc xe đều. Thu nhập rõ. Không mất phiếu.",
@@ -46,6 +47,7 @@ const content: Record<
       "Đánh giá uy tín → cuốc xe tốt hơn, thu nhập cao hơn",
     ],
     cta: "Đăng ký lái xe ngay →",
+    href: "/dang-ky-tai-xe",
   },
   investor: {
     headline: "Kiểm soát toàn bộ. Không thất thoát. Dữ liệu realtime.",
@@ -58,6 +60,7 @@ const content: Record<
       "Bảo vệ tài sản chủ đầu tư bằng dữ liệu xác thực",
     ],
     cta: "Yêu cầu demo miễn phí →",
+    href: "/doi-tac",
   },
   partner: {
     headline: "Cơ hội đầu tư vào hạ tầng số ngành xây dựng.",
@@ -70,6 +73,7 @@ const content: Record<
       "Mô hình Holding địa phương — mở rộng nhanh, chi phí thấp",
     ],
     cta: "Liên hệ đội ngũ →",
+    href: "/doi-tac",
   },
 };
 
@@ -147,7 +151,7 @@ export function EcosystemSection() {
               </p>
 
               <a
-                href="#register"
+                href={c.href}
                 className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-xl font-semibold text-sm transition-colors cursor-pointer group"
               >
                 {c.cta}

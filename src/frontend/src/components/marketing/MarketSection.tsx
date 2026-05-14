@@ -2,12 +2,10 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  ArrowUpRight,
   BarChart3,
   Building2,
   Factory,
   Plane,
-  Radar,
   Route,
   Ship,
   Zap,
@@ -175,10 +173,10 @@ export function MarketSection() {
               &rdquo;
             </p>
             <a
-              href="#register"
+              href="/doi-tac"
               className="inline-flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-orange-600"
             >
-              Đăng ký tham gia
+              Hợp tác cùng BenHub
               <ArrowUpRight className="h-4 w-4" />
             </a>
           </div>

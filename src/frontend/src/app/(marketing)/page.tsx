@@ -7,7 +7,6 @@ import { MarketSection } from "@/components/marketing/MarketSection";
 import { HowItWorksSection } from "@/components/marketing/HowItWorksSection";
 import { EcosystemSection } from "@/components/marketing/EcosystemSection";
 import { RoadmapSection } from "@/components/marketing/RoadmapSection";
-import { RegisterSection } from "@/components/marketing/RegisterSection";
 
 export const metadata: Metadata = {
   title: "BenHub — Hệ Điều Hành Số Cho Vận Tải Công Trình Việt Nam",

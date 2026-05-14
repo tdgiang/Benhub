@@ -9,7 +9,14 @@ const products = [
   "BenHub Materials",
   "BenHub AI Labs",
 ];
-const company = ["Về BenHub", "Tin tức", "Tuyển dụng", "Đối tác", "Nhà đầu tư"];
+const company = [
+  { label: "Về BenHub", href: "/#hero" },
+  { label: "Tin tức", href: "/tin-tuc" },
+  { label: "Đăng ký tài xế", href: "/dang-ky-tai-xe" },
+  { label: "Tuyển dụng", href: "#" },
+  { label: "Đối tác", href: "/doi-tac" },
+  { label: "Nhà đầu tư", href: "/#roadmap" },
+];
 
 export function Footer({ className }: { className?: string }) {
   return (
@@ -85,12 +92,12 @@ export function Footer({ className }: { className?: string }) {
             <ul className="space-y-2.5">
               {products.map((p) => (
                 <li key={p}>
-                  <a
-                    href="#products"
+                  <Link
+                    href="/#products"
                     className="text-slate-400 hover:text-orange-400 text-sm transition-colors cursor-pointer"
                   >
                     {p}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -103,13 +110,13 @@ export function Footer({ className }: { className?: string }) {
             </h3>
             <ul className="space-y-2.5">
               {company.map((c) => (
-                <li key={c}>
-                  <a
-                    href="#"
+                <li key={c.label}>
+                  <Link
+                    href={c.href}
                     className="text-slate-400 hover:text-orange-400 text-sm transition-colors cursor-pointer"
                   >
-                    {c}
-                  </a>
+                    {c.label}
+                  </Link>
                 </li>
               ))}
             </ul>

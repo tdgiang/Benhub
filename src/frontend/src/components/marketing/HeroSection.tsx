@@ -184,13 +184,13 @@ export function HeroSection() {
           style={{ animationDelay: "0.3s" }}
         >
           <a
-            href="#register"
+            href="/doi-tac"
             className="btn-glow inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-base transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:scale-[1.02]"
             style={{
               background: "linear-gradient(135deg, #F97316 0%, #EA580C 100%)",
             }}
           >
-            Đăng ký tham gia →
+            Đăng ký đối tác →
           </a>
           <a
             href="#how-it-works"

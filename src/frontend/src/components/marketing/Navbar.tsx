@@ -9,7 +9,9 @@ const navLinks = [
   { label: "Giải pháp", href: "/#solution" },
   { label: "Sản phẩm", href: "/#products" },
   { label: "Hệ sinh thái", href: "/#ecosystem" },
-  { label: "Lộ trình", href: "/#roadmap" },
+  { label: "Tin tức", href: "/tin-tuc" },
+  { label: "Tài xế", href: "/dang-ky-tai-xe" },
+  { label: "Đối tác", href: "/doi-tac" },
 ];
 
 export function Navbar({ className }: { className?: string }) {
@@ -64,10 +66,10 @@ export function Navbar({ className }: { className?: string }) {
         {/* Right */}
         <div className="flex items-center gap-3">
           <a
-            href="#register"
+            href="/doi-tac"
             className="hidden md:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-150 cursor-pointer shadow-sm shadow-orange-500/30"
           >
-            Đăng ký ngay →
+            Đăng ký đối tác →
           </a>
           <button
             onClick={() => setOpen((o) => !o)}
@@ -94,11 +96,11 @@ export function Navbar({ className }: { className?: string }) {
           ))}
           <div className="pt-3 border-t border-white/5 mt-3">
             <a
-              href="#register"
+              href="/doi-tac"
               onClick={() => setOpen(false)}
               className="block text-center bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg text-sm font-semibold transition-colors cursor-pointer"
             >
-              Đăng ký ngay →
+              Đăng ký đối tác →
             </a>
           </div>
         </div>
