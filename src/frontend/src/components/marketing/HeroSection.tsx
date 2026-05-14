@@ -143,11 +143,12 @@ export function HeroSection() {
 
         {/* H1 */}
         <h1
-          className="font-black text-white leading-none tracking-tight mb-5 fade-up"
+          className="font-black text-white leading-[1.12] tracking-tight mb-5 fade-up"
           style={{
             fontFamily: "var(--font-barlow), system-ui, sans-serif",
-            fontSize: "clamp(3rem, 9vw, 6.5rem)",
+            fontSize: "clamp(2.65rem, 8.4vw, 5rem)",
             animationDelay: "0.1s",
+            lineHeight: "1.2",
           }}
         >
           Số Hóa
@@ -155,7 +156,7 @@ export function HeroSection() {
           Ngành Vận Tải
           <br />
           <span
-            className="bg-clip-text text-transparent"
+            className="inline-block bg-clip-text pb-2 text-transparent"
             style={{
               backgroundImage:
                 "linear-gradient(135deg, #F97316 0%, #FBBF24 45%, #F97316 100%)",
