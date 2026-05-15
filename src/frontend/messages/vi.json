@@ -164,6 +164,10 @@
     "ai_f3": "Demand Forecast",
     "map_label": "Ecosystem map",
     "map_title": "Các lớp sản phẩm kết nối nhau",
+    "map_subtitle": "Mọi module dùng chung mô hình dữ liệu, định danh và API realtime — điều phối tập trung từ Core.",
+    "flow_legend": "Luồng vận hành liên module",
+    "map_tile_badge": "Qua trục Core",
+    "layer_tie": "Đồng bộ qua Core",
     "cta": "Hợp tác triển khai"
   },
   "Market": {

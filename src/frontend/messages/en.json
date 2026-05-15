@@ -164,6 +164,10 @@
     "ai_f3": "Demand Forecast",
     "map_label": "Ecosystem map",
     "map_title": "Connected product layers",
+    "map_subtitle": "Every module shares the same data model, identity, and realtime APIs — orchestrated from Core.",
+    "flow_legend": "Operational data flow",
+    "map_tile_badge": "Via Core hub",
+    "layer_tie": "Synced via Core",
     "cta": "Partner for deployment"
   },
   "Market": {

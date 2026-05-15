@@ -7,6 +7,7 @@ import {
   Globe,
   Layers3,
   LayoutDashboard,
+  Link2,
   Network,
   Package,
   Smartphone,
@@ -14,6 +15,18 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+
+/** 2×4 cell centers (viewBox 0–100) — lines radiate from shared Core hub */
+const ECOSYSTEM_HUB_CENTERS: { x: number; y: number }[] = [
+  { x: 26, y: 16 },
+  { x: 74, y: 16 },
+  { x: 26, y: 39 },
+  { x: 74, y: 39 },
+  { x: 26, y: 62 },
+  { x: 74, y: 62 },
+  { x: 26, y: 85 },
+  { x: 74, y: 85 },
+];
 
 export function ProductsSection() {
   const t = useTranslations("Products");
@@ -27,6 +40,7 @@ export function ProductsSection() {
       features: [t("core_f1"), t("core_f2"), t("core_f3")],
       layer: t("core_layer"),
       accent: "from-orange-500 to-amber-400",
+      dotClass: "bg-orange-400",
       featured: "core",
     },
     {
@@ -37,6 +51,7 @@ export function ProductsSection() {
       features: [t("driver_f1"), t("driver_f2"), t("driver_f3")],
       layer: t("driver_layer"),
       accent: "from-blue-500 to-cyan-400",
+      dotClass: "bg-sky-400",
     },
     {
       icon: Eye,
@@ -46,6 +61,7 @@ export function ProductsSection() {
       features: [t("supervisor_f1"), t("supervisor_f2"), t("supervisor_f3")],
       layer: t("supervisor_layer"),
       accent: "from-purple-500 to-fuchsia-400",
+      dotClass: "bg-fuchsia-400",
     },
     {
       icon: Truck,
@@ -55,6 +71,7 @@ export function ProductsSection() {
       features: [t("fleet_f1"), t("fleet_f2"), t("fleet_f3")],
       layer: t("fleet_layer"),
       accent: "from-green-500 to-emerald-400",
+      dotClass: "bg-emerald-400",
     },
     {
       icon: Globe,
@@ -64,6 +81,7 @@ export function ProductsSection() {
       features: [t("marketplace_f1"), t("marketplace_f2"), t("marketplace_f3")],
       layer: t("marketplace_layer"),
       accent: "from-cyan-500 to-sky-400",
+      dotClass: "bg-cyan-400",
     },
     {
       icon: CreditCard,
@@ -73,6 +91,7 @@ export function ProductsSection() {
       features: [t("finance_f1"), t("finance_f2"), t("finance_f3")],
       layer: t("finance_layer"),
       accent: "from-emerald-500 to-lime-400",
+      dotClass: "bg-lime-400",
       featured: "finance",
     },
     {
@@ -83,6 +102,7 @@ export function ProductsSection() {
       features: [t("materials_f1"), t("materials_f2"), t("materials_f3")],
       layer: t("materials_layer"),
       accent: "from-amber-500 to-yellow-400",
+      dotClass: "bg-amber-400",
     },
     {
       icon: Cpu,
@@ -92,6 +112,7 @@ export function ProductsSection() {
       features: [t("ai_f1"), t("ai_f2"), t("ai_f3")],
       layer: t("ai_layer"),
       accent: "from-violet-500 to-indigo-400",
+      dotClass: "bg-violet-400",
     },
   ];
 
@@ -101,6 +122,10 @@ export function ProductsSection() {
   const ctaText = t("cta");
   const mapLabel = t("map_label");
   const mapTitle = t("map_title");
+  const mapSubtitle = t("map_subtitle");
+  const flowLegend = t("flow_legend");
+  const layerTie = t("layer_tie");
+  const mapTileBadge = t("map_tile_badge");
 
   return (
     <section
@@ -127,27 +152,65 @@ export function ProductsSection() {
           />
 
           <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-white/4 p-6 shadow-2xl shadow-black/30 backdrop-blur lg:col-span-5">
-            <div className="mb-6 flex items-center justify-between">
-              <div>
+            <div className="mb-5 flex items-start justify-between gap-4">
+              <div className="min-w-0 flex-1">
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-orange-300">
                   {mapLabel}
                 </p>
                 <h3 className="mt-2 text-2xl font-bold text-white">
                   {mapTitle}
                 </h3>
+                <p className="mt-3 text-sm leading-relaxed text-slate-400">
+                  {mapSubtitle}
+                </p>
               </div>
-              <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-orange-300">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-orange-300">
                 <Network className="h-5 w-5" />
               </div>
             </div>
 
-            <div className="relative min-h-[280px] rounded-3xl border border-white/10 bg-slate-950/80 p-5">
-              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(249,115,22,0.18),transparent_36%)]" />
-              <div className="relative grid h-full grid-cols-2 gap-3">
+            <div className="relative min-h-[300px] overflow-hidden rounded-3xl border border-white/10 bg-slate-950/80 p-5">
+              <svg
+                className="pointer-events-none absolute inset-0 h-full w-full"
+                viewBox="0 0 100 100"
+                preserveAspectRatio="none"
+                aria-hidden
+              >
+                {ECOSYSTEM_HUB_CENTERS.map((pt, i) => (
+                  <line
+                    key={i}
+                    x1="50"
+                    y1="50"
+                    x2={pt.x}
+                    y2={pt.y}
+                    stroke="rgb(249 115 22)"
+                    strokeOpacity="0.2"
+                    strokeWidth="0.5"
+                    strokeLinecap="round"
+                  />
+                ))}
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="3.2"
+                  className="fill-orange-500/90 motion-safe:animate-pulse"
+                />
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="6"
+                  fill="none"
+                  stroke="rgb(249 115 22)"
+                  strokeOpacity="0.25"
+                  strokeWidth="0.4"
+                />
+              </svg>
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(249,115,22,0.22),transparent_42%)]" />
+              <div className="relative z-10 grid h-full grid-cols-2 gap-3">
                 {products.map(({ name, layer, accent }) => (
                   <div
                     key={name}
-                    className="rounded-2xl border border-white/10 bg-white/5 p-3"
+                    className="rounded-2xl border border-white/10 bg-slate-950/55 p-3 shadow-sm shadow-black/20 backdrop-blur-[2px] transition hover:border-orange-400/25 hover:bg-slate-950/75"
                   >
                     <div
                       className={`mb-3 h-1 rounded-full bg-linear-to-r ${accent}`}
@@ -155,6 +218,13 @@ export function ProductsSection() {
                     <p className="text-xs font-bold text-white">{layer}</p>
                     <p className="mt-1 text-[11px] leading-snug text-slate-500">
                       {name.replace("BenHub ", "")}
+                    </p>
+                    <p className="mt-2 flex items-center gap-1 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600">
+                      <span
+                        className="inline-block h-1 w-1 rounded-full bg-orange-400/80"
+                        aria-hidden
+                      />
+                      {mapTileBadge}
                     </p>
                   </div>
                 ))}
@@ -168,10 +238,31 @@ export function ProductsSection() {
             className="lg:col-span-5"
           />
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:col-span-7 lg:grid-cols-3">
-            {supportingProducts.map((product) => (
-              <ProductMiniCard key={product.name} product={product} />
-            ))}
+          <div className="flex flex-col gap-4 lg:col-span-7">
+            <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-white/10 bg-white/4 px-4 py-3 backdrop-blur-sm">
+              <span className="flex shrink-0 items-center gap-2 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-500">
+                <Link2 className="h-3.5 w-3.5 text-orange-400/90" aria-hidden />
+                {flowLegend}
+              </span>
+              <div className="flex min-h-[6px] min-w-[140px] flex-1 items-center gap-0.5 sm:gap-1">
+                {supportingProducts.map((p) => (
+                  <div
+                    key={p.name}
+                    title={p.name}
+                    className={`h-1.5 min-w-[6px] flex-1 rounded-full bg-linear-to-r ${p.accent}`}
+                  />
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {supportingProducts.map((product) => (
+                <ProductMiniCard
+                  key={product.name}
+                  product={product}
+                  layerTie={layerTie}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -187,6 +278,7 @@ type Product = {
   features: string[];
   layer: string;
   accent: string;
+  dotClass: string;
   featured?: string;
 };
 
@@ -262,7 +354,13 @@ function FeaturedProductCard({
   );
 }
 
-function ProductMiniCard({ product }: { product: Product }) {
+function ProductMiniCard({
+  product,
+  layerTie,
+}: {
+  product: Product;
+  layerTie: string;
+}) {
   const Icon = product.icon;
 
   return (
@@ -290,11 +388,18 @@ function ProductMiniCard({ product }: { product: Product }) {
       <div className="mt-5 space-y-2 border-t border-white/10 pt-4">
         {product.features.slice(0, 2).map((feature) => (
           <div key={feature} className="flex items-center gap-2">
-            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
+            <span
+              className={`h-1.5 w-1.5 shrink-0 rounded-full ${product.dotClass}`}
+            />
             <span className="text-xs text-slate-500">{feature}</span>
           </div>
         ))}
       </div>
+
+      <p className="mt-4 flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-600">
+        <Link2 className="h-3 w-3 shrink-0 text-slate-500" aria-hidden />
+        {layerTie}
+      </p>
     </article>
   );
 }
