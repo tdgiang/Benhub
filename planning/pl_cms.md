@@ -19,8 +19,8 @@
 | Backend | Posts module | ✅ **DONE — Phase 2** |
 | Frontend CMS | Layout: Sidebar + Topbar | ✅ Hoàn chỉnh |
 | Frontend CMS | Posts UI (list, create, edit) | ✅ **DONE — Phase 2** (TipTap + backend) |
-| Frontend CMS | Dashboard UI | ✅ UI có, **dữ liệu hardcode** → Phase 3 |
-| Frontend CMS | Leads UI | ❌ Chưa có → Phase 3 |
+| Frontend CMS | Dashboard UI | ✅ **DONE — Phase 3** (stats thật từ backend) |
+| Frontend CMS | Leads UI | ✅ **DONE — Phase 3** (filter + CSV export) |
 
 ### Vấn đề cần giải quyết
 1. `POST /api/v1/leads` trả 404 — form đăng ký tài xế/đối tác **đang mất data**
@@ -354,14 +354,19 @@ const autoSlug = title
 ✅ Fix proxy.ts: bỏ /api/posts khỏi PROTECTED (backend tự handle auth)
 ```
 
-### Phase 3 — Backend Stats + Dashboard + Leads CMS UI
+### Phase 3 — Backend Stats + Dashboard + Leads CMS UI ✅ DONE (commit dc3f85e)
 ```
-□ Tạo StatsModule (service + controller): GET /api/v1/stats
-□ Cập nhật dashboard/page.tsx fetch stats thật
-□ Tạo leads/page.tsx + LeadsTableClient (filter + CSV export button)
-□ Thêm link Leads vào Sidebar
-□ Thêm error.tsx + loading.tsx cho leads route
+✅ Tạo StatsModule: GET /api/v1/stats (parallel Prisma queries, ADMIN)
+✅ Response: posts{total,published,draft}, leads{total,driver,partner,thisWeek}, users, recentLeads, recentPosts
+✅ Dashboard: 4 stat cards + segment bar chart + recent leads + recent posts
+✅ Leads CMS: filter bar (segment/province/date), table, pagination
+✅ Export CSV button → /api/leads/export proxy → backend stream
+✅ Sidebar: thêm Inbox icon + Leads link
+✅ shadcn Select component cài
+✅ error.tsx + loading.tsx cho /cms/leads
 ```
+
+### ✅ Toàn bộ 3 phases HOÀN THÀNH
 
 ---
 
