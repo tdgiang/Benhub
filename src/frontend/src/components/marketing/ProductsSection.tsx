@@ -12,6 +12,7 @@ import {
   Smartphone,
   Truck,
 } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 export function ProductsSection() {
@@ -249,13 +250,13 @@ function FeaturedProductCard({
           ))}
         </div>
 
-        <a
+        <Link
           href="/doi-tac"
-          className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-orange-600"
+          className="mt-8 inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-orange-600"
         >
           {ctaText}
           <ArrowRight className="h-4 w-4" />
-        </a>
+        </Link>
       </div>
     </article>
   );
