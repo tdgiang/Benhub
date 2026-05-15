@@ -21,6 +21,7 @@ export function Navbar({ className }: { className?: string }) {
     { label: t("nav_news"), href: "/tin-tuc" },
     { label: t("nav_driver"), href: "/dang-ky-tai-xe" },
     { label: t("nav_partner"), href: "/doi-tac" },
+    { label: t("nav_about"), href: "/ve-chung-toi" },
   ];
 
   useEffect(() => {
@@ -114,7 +115,10 @@ export function Navbar({ className }: { className?: string }) {
           ))}
           <div className="pt-3 border-t border-white/5 mt-3 space-y-2">
             <button
-              onClick={() => { toggleLocale(); setOpen(false); }}
+              onClick={() => {
+                toggleLocale();
+                setOpen(false);
+              }}
               className="w-full flex items-center justify-center gap-2 border border-white/10 bg-white/5 text-slate-300 px-4 py-2.5 rounded-lg text-sm font-bold transition-colors cursor-pointer"
             >
               <Globe className="w-4 h-4" />

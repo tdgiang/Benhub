@@ -18,7 +18,7 @@ export class CreateLeadDto {
   @IsNotEmpty()
   segment: LeadSegment;
 
-  @ApiProperty({ description: 'Họ tên', example: 'Nguyễn Văn A' })
+  @ApiProperty({ description: 'Họ tên', example: 'Nguyễn Văn Thi' })
   @IsString()
   @IsNotEmpty()
   @MaxLength(120)

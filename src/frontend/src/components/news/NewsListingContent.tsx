@@ -83,11 +83,7 @@ function Thumbnail({
   if (coverImage) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={coverImage}
-        alt={title ?? ""}
-        className={imgClass}
-      />
+      <img src={coverImage} alt={title ?? ""} className={imgClass} />
     );
   }
 
@@ -233,7 +229,9 @@ function ArticleCard({ post, index }: { post: ApiPost; index: number }) {
               {estimateReadTime(post.content)}
             </span>
           </div>
-          <p className="mt-1 text-[11px] text-slate-400">{formatDate(post.createdAt)}</p>
+          <p className="mt-1 text-[11px] text-slate-400">
+            {formatDate(post.createdAt)}
+          </p>
         </div>
       </div>
     </Link>
@@ -242,9 +240,7 @@ function ArticleCard({ post, index }: { post: ApiPost; index: number }) {
 
 /* ─── Skeleton card ─── */
 function SkeletonCard() {
-  return (
-    <div className="h-72 animate-pulse rounded-[2rem] bg-slate-200" />
-  );
+  return <div className="h-72 animate-pulse rounded-[2rem] bg-slate-200" />;
 }
 
 /* ─── Pagination ─── */
@@ -425,7 +421,9 @@ export function NewsListingContent() {
     }
 
     load();
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [currentPage, debouncedSearch]);
 
   const updateURL = useCallback(
@@ -453,19 +451,23 @@ export function NewsListingContent() {
     <div className="bg-slate-50 text-slate-950">
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-[#050B18] pb-14 pt-28 md:pb-20 md:pt-32">
-        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div
+          className="pointer-events-none absolute inset-0"
+          aria-hidden="true"
+        >
           <div
             className="absolute inset-0 bg-cover bg-center opacity-20"
             style={{ backgroundImage: "url('/bg_login.png')" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-[#050B18]/85 to-[#050B18]" />
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-[#050B18]/65 to-[#050B18]" />
           <div className="absolute -left-24 top-24 h-96 w-96 rounded-full bg-orange-500/20 blur-[90px]" />
-          <div className="absolute bottom-0 right-0 h-[420px] w-[420px] rounded-full bg-blue-500/10 blur-[110px]" />
+          <div className="absolute bottom-0 right-0 h-[420px] w-[420px] rounded-full bg-blue-500/5 blur-[110px]" />
+
           <div
             className="absolute inset-0 opacity-[0.05]"
             style={{
               backgroundImage:
-                "linear-gradient(rgba(255,255,255,0.95) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.95) 1px,transparent 1px)",
+                "linear-gradient(rgba(255,255,255,0.55) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,0.45) 1px,transparent 1px)",
               backgroundSize: "72px 72px",
             }}
           />

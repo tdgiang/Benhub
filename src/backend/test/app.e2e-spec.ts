@@ -93,7 +93,7 @@ describe('App (e2e)', () => {
       const mockLead = {
         id: 'uuid-1',
         segment: 'driver',
-        fullName: 'Nguyễn Văn A',
+        fullName: 'Nguyễn Văn Thi',
         phone: '0912345678',
         province: 'Hồ Chí Minh',
         source: 'driver_signup_page',
@@ -107,7 +107,7 @@ describe('App (e2e)', () => {
         .post('/api/v1/leads')
         .send({
           segment: 'driver',
-          fullName: 'Nguyễn Văn A',
+          fullName: 'Nguyễn Văn Thi',
           phone: '0912345678',
           province: 'Hồ Chí Minh',
           source: 'driver_signup_page',
@@ -116,7 +116,7 @@ describe('App (e2e)', () => {
         .expect((res) => {
           expect(res.body.statusCode).toBe(201);
           expect(res.body.data.segment).toBe('driver');
-          expect(res.body.data.fullName).toBe('Nguyễn Văn A');
+          expect(res.body.data.fullName).toBe('Nguyễn Văn Thi');
         });
     });
 

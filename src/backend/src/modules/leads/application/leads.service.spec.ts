@@ -45,7 +45,7 @@ describe('LeadsService', () => {
   describe('create', () => {
     const dto = {
       segment: LeadSegment.driver,
-      fullName: 'Nguyễn Văn A',
+      fullName: 'Nguyễn Văn Thi',
       phone: '0912345678',
       province: 'Hồ Chí Minh',
       source: 'driver_signup_page',
@@ -59,7 +59,7 @@ describe('LeadsService', () => {
 
       expect(mockRepository.create).toHaveBeenCalledWith(expect.objectContaining({
         segment: LeadSegment.driver,
-        fullName: 'Nguyễn Văn A',
+        fullName: 'Nguyễn Văn Thi',
         phone: '0912345678',
       }));
       expect(result.id).toBe('uuid-1');

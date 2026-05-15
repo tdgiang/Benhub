@@ -8,7 +8,13 @@ import { Zap, Eye, EyeOff, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { Suspense } from "react";
 import { toast } from "sonner";
 import { APP_NAME } from "@/lib/constants";
@@ -68,7 +74,9 @@ function LoginForm() {
               type="email"
               placeholder="admin@example.com"
               value={form.email}
-              onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
+              onChange={(e) =>
+                setForm((p) => ({ ...p, email: e.target.value }))
+              }
               required
               autoComplete="email"
             />
@@ -121,18 +129,6 @@ function LoginForm() {
             )}
           </Button>
         </form>
-
-        <div className="mt-6 p-4 rounded-lg bg-muted/50 text-xs text-muted-foreground space-y-1">
-          <p className="font-medium text-foreground mb-2">Tài khoản demo:</p>
-          <p>
-            <span className="font-mono">admin@example.com</span> /{" "}
-            <span className="font-mono">Admin@123</span>
-          </p>
-          <p>
-            <span className="font-mono">editor@example.com</span> /{" "}
-            <span className="font-mono">Editor@123</span>
-          </p>
-        </div>
 
         <p className="text-center text-sm text-muted-foreground mt-4">
           Chưa có tài khoản?{" "}
