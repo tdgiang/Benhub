@@ -77,17 +77,18 @@ model Lead {
 }
 
 model Post {
-  id        String     @id @default(uuid())
-  title     String
-  slug      String     @unique
-  excerpt   String?
-  content   String     @default("")
-  status    PostStatus @default(DRAFT)
-  authorId  String
-  author    User       @relation(fields: [authorId], references: [id])
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  deletedAt DateTime?
+  id          String     @id @default(uuid())
+  title       String
+  slug        String     @unique
+  excerpt     String?
+  content     String     @default("")
+  coverImage  String?
+  status      PostStatus @default(DRAFT)
+  authorId    String
+  author      User       @relation(fields: [authorId], references: [id])
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  deletedAt   DateTime?
 
   @@map("posts")
 }

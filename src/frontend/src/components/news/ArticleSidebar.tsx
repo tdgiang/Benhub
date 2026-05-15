@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Truck } from 'lucide-react'
 import { useTranslations } from 'next-intl'
-import { getCategoryById, type NewsPost } from '@/lib/news'
 
 export interface Heading {
   id: string
@@ -12,9 +11,16 @@ export interface Heading {
   level: 2 | 3
 }
 
+export interface RelatedPost {
+  slug: string
+  title: string
+  gradient: string
+  readTime?: string
+}
+
 interface ArticleSidebarProps {
   headings: Heading[]
-  relatedPosts: NewsPost[]
+  relatedPosts: RelatedPost[]
 }
 
 export function ArticleSidebar({ headings, relatedPosts }: ArticleSidebarProps) {
@@ -82,13 +88,13 @@ export function ArticleSidebar({ headings, relatedPosts }: ArticleSidebarProps) 
         </div>
         <p className="text-sm font-bold text-white">{t('join_title')}</p>
         <p className="mt-2 text-xs leading-relaxed text-slate-400">{t('join_desc')}</p>
-        <a
+        <Link
           href="/#register"
           className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-600"
         >
           {t('join_cta')}
           <ArrowRight className="h-3 w-3" />
-        </a>
+        </Link>
       </div>
 
       {relatedPosts.length > 0 && (
@@ -97,27 +103,26 @@ export function ArticleSidebar({ headings, relatedPosts }: ArticleSidebarProps) 
             {t('related_label')}
           </p>
           <div className="space-y-4">
-            {relatedPosts.map((post) => {
-              const cat = getCategoryById(post.categoryId)
-              return (
-                <Link
-                  key={post.slug}
-                  href={`/tin-tuc/${post.slug}`}
-                  className="group flex gap-3 cursor-pointer"
-                >
-                  <div
-                    className="h-14 w-14 shrink-0 rounded-lg"
-                    style={{ background: cat.gradient }}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <p className="line-clamp-2 text-xs font-semibold leading-snug text-slate-700 transition group-hover:text-orange-600">
-                      {post.title}
-                    </p>
+            {relatedPosts.map((post) => (
+              <Link
+                key={post.slug}
+                href={`/tin-tuc/${post.slug}`}
+                className="group flex gap-3 cursor-pointer"
+              >
+                <div
+                  className="h-14 w-14 shrink-0 rounded-lg"
+                  style={{ background: post.gradient }}
+                />
+                <div className="min-w-0 flex-1">
+                  <p className="line-clamp-2 text-xs font-semibold leading-snug text-slate-700 transition group-hover:text-orange-600">
+                    {post.title}
+                  </p>
+                  {post.readTime && (
                     <p className="mt-1 text-[11px] text-slate-400">{post.readTime}</p>
-                  </div>
-                </Link>
-              )
-            })}
+                  )}
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       )}

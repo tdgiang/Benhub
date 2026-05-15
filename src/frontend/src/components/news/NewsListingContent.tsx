@@ -13,29 +13,88 @@ import {
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
-import {
-  CATEGORIES,
-  getCategoryById,
-  newsPosts,
-  type CategoryId,
-  type NewsPost,
-} from "@/lib/news";
+
+interface ApiPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string | null;
+  content: string;
+  coverImage: string | null;
+  status: string;
+  createdAt: string;
+}
+
+interface ApiMeta {
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+}
 
 const POSTS_PER_PAGE = 9;
 
-/* ─── Thumbnail placeholder ─── */
+const GRADIENTS = [
+  "linear-gradient(135deg, #c2410c 0%, #f97316 50%, #fb923c 100%)",
+  "linear-gradient(135deg, #0f172a 0%, #1e3a5f 50%, #2563eb 100%)",
+  "linear-gradient(135deg, #052e16 0%, #0f6e56 50%, #14b8a6 100%)",
+  "linear-gradient(135deg, #1e293b 0%, #475569 50%, #64748b 100%)",
+  "linear-gradient(135deg, #78350f 0%, #b45309 50%, #f59e0b 100%)",
+];
+
+function getGradient(index: number) {
+  return GRADIENTS[index % GRADIENTS.length];
+}
+
+function formatDate(iso: string) {
+  return new Date(iso).toLocaleDateString("vi-VN", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+  });
+}
+
+function estimateReadTime(content: string) {
+  const words = content
+    .replace(/<[^>]+>/g, "")
+    .split(/\s+/)
+    .filter(Boolean).length;
+  return `${Math.max(1, Math.round(words / 200))} phút đọc`;
+}
+
+/* ─── Thumbnail ─── */
 function Thumbnail({
-  post,
-  aspectClass = "aspect-[16/9]",
+  coverImage,
+  title,
+  gradient,
+  index,
+  /** Class applied to <img> when coverImage exists */
+  imgClass = "aspect-[16/9] w-full object-cover",
+  /** Class applied to the gradient fallback div */
+  gradientClass = "aspect-[16/9]",
 }: {
-  post: NewsPost;
-  aspectClass?: string;
+  coverImage?: string | null;
+  title?: string;
+  gradient: string;
+  index: number;
+  imgClass?: string;
+  gradientClass?: string;
 }) {
-  const cat = getCategoryById(post.categoryId);
+  if (coverImage) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={coverImage}
+        alt={title ?? ""}
+        className={imgClass}
+      />
+    );
+  }
+
   return (
     <div
-      className={`${aspectClass} w-full overflow-hidden rounded-xl`}
-      style={{ background: cat.gradient }}
+      className={`${gradientClass} w-full overflow-hidden rounded-xl`}
+      style={{ background: gradient }}
     >
       <div className="relative flex h-full w-full items-end justify-end p-4">
         <div
@@ -53,33 +112,22 @@ function Thumbnail({
             fontSize: "clamp(4rem,10vw,7rem)",
           }}
         >
-          {post.heroIndex}
+          {index + 1}
         </span>
       </div>
     </div>
   );
 }
 
-/* ─── Category badge ─── */
-function CategoryBadge({ categoryId }: { categoryId: CategoryId }) {
-  const cat = getCategoryById(categoryId);
-  return (
-    <span
-      className="inline-flex items-center rounded-full px-3 py-1 text-xs font-bold text-white"
-      style={{ backgroundColor: cat.color }}
-    >
-      {cat.label}
-    </span>
-  );
-}
-
 /* ─── Featured article ─── */
 function FeaturedArticle({
   post,
+  index,
   featuredBadge,
   readMore,
 }: {
-  post: NewsPost;
+  post: ApiPost;
+  index: number;
   featuredBadge: string;
   readMore: string;
 }) {
@@ -89,13 +137,19 @@ function FeaturedArticle({
       className="group mb-10 grid overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition duration-300 hover:shadow-xl hover:shadow-slate-200/80 md:grid-cols-[3fr_2fr]"
     >
       <div className="relative min-h-56 overflow-hidden md:min-h-full">
-        <Thumbnail post={post} aspectClass="h-full min-h-56" />
+        <Thumbnail
+          coverImage={post.coverImage}
+          title={post.title}
+          gradient={getGradient(index)}
+          index={index}
+          imgClass="absolute inset-0 h-full w-full object-cover"
+          gradientClass="h-full min-h-56"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 transition group-hover:opacity-100" />
       </div>
 
       <div className="flex flex-col justify-center p-6 md:p-8 lg:p-10">
-        <div className="mb-4 flex flex-wrap items-center gap-2">
-          <CategoryBadge categoryId={post.categoryId} />
+        <div className="mb-4">
           <span className="rounded-full border border-orange-200 bg-orange-50 px-2 py-0.5 text-xs font-bold text-orange-600">
             {featuredBadge}
           </span>
@@ -111,27 +165,20 @@ function FeaturedArticle({
           {post.title}
         </h2>
 
-        <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-slate-600">
-          {post.sapo}
-        </p>
+        {post.excerpt && (
+          <p className="mt-4 line-clamp-3 text-sm leading-relaxed text-slate-600">
+            {post.excerpt}
+          </p>
+        )}
 
         <div className="mt-6 flex flex-wrap items-center gap-4 text-xs font-semibold text-slate-400">
           <span className="flex items-center gap-1.5">
             <CalendarDays className="h-3.5 w-3.5" />
-            {post.date}
+            {formatDate(post.createdAt)}
           </span>
           <span className="flex items-center gap-1.5">
             <Clock3 className="h-3.5 w-3.5" />
-            {post.readTime}
-          </span>
-        </div>
-
-        <div className="mt-4 flex items-center gap-3">
-          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-100 text-xs font-bold text-orange-600">
-            {post.author.initials}
-          </div>
-          <span className="text-sm font-semibold text-slate-700">
-            {post.author.name}
+            {estimateReadTime(post.content)}
           </span>
         </div>
 
@@ -145,46 +192,58 @@ function FeaturedArticle({
 }
 
 /* ─── Article card ─── */
-function ArticleCard({ post }: { post: NewsPost }) {
+function ArticleCard({ post, index }: { post: ApiPost; index: number }) {
   return (
     <Link
       href={`/tin-tuc/${post.slug}`}
       className="group flex cursor-pointer flex-col overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition duration-200 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-100/60"
     >
       <div className="overflow-hidden rounded-t-[2rem]">
-        <Thumbnail post={post} />
+        <Thumbnail
+          coverImage={post.coverImage}
+          title={post.title}
+          gradient={getGradient(index)}
+          index={index}
+          imgClass="aspect-[16/9] w-full object-cover"
+          gradientClass="aspect-[16/9]"
+        />
       </div>
 
       <div className="flex flex-1 flex-col p-5">
-        <div className="mb-3">
-          <CategoryBadge categoryId={post.categoryId} />
-        </div>
-
         <h3 className="line-clamp-2 text-base font-bold leading-snug text-slate-950 transition group-hover:text-orange-600">
           {post.title}
         </h3>
 
-        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-500">
-          {post.excerpt}
-        </p>
+        {post.excerpt && (
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-slate-500">
+            {post.excerpt}
+          </p>
+        )}
 
         <div className="mt-auto border-t border-slate-100 pt-4">
           <div className="flex items-center gap-2">
             <div className="flex h-6 w-6 items-center justify-center rounded-full bg-orange-100 text-[10px] font-bold text-orange-600">
-              {post.author.initials}
+              BH
             </div>
             <span className="flex-1 truncate text-xs font-semibold text-slate-600">
-              {post.author.name}
+              BenHub
             </span>
             <span className="flex items-center gap-1 text-[11px] text-slate-400">
               <Clock3 className="h-3 w-3" />
-              {post.readTime}
+              {estimateReadTime(post.content)}
             </span>
           </div>
-          <p className="mt-1 text-[11px] text-slate-400">{post.date}</p>
+          <p className="mt-1 text-[11px] text-slate-400">{formatDate(post.createdAt)}</p>
         </div>
       </div>
     </Link>
+  );
+}
+
+/* ─── Skeleton card ─── */
+function SkeletonCard() {
+  return (
+    <div className="h-72 animate-pulse rounded-[2rem] bg-slate-200" />
   );
 }
 
@@ -320,17 +379,54 @@ export function NewsListingContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const activeCategory =
-    (searchParams.get("category") as CategoryId | null) ?? null;
   const currentPage = Math.max(1, Number(searchParams.get("page") ?? "1"));
 
   const [searchInput, setSearchInput] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
+  const [posts, setPosts] = useState<ApiPost[]>([]);
+  const [meta, setMeta] = useState<ApiMeta>({
+    total: 0,
+    page: 1,
+    limit: POSTS_PER_PAGE,
+    totalPages: 1,
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const timer = setTimeout(() => setDebouncedSearch(searchInput.trim()), 300);
     return () => clearTimeout(timer);
   }, [searchInput]);
+
+  useEffect(() => {
+    let cancelled = false;
+    const params = new URLSearchParams({
+      status: "PUBLISHED",
+      page: String(currentPage),
+      limit: String(POSTS_PER_PAGE),
+    });
+    if (debouncedSearch) params.set("search", debouncedSearch);
+
+    async function load() {
+      await Promise.resolve();
+      if (cancelled) return;
+      setLoading(true);
+      try {
+        const r = await fetch(`/api/posts?${params}`);
+        const body = await r.json();
+        if (!cancelled && body?.data) {
+          setPosts(body.data.items ?? []);
+          setMeta(body.data.meta);
+        }
+      } catch {
+        // network error — keep existing posts
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+    return () => { cancelled = true; };
+  }, [currentPage, debouncedSearch]);
 
   const updateURL = useCallback(
     (params: Record<string, string | null>) => {
@@ -344,58 +440,20 @@ export function NewsListingContent() {
     [router, searchParams],
   );
 
-  const handleCategoryClick = (catId: CategoryId | null) => {
-    updateURL({ category: catId, page: null });
-  };
-
   const handlePageChange = (page: number) => {
     updateURL({ page: page === 1 ? null : String(page) });
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const isSearching = debouncedSearch.length > 0;
-  const isFiltering = !!activeCategory;
-
-  const filteredPosts = newsPosts.filter((p) => {
-    if (isSearching) {
-      const q = debouncedSearch.toLowerCase();
-      return (
-        p.title.toLowerCase().includes(q) ||
-        p.excerpt.toLowerCase().includes(q) ||
-        p.tags.some((tag) => tag.toLowerCase().includes(q))
-      );
-    }
-    if (activeCategory) return p.categoryId === activeCategory;
-    return true;
-  });
-
-  const featuredPost = newsPosts.find((p) => p.isFeatured);
-  const gridPosts =
-    isSearching || isFiltering
-      ? filteredPosts
-      : filteredPosts.filter((p) => !p.isFeatured);
-
-  const totalPages = Math.ceil(gridPosts.length / POSTS_PER_PAGE);
-  const pagedPosts = gridPosts.slice(
-    (currentPage - 1) * POSTS_PER_PAGE,
-    currentPage * POSTS_PER_PAGE,
-  );
-
-  const categoryCountMap = Object.fromEntries(
-    CATEGORIES.map((cat) => [
-      cat.id,
-      newsPosts.filter((p) => p.categoryId === cat.id).length,
-    ]),
-  );
+  const featuredPost = !isSearching && currentPage === 1 ? posts[0] : undefined;
+  const gridPosts = featuredPost ? posts.slice(1) : posts;
 
   return (
     <div className="bg-slate-50 text-slate-950">
       {/* ── Hero ── */}
       <section className="relative overflow-hidden bg-[#050B18] pb-14 pt-28 md:pb-20 md:pt-32">
-        <div
-          className="pointer-events-none absolute inset-0"
-          aria-hidden="true"
-        >
+        <div className="pointer-events-none absolute inset-0" aria-hidden="true">
           <div
             className="absolute inset-0 bg-cover bg-center opacity-20"
             style={{ backgroundImage: "url('/bg_login.png')" }}
@@ -458,61 +516,28 @@ export function NewsListingContent() {
       <section className="py-10 md:py-14">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* ── Featured ── */}
-          {!isSearching && !isFiltering && featuredPost && (
+          {!loading && featuredPost && (
             <FeaturedArticle
               post={featuredPost}
+              index={0}
               featuredBadge={t("featured_badge")}
               readMore={t("read_more")}
             />
           )}
 
-          {/* ── Category filter ── */}
-          {!isSearching && (
-            <div
-              className="mb-8 flex gap-2 overflow-x-auto pb-1"
-              role="tablist"
-            >
-              <button
-                type="button"
-                role="tab"
-                aria-selected={!activeCategory}
-                onClick={() => handleCategoryClick(null)}
-                className={`shrink-0 cursor-pointer rounded-full border px-4 py-2 text-sm font-bold transition ${
-                  !activeCategory
-                    ? "border-orange-500 bg-orange-500 text-white shadow-lg shadow-orange-100"
-                    : "border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-orange-600"
-                }`}
-              >
-                {t("filter_all")} ({newsPosts.length})
-              </button>
-              {CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  role="tab"
-                  aria-selected={activeCategory === cat.id}
-                  onClick={() => handleCategoryClick(cat.id)}
-                  className={`shrink-0 cursor-pointer rounded-full border px-4 py-2 text-sm font-bold transition ${
-                    activeCategory === cat.id
-                      ? "border-orange-500 bg-orange-500 text-white shadow-lg shadow-orange-100"
-                      : "border-slate-200 bg-white text-slate-600 hover:border-orange-200 hover:text-orange-600"
-                  }`}
-                >
-                  {cat.label} ({categoryCountMap[cat.id] ?? 0})
-                </button>
+          {/* ── Article grid ── */}
+          {loading ? (
+            <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <SkeletonCard key={i} />
               ))}
             </div>
-          )}
-
-          {/* ── Article grid ── */}
-          {pagedPosts.length > 0 ? (
+          ) : gridPosts.length > 0 ? (
             <>
               {isSearching && (
                 <p className="mb-5 text-sm text-slate-500">
                   {t("search_result")}{" "}
-                  <span className="font-bold text-slate-900">
-                    {filteredPosts.length}
-                  </span>{" "}
+                  <span className="font-bold text-slate-900">{meta.total}</span>{" "}
                   {t("search_result_for")} &ldquo;
                   <span className="font-bold text-orange-600">
                     {debouncedSearch}
@@ -521,13 +546,17 @@ export function NewsListingContent() {
                 </p>
               )}
               <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {pagedPosts.map((post) => (
-                  <ArticleCard key={post.slug} post={post} />
+                {gridPosts.map((post, i) => (
+                  <ArticleCard
+                    key={post.id}
+                    post={post}
+                    index={featuredPost ? i + 1 : i}
+                  />
                 ))}
               </div>
               <Pagination
                 currentPage={currentPage}
-                totalPages={totalPages}
+                totalPages={meta.totalPages}
                 onPageChange={handlePageChange}
                 prevLabel={t("pagination_prev")}
                 nextLabel={t("pagination_next")}
@@ -544,10 +573,7 @@ export function NewsListingContent() {
               <p className="text-sm text-slate-500">{t("search_empty_desc")}</p>
               <button
                 type="button"
-                onClick={() => {
-                  setSearchInput("");
-                  handleCategoryClick(null);
-                }}
+                onClick={() => setSearchInput("")}
                 className="cursor-pointer rounded-2xl bg-orange-500 px-5 py-2.5 text-sm font-bold text-white transition hover:bg-orange-600"
               >
                 {t("search_reset")}

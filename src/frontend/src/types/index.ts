@@ -19,6 +19,7 @@ export interface Post {
   slug: string;
   excerpt?: string;
   content: string;
+  coverImage?: string;
   status: "DRAFT" | "PUBLISHED";
   authorId: string;
   createdAt: Date;

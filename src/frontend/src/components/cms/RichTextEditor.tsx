@@ -6,6 +6,8 @@ import Placeholder from "@tiptap/extension-placeholder";
 import Link from "@tiptap/extension-link";
 import Underline from "@tiptap/extension-underline";
 import TextAlign from "@tiptap/extension-text-align";
+import Image from "@tiptap/extension-image";
+import Youtube from "@tiptap/extension-youtube";
 import {
   Bold,
   Italic,
@@ -22,9 +24,13 @@ import {
   Minus,
   RotateCcw,
   RotateCw,
+  ImageIcon,
+  Video,
+  Loader2,
 } from "lucide-react";
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 interface RichTextEditorProps {
   value: string;
@@ -76,6 +82,9 @@ export function RichTextEditor({
   disabled = false,
   className,
 }: RichTextEditorProps) {
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -85,6 +94,18 @@ export function RichTextEditor({
       Underline,
       Link.configure({ openOnClick: false }),
       TextAlign.configure({ types: ["heading", "paragraph"] }),
+      Image.configure({
+        HTMLAttributes: {
+          class: "max-w-full rounded-lg my-4",
+        },
+      }),
+      Youtube.configure({
+        width: 640,
+        height: 360,
+        HTMLAttributes: {
+          class: "w-full rounded-lg my-4 aspect-video",
+        },
+      }),
     ],
     content: value,
     editable: !disabled,
@@ -99,7 +120,6 @@ export function RichTextEditor({
     },
   });
 
-  // Sync external value changes (e.g. on reset)
   useEffect(() => {
     if (!editor) return;
     const current = editor.getHTML();
@@ -120,6 +140,42 @@ export function RichTextEditor({
     }
   }, [editor]);
 
+  const handleImageUpload = useCallback(
+    async (file: File) => {
+      if (!editor) return;
+      const form = new FormData();
+      form.append("file", file);
+      setUploadingImage(true);
+      try {
+        const res = await fetch("/api/upload", { method: "POST", body: form });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body.message ?? "Upload thất bại");
+        editor.chain().focus().setImage({ src: body.url, alt: file.name }).run();
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Upload ảnh thất bại");
+      } finally {
+        setUploadingImage(false);
+      }
+    },
+    [editor],
+  );
+
+  const handleImageFileChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) handleImageUpload(file);
+      e.target.value = "";
+    },
+    [handleImageUpload],
+  );
+
+  const insertYoutube = useCallback(() => {
+    if (!editor) return;
+    const url = window.prompt("Nhập URL YouTube hoặc Vimeo:");
+    if (!url) return;
+    editor.chain().focus().setYoutubeVideo({ src: url }).run();
+  }, [editor]);
+
   if (!editor) return null;
 
   return (
@@ -130,6 +186,15 @@ export function RichTextEditor({
         className,
       )}
     >
+      {/* Hidden file input for image upload */}
+      <input
+        ref={imageInputRef}
+        type="file"
+        accept="image/jpeg,image/png,image/webp,image/gif"
+        className="hidden"
+        onChange={handleImageFileChange}
+      />
+
       {/* Toolbar */}
       <div className="flex flex-wrap items-center gap-0.5 border-b border-border bg-slate-50 px-2 py-1.5">
         {/* Text style */}
@@ -240,6 +305,30 @@ export function RichTextEditor({
           title="Horizontal rule"
         >
           <Minus className="h-3.5 w-3.5" />
+        </ToolbarButton>
+
+        <div className="mx-1 h-4 w-px bg-border" />
+
+        {/* Image upload */}
+        <ToolbarButton
+          onClick={() => imageInputRef.current?.click()}
+          disabled={uploadingImage || disabled}
+          title="Chèn ảnh (JPG/PNG/WebP/GIF, tối đa 10 MB)"
+        >
+          {uploadingImage ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <ImageIcon className="h-3.5 w-3.5" />
+          )}
+        </ToolbarButton>
+
+        {/* YouTube / Video embed */}
+        <ToolbarButton
+          onClick={insertYoutube}
+          disabled={disabled}
+          title="Nhúng video YouTube / Vimeo"
+        >
+          <Video className="h-3.5 w-3.5" />
         </ToolbarButton>
 
         <div className="mx-1 h-4 w-px bg-border" />

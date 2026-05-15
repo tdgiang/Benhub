@@ -32,6 +32,7 @@ export class PostsService {
       slug: dto.slug,
       excerpt: dto.excerpt,
       content: dto.content,
+      coverImage: dto.coverImage,
       status: dto.status ?? PostStatus.DRAFT,
       author: { connect: { id: authorId } },
     });

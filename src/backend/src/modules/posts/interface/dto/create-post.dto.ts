@@ -36,6 +36,11 @@ export class CreatePostDto {
   @IsNotEmpty()
   content: string;
 
+  @ApiPropertyOptional({ description: 'URL ảnh bìa bài viết' })
+  @IsString()
+  @IsOptional()
+  coverImage?: string;
+
   @ApiPropertyOptional({ enum: PostStatus, default: PostStatus.DRAFT })
   @IsEnum(PostStatus)
   @IsOptional()

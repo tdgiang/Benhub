@@ -287,7 +287,10 @@ function HeroSection() {
               {[
                 { icon: Zap, text: "Cuốc xe đều — không phụ thuộc mối quen" },
                 { icon: QrCode, text: "E-Ticket số — không mất phiếu bao giờ" },
-                { icon: Wallet, text: "Ứng tiền trước cuối tháng qua BenHub Finance" },
+                {
+                  icon: Wallet,
+                  text: "Ứng tiền trước cuối tháng qua BenHub Finance",
+                },
                 { icon: Route, text: "GPS proof cho mọi chuyến xe" },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-3">
@@ -362,7 +365,8 @@ function BenefitsSection() {
             Mọi thứ một tài xế cần để vận hành tốt hơn.
           </h2>
           <p className="mt-4 text-base leading-relaxed text-slate-600">
-            BenHub không chỉ là app gọi xe — đây là hạ tầng số cho cả chuỗi vận hành của bạn.
+            BenHub không chỉ là app gọi xe — đây là hạ tầng số cho cả chuỗi vận
+            hành của bạn.
           </p>
         </div>
 
@@ -379,7 +383,9 @@ function BenefitsSection() {
               <h3 className="text-lg font-black leading-snug text-slate-950">
                 {title}
               </h3>
-              <p className="mt-2 text-sm leading-relaxed text-slate-600">{desc}</p>
+              <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                {desc}
+              </p>
             </div>
           ))}
         </div>
@@ -428,9 +434,7 @@ function HowItWorksSection() {
               <div className="rounded-[2rem] border border-white/8 bg-white/5 p-6 backdrop-blur-sm transition hover:border-orange-400/20 hover:bg-white/8">
                 {/* Number + icon */}
                 <div className="mb-5 flex items-center gap-3">
-                  <div
-                    className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-950/40"
-                  >
+                  <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-orange-500 shadow-lg shadow-orange-950/40">
                     <Icon className="h-5 w-5 text-white" />
                   </div>
                   <span
@@ -446,7 +450,9 @@ function HowItWorksSection() {
                 <h3 className="text-lg font-black leading-snug text-white">
                   {title}
                 </h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-400">{desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-400">
+                  {desc}
+                </p>
               </div>
             </div>
           ))}
@@ -469,7 +475,10 @@ function HowItWorksSection() {
 
 function TestimonialsSection() {
   return (
-    <section className="bg-white py-10 md:py-14" aria-labelledby="testimonials-heading">
+    <section
+      className="bg-white py-10 md:py-14"
+      aria-labelledby="testimonials-heading"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-12 max-w-2xl">
@@ -490,41 +499,43 @@ function TestimonialsSection() {
 
         {/* Cards */}
         <div className="grid gap-5 md:grid-cols-3">
-          {testimonials.map(({ initials, name, role, rating, quote, gradient }) => (
-            <figure
-              key={name}
-              className="flex flex-col rounded-[2rem] border border-slate-200 bg-slate-50 p-6 shadow-sm"
-            >
-              {/* Stars */}
-              <div className="mb-4 flex gap-0.5" aria-label={`${rating} sao`}>
-                {Array.from({ length: rating }).map((_, i) => (
-                  <Star
-                    key={i}
-                    className="h-4 w-4 fill-orange-400 text-orange-400"
-                    aria-hidden="true"
-                  />
-                ))}
-              </div>
-
-              {/* Quote */}
-              <blockquote className="flex-1 text-sm leading-relaxed text-slate-700">
-                &ldquo;{quote}&rdquo;
-              </blockquote>
-
-              {/* Author */}
-              <figcaption className="mt-6 flex items-center gap-3">
-                <div
-                  className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${gradient} text-sm font-black text-white`}
-                >
-                  {initials}
+          {testimonials.map(
+            ({ initials, name, role, rating, quote, gradient }) => (
+              <figure
+                key={name}
+                className="flex flex-col rounded-[2rem] border border-slate-200 bg-slate-50 p-6 shadow-sm"
+              >
+                {/* Stars */}
+                <div className="mb-4 flex gap-0.5" aria-label={`${rating} sao`}>
+                  {Array.from({ length: rating }).map((_, i) => (
+                    <Star
+                      key={i}
+                      className="h-4 w-4 fill-orange-400 text-orange-400"
+                      aria-hidden="true"
+                    />
+                  ))}
                 </div>
-                <div>
-                  <p className="text-sm font-bold text-slate-950">{name}</p>
-                  <p className="text-xs text-slate-500">{role}</p>
-                </div>
-              </figcaption>
-            </figure>
-          ))}
+
+                {/* Quote */}
+                <blockquote className="flex-1 text-sm leading-relaxed text-slate-700">
+                  &ldquo;{quote}&rdquo;
+                </blockquote>
+
+                {/* Author */}
+                <figcaption className="mt-6 flex items-center gap-3">
+                  <div
+                    className={`flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br ${gradient} text-sm font-black text-white`}
+                  >
+                    {initials}
+                  </div>
+                  <div>
+                    <p className="text-sm font-bold text-slate-950">{name}</p>
+                    <p className="text-xs text-slate-500">{role}</p>
+                  </div>
+                </figcaption>
+              </figure>
+            ),
+          )}
         </div>
       </div>
     </section>
@@ -533,7 +544,10 @@ function TestimonialsSection() {
 
 function FAQSection() {
   return (
-    <section className="bg-slate-50 py-10 md:py-14" aria-labelledby="faq-heading">
+    <section
+      className="bg-slate-50 py-10 md:py-14"
+      aria-labelledby="faq-heading"
+    >
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-10 text-center">
@@ -606,7 +620,10 @@ function FormSection() {
       aria-labelledby="form-heading"
     >
       {/* Background glows */}
-      <div className="pointer-events-none absolute inset-x-0 overflow-hidden" aria-hidden="true">
+      <div
+        className="pointer-events-none absolute inset-x-0 overflow-hidden"
+        aria-hidden="true"
+      >
         <div
           className="absolute left-1/4 top-0 h-96 w-96 -translate-y-1/2 rounded-full opacity-20"
           style={{
@@ -634,8 +651,8 @@ function FormSection() {
               Tham gia mạng lưới tài xế BenHub ngay hôm nay.
             </h2>
             <p className="mt-5 max-w-md text-base leading-relaxed text-slate-300">
-              Điền form này và đội vận hành sẽ liên hệ trong vòng 24h để xác nhận
-              khu vực chạy xe và các chuyến phù hợp với lịch của bạn.
+              Điền form này và đội vận hành sẽ liên hệ trong vòng 24h để xác
+              nhận khu vực chạy xe và các chuyến phù hợp với lịch của bạn.
             </p>
 
             {/* Mini checklist */}
@@ -661,7 +678,9 @@ function FormSection() {
                     key={init}
                     className="flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#050B18] text-xs font-black text-white"
                     style={{
-                      background: ["#f97316", "#2563eb", "#0f6e56", "#b45309"][i],
+                      background: ["#f97316", "#2563eb", "#0f6e56", "#b45309"][
+                        i
+                      ],
                     }}
                     aria-hidden="true"
                   >
@@ -670,7 +689,8 @@ function FormSection() {
                 ))}
               </div>
               <p className="text-sm font-semibold text-slate-300">
-                <span className="text-white">5,000+ tài xế</span> đã tham gia BenHub
+                <span className="text-white">5,000+ tài xế</span> đã tham gia
+                BenHub
               </p>
             </div>
           </div>
