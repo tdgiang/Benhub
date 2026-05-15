@@ -54,6 +54,7 @@ export function Navbar({ className }: { className?: string }) {
         >
           <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center shadow-sm shadow-orange-500/40">
             <Truck className="w-4 h-4 text-white" />
+            {/* <img src="/logo.png" alt="BenHub" className="w-8 h-8" /> */}
           </div>
           <span className="text-lg font-bold text-white tracking-tight">
             Ben<span className="text-orange-400">Hub</span>
