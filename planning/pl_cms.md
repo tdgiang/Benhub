@@ -14,12 +14,13 @@
 |---|---|---|
 | Backend | Auth module (JWT, refresh token) | ✅ Hoàn chỉnh |
 | Backend | Users module (CRUD, cache) | ✅ Hoàn chỉnh |
-| Backend | Prisma schema: `User`, `Post`, `Product` | ✅ Schema có, chưa có module Posts |
-| Backend | Leads module | ❌ Chưa có (forms đang gọi nhưng 404) |
+| Backend | Prisma schema: `User`, `Post`, `Product`, `Lead` | ✅ Hoàn chỉnh |
+| Backend | Leads module | ✅ **DONE — Phase 1** |
+| Backend | Posts module | ✅ **DONE — Phase 2** |
 | Frontend CMS | Layout: Sidebar + Topbar | ✅ Hoàn chỉnh |
-| Frontend CMS | Posts UI (list, create, edit) | ✅ UI có, dùng **in-memory store** |
-| Frontend CMS | Dashboard UI | ✅ UI có, **dữ liệu hardcode** |
-| Frontend CMS | Leads UI | ❌ Chưa có |
+| Frontend CMS | Posts UI (list, create, edit) | ✅ **DONE — Phase 2** (TipTap + backend) |
+| Frontend CMS | Dashboard UI | ✅ UI có, **dữ liệu hardcode** → Phase 3 |
+| Frontend CMS | Leads UI | ❌ Chưa có → Phase 3 |
 
 ### Vấn đề cần giải quyết
 1. `POST /api/v1/leads` trả 404 — form đăng ký tài xế/đối tác **đang mất data**
@@ -328,36 +329,36 @@ const autoSlug = title
 
 ## 5. Thứ tự implement
 
-### Phase 1 — Backend Leads (ưu tiên nhất, forms đang mất data)
+### Phase 1 — Backend Leads ✅ DONE (commit 8dcce32)
 ```
-□ Thêm Lead model vào prisma schema
-□ prisma migrate dev --name add-leads
-□ Tạo LeadsModule: dto, repository, service, controller
-□ Đăng ký vào AppModule
-□ Test: POST /api/v1/leads từ form landing
-□ Test: GET /api/v1/leads (với ADMIN token)
-□ Implement CSV export endpoint
-```
-
-### Phase 2 — Backend Posts + Frontend wire-up
-```
-□ Tạo PostsModule: dto, repository, service, controller
-□ Đăng ký vào AppModule
-□ Cài TipTap packages
-□ Tạo RichTextEditor component
-□ Cập nhật PostForm dùng RichTextEditor + excerpt field
-□ Wire PostsTableClient → backend
-□ Wire PostFormWrapper (new) → backend
-□ Wire EditPostFormWrapper → backend
-□ Xóa in-memory routes + posts-store
-□ Cài @tailwindcss/typography, style prose wrapper
+✅ Thêm LeadSegment enum + Lead model vào schema (SQL trực tiếp do DB drift)
+✅ Tạo LeadsModule: dto, repository, service, controller
+✅ Đăng ký vào AppModule
+✅ Test: POST /api/v1/leads từ form landing → 201
+✅ Test: GET /api/v1/leads (ADMIN) → filter đúng
+✅ CSV export: UTF-8 BOM, streaming
 ```
 
-### Phase 3 — Backend Stats + Dashboard + Leads CMS
+### Phase 2 — Backend Posts + Frontend wire-up ✅ DONE (commit a23e842)
 ```
-□ Tạo StatsModule (service + controller)
+✅ Add excerpt column (SQL ALTER TABLE)
+✅ Tạo PostsModule: dto, repository, service, controller
+✅ GET /api/v1/posts + /slug/:slug @Public; POST/PATCH/DELETE @Roles(ADMIN)
+✅ Đăng ký vào AppModule
+✅ Cài TipTap: starter-kit, placeholder, link, underline, text-align
+✅ Tạo RichTextEditor component (toolbar đầy đủ)
+✅ Cập nhật PostForm: excerpt field + RichTextEditor thay textarea
+✅ Proxy routes /api/posts → /api/v1/posts (giữ nguyên client code)
+✅ Xóa posts-store.ts
+✅ CSS prose cho editor + article-content rendering
+✅ Fix proxy.ts: bỏ /api/posts khỏi PROTECTED (backend tự handle auth)
+```
+
+### Phase 3 — Backend Stats + Dashboard + Leads CMS UI
+```
+□ Tạo StatsModule (service + controller): GET /api/v1/stats
 □ Cập nhật dashboard/page.tsx fetch stats thật
-□ Tạo leads/page.tsx + LeadsTableClient
+□ Tạo leads/page.tsx + LeadsTableClient (filter + CSV export button)
 □ Thêm link Leads vào Sidebar
 □ Thêm error.tsx + loading.tsx cho leads route
 ```
