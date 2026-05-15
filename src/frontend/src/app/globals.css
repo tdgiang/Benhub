@@ -204,3 +204,32 @@
 @media (prefers-reduced-motion: reduce) {
   .btn-glow, .fade-up, .float-up, .border-glow { animation: none !important; }
 }
+/* ─── TipTap / Prose editor styles ─── */
+.prose-editor .tiptap { outline: none; }
+.prose-editor .tiptap p { margin: 0.5rem 0; }
+.prose-editor .tiptap h2 { font-size: 1.4rem; font-weight: 700; margin: 1rem 0 0.4rem; }
+.prose-editor .tiptap h3 { font-size: 1.15rem; font-weight: 600; margin: 0.8rem 0 0.3rem; }
+.prose-editor .tiptap ul { list-style: disc; padding-left: 1.5rem; margin: 0.5rem 0; }
+.prose-editor .tiptap ol { list-style: decimal; padding-left: 1.5rem; margin: 0.5rem 0; }
+.prose-editor .tiptap li { margin: 0.2rem 0; }
+.prose-editor .tiptap a { color: #f97316; text-decoration: underline; }
+.prose-editor .tiptap hr { border: none; border-top: 1px solid #e2e8f0; margin: 1rem 0; }
+.prose-editor .tiptap blockquote { border-left: 3px solid #f97316; padding-left: 1rem; color: #64748b; font-style: italic; }
+.prose-editor .tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #94a3b8;
+  pointer-events: none;
+  float: left;
+  height: 0;
+}
+
+/* ─── Public article content rendering ─── */
+.article-content h2 { font-size: 1.4rem; font-weight: 700; margin: 1.5rem 0 0.5rem; }
+.article-content h3 { font-size: 1.15rem; font-weight: 600; margin: 1.2rem 0 0.4rem; }
+.article-content p { margin: 0.75rem 0; line-height: 1.8; }
+.article-content ul { list-style: disc; padding-left: 1.5rem; margin: 0.75rem 0; }
+.article-content ol { list-style: decimal; padding-left: 1.5rem; margin: 0.75rem 0; }
+.article-content li { margin: 0.3rem 0; }
+.article-content a { color: #f97316; text-decoration: underline; }
+.article-content hr { border: none; border-top: 1px solid #e2e8f0; margin: 1.5rem 0; }
+.article-content blockquote { border-left: 3px solid #f97316; padding-left: 1rem; color: #64748b; font-style: italic; margin: 1rem 0; }

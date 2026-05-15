@@ -8,6 +8,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { ProductsModule } from './modules/products/products.module';
 import { LeadsModule } from './modules/leads/leads.module';
+import { PostsModule } from './modules/posts/posts.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
 import { APP_GUARD } from '@nestjs/core';
@@ -48,6 +49,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     UsersModule,
     ProductsModule,
     LeadsModule,
+    PostsModule,
   ],
   providers: [
     {

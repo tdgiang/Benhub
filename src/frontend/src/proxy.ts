@@ -5,7 +5,7 @@ import { routing } from "@/i18n/routing";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
-const PROTECTED = ["/cms", "/api/posts"];
+const PROTECTED = ["/cms"];
 const SKIP_INTL = ["/api/", "/cms", "/login", "/register", "/_next"];
 
 export default auth((req) => {

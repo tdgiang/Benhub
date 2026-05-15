@@ -11,10 +11,8 @@ export const metadata: Metadata = {
 
 async function getPost(id: string): Promise<Post | null> {
   try {
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/api/posts/${id}`,
-      { cache: "no-store" },
-    );
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+    const res = await fetch(`${apiUrl}/api/v1/posts/${id}`, { cache: "no-store" });
     if (!res.ok) return null;
     const { data } = await res.json();
     return data ?? null;

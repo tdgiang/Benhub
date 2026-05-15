@@ -1,54 +1,57 @@
-/**
- * Single post CRUD — in-memory storage.
- * Replace with backend proxy when PostsModule is implemented.
- */
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
-import type { Post } from "@/types";
-import { slugify } from "@/lib/utils";
-import { postsStore } from "@/lib/posts-store";
 
-export async function GET(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+const BACKEND = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+
+export async function GET(
+  _: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const { id } = await params;
-  const post = postsStore.find((p) => p.id === id);
-  if (!post) {
-    return NextResponse.json({ message: "Không tìm thấy bài viết" }, { status: 404 });
-  }
-  return NextResponse.json({ data: post });
+  const res = await fetch(`${BACKEND}/api/v1/posts/${id}`, { cache: "no-store" });
+  const body = await res.json();
+  return NextResponse.json(body, { status: res.status });
 }
 
-export async function PATCH(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const session = await auth();
-  if (!session?.user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-  const { id } = await params;
-  const body = (await request.json()) as Partial<Post>;
-  const idx = postsStore.findIndex((p) => p.id === id);
-
-  if (idx === -1) {
-    return NextResponse.json({ message: "Không tìm thấy bài viết" }, { status: 404 });
+  if (!session?.accessToken) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  postsStore[idx] = {
-    ...postsStore[idx],
-    ...body,
-    slug: body.title ? (body.slug || slugify(body.title)) : postsStore[idx].slug,
-    updatedAt: new Date(),
-  };
+  const { id } = await params;
+  const body = await request.json();
+  const res = await fetch(`${BACKEND}/api/v1/posts/${id}`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${session.accessToken}`,
+    },
+    body: JSON.stringify(body),
+  });
 
-  return NextResponse.json({ data: postsStore[idx] });
+  const data = await res.json();
+  return NextResponse.json(data, { status: res.status });
 }
 
-export async function DELETE(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+export async function DELETE(
+  _: NextRequest,
+  { params }: { params: Promise<{ id: string }> },
+) {
   const session = await auth();
-  if (!session?.user) return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-
-  const { id } = await params;
-  const idx = postsStore.findIndex((p) => p.id === id);
-  if (idx === -1) {
-    return NextResponse.json({ message: "Không tìm thấy bài viết" }, { status: 404 });
+  if (!session?.accessToken) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  postsStore.splice(idx, 1);
-  return NextResponse.json({ data: { id } });
+  const { id } = await params;
+  const res = await fetch(`${BACKEND}/api/v1/posts/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${session.accessToken}` },
+  });
+
+  const data = await res.json();
+  return NextResponse.json(data, { status: res.status });
 }
