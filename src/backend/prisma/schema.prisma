@@ -14,6 +14,11 @@ enum Role {
   ADMIN
 }
 
+enum LeadSegment {
+  driver
+  partner
+}
+
 enum PostStatus {
   DRAFT
   PUBLISHED
@@ -49,6 +54,26 @@ model Product {
   deletedAt   DateTime?
 
   @@map("products")
+}
+
+model Lead {
+  id           String      @id @default(uuid())
+  segment      LeadSegment
+  fullName     String
+  phone        String
+  email        String?
+  province     String?
+  companyName  String?
+  licensePlate String?
+  projectScale String?
+  fleetSize    Int?
+  source       String?
+  note         String?
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+  deletedAt    DateTime?
+
+  @@map("leads")
 }
 
 model Post {
