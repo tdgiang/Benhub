@@ -29,6 +29,7 @@ export const NAV_ITEMS = [
 export const CMS_NAV_ITEMS = [
   { label: "Dashboard", href: "/cms/dashboard", icon: "LayoutDashboard" },
   { label: "Bài viết", href: "/cms/posts", icon: "FileText" },
+  { label: "Leads", href: "/cms/leads", icon: "Inbox" },
   { label: "Cài đặt", href: "/cms/settings", icon: "Settings" },
 ];
 

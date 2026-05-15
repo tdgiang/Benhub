@@ -9,6 +9,7 @@ import {
   Zap,
   LogOut,
   ChevronRight,
+  Inbox,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,7 @@ import { Button } from "@/components/ui/button";
 const iconMap: Record<string, React.ReactNode> = {
   LayoutDashboard: <LayoutDashboard className="w-4 h-4" />,
   FileText: <FileText className="w-4 h-4" />,
+  Inbox: <Inbox className="w-4 h-4" />,
   Settings: <Settings className="w-4 h-4" />,
 };
 
