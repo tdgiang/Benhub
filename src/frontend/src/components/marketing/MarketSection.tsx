@@ -10,46 +10,48 @@ import {
   Ship,
   Zap,
 } from "lucide-react";
-
-const stats = [
-  {
-    value: "60–80 tỷ USD",
-    label: "Quy mô ngành xây dựng VN",
-    sub: "Tăng trưởng 8–10%/năm",
-    tone: "from-orange-500 to-amber-400",
-  },
-  {
-    value: "100,000+",
-    label: "Xe ben đang hoạt động",
-    sub: "Phần lớn chưa có platform",
-    tone: "from-blue-500 to-cyan-400",
-  },
-  {
-    value: "< 5%",
-    label: "Tỷ lệ số hóa hiện tại",
-    sub: "Khoảng trống khổng lồ",
-    tone: "from-emerald-500 to-lime-400",
-  },
-];
-
-const infra = [
-  { icon: Route, label: "Cao tốc Bắc Nam", sub: "Hạ tầng liên vùng" },
-  { icon: Plane, label: "Sân bay Long Thành", sub: "Siêu dự án logistics" },
-  { icon: Factory, label: "KCN & FDI", sub: "Mở rộng nhà máy" },
-  { icon: Building2, label: "Đô thị hóa", sub: "Nhu cầu san lấp" },
-  { icon: Zap, label: "Năng lượng tái tạo", sub: "Dự án quy mô lớn" },
-  { icon: Ship, label: "Cảng biển", sub: "Kết nối chuỗi cung ứng" },
-];
-
-const marketSignals = [
-  { label: "CAGR xây dựng", value: "8–10%" },
-  { label: "Số hóa logistics công trình", value: "< 5%" },
-  { label: "Giai đoạn mở rộng", value: "2025–2035" },
-];
+import { useTranslations } from "next-intl";
 
 export function MarketSection() {
+  const t = useTranslations("Market");
   const sectionRef = useRef<HTMLElement>(null);
   const [visible, setVisible] = useState(false);
+
+  const stats = [
+    {
+      value: t("stat_1_val"),
+      label: t("stat_1_label"),
+      sub: t("stat_1_sub"),
+      tone: "from-orange-500 to-amber-400",
+    },
+    {
+      value: t("stat_2_val"),
+      label: t("stat_2_label"),
+      sub: t("stat_2_sub"),
+      tone: "from-blue-500 to-cyan-400",
+    },
+    {
+      value: t("stat_3_val"),
+      label: t("stat_3_label"),
+      sub: t("stat_3_sub"),
+      tone: "from-emerald-500 to-lime-400",
+    },
+  ];
+
+  const infra = [
+    { icon: Route, label: t("infra_1"), sub: t("infra_1_sub") },
+    { icon: Plane, label: t("infra_2"), sub: t("infra_2_sub") },
+    { icon: Factory, label: t("infra_3"), sub: t("infra_3_sub") },
+    { icon: Building2, label: t("infra_4"), sub: t("infra_4_sub") },
+    { icon: Zap, label: t("infra_5"), sub: t("infra_5_sub") },
+    { icon: Ship, label: t("infra_6"), sub: t("infra_6_sub") },
+  ];
+
+  const marketSignals = [
+    { label: t("signal_1"), value: t("signal_1_val") },
+    { label: t("signal_2"), value: t("signal_2_val") },
+    { label: t("signal_3"), value: t("signal_3_val") },
+  ];
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -78,10 +80,6 @@ export function MarketSection() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-10 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
           <div>
-            {/* <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/80 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-orange-600 shadow-sm">
-              <Radar className="h-4 w-4" />
-              Cơ hội thị trường
-            </p> */}
             <h2
               className="font-black leading-none tracking-tight text-slate-950"
               style={{
@@ -89,7 +87,7 @@ export function MarketSection() {
                 fontSize: "clamp(2.4rem, 6vw, 4rem)",
               }}
             >
-              Thị trường khổng lồ nhưng chưa được số hóa.
+              {t("h2")}
             </h2>
           </div>
 
@@ -97,11 +95,10 @@ export function MarketSection() {
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-orange-600">
-                  Market intelligence
+                  {t("intel_label")}
                 </p>
                 <p className="mt-2 text-sm leading-relaxed text-slate-600">
-                  Nhu cầu hạ tầng tăng nhanh, nhưng vận tải công trình vẫn vận
-                  hành rời rạc và thiếu dữ liệu.
+                  {t("intel_desc")}
                 </p>
               </div>
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-orange-100 bg-orange-50 text-orange-600">
@@ -156,35 +153,9 @@ export function MarketSection() {
           ))}
         </div>
 
-        {/* <div className="mb-6 overflow-hidden rounded-[2rem] border border-orange-200 bg-white p-6 shadow-xl shadow-orange-100/60">
-          <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-            <p
-              className="font-black italic leading-tight text-slate-950"
-              style={{
-                fontSize: "clamp(1.4rem, 3vw, 2.3rem)",
-                fontFamily: "var(--font-barlow), system-ui, sans-serif",
-              }}
-            >
-              &ldquo;Ngành vận tải công trình Việt Nam: Quy mô cực lớn nhưng số hóa
-              cực thấp.
-              <span className="block text-orange-600">
-                Đây là khoảng trống thị trường BenHub đang lấp đầy.
-              </span>
-              &rdquo;
-            </p>
-            <a
-              href="/doi-tac"
-              className="inline-flex items-center justify-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-200 transition hover:-translate-y-0.5 hover:bg-orange-600"
-            >
-              Hợp tác cùng BenHub
-              <ArrowUpRight className="h-4 w-4" />
-            </a>
-          </div>
-        </div> */}
-
         <div>
           <p className="mb-5 text-center text-xs font-bold uppercase tracking-[0.18em] text-slate-500">
-            Dự án hạ tầng đang tạo nhu cầu
+            {t("infra_header")}
           </p>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {infra.map(({ icon: Icon, label, sub }) => (

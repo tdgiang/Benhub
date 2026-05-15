@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { ArrowRight, Truck } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import { getCategoryById, type NewsPost } from '@/lib/news'
 
 export interface Heading {
@@ -17,6 +18,7 @@ interface ArticleSidebarProps {
 }
 
 export function ArticleSidebar({ headings, relatedPosts }: ArticleSidebarProps) {
+  const t = useTranslations('ArticleDetail')
   const [activeId, setActiveId] = useState<string>('')
 
   useEffect(() => {
@@ -44,9 +46,9 @@ export function ArticleSidebar({ headings, relatedPosts }: ArticleSidebarProps) 
       {headings.length >= 3 && (
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
-            Mục lục bài viết
+            {t('toc_label')}
           </p>
-          <nav aria-label="Mục lục bài viết">
+          <nav aria-label={t('toc_label')}>
             <ul className="space-y-0.5" role="list">
               {headings.map((h) => (
                 <li key={h.id} className={h.level === 3 ? 'ml-3' : ''}>
@@ -78,15 +80,13 @@ export function ArticleSidebar({ headings, relatedPosts }: ArticleSidebarProps) 
         <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-orange-500/15">
           <Truck className="h-5 w-5 text-orange-400" />
         </div>
-        <p className="text-sm font-bold text-white">Tham gia BenHub</p>
-        <p className="mt-2 text-xs leading-relaxed text-slate-400">
-          Đăng ký để nhận cuốc xe đều và quản lý đội xe dễ dàng hơn.
-        </p>
+        <p className="text-sm font-bold text-white">{t('join_title')}</p>
+        <p className="mt-2 text-xs leading-relaxed text-slate-400">{t('join_desc')}</p>
         <a
           href="/#register"
           className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-600"
         >
-          Đăng ký ngay
+          {t('join_cta')}
           <ArrowRight className="h-3 w-3" />
         </a>
       </div>
@@ -94,7 +94,7 @@ export function ArticleSidebar({ headings, relatedPosts }: ArticleSidebarProps) 
       {relatedPosts.length > 0 && (
         <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm">
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-slate-400">
-            Bài viết liên quan
+            {t('related_label')}
           </p>
           <div className="space-y-4">
             {relatedPosts.map((post) => {

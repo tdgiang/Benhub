@@ -1,24 +1,28 @@
 import Link from "next/link";
 import { Truck, Phone, Mail, MapPin, Clock } from "lucide-react";
-
-const products = [
-  "BenHub Core",
-  "BenHub Driver",
-  "BenHub Fleet",
-  "BenHub Finance",
-  "BenHub Materials",
-  "BenHub AI Labs",
-];
-const company = [
-  { label: "Về BenHub", href: "/#hero" },
-  { label: "Tin tức", href: "/tin-tuc" },
-  { label: "Đăng ký tài xế", href: "/dang-ky-tai-xe" },
-  { label: "Tuyển dụng", href: "#" },
-  { label: "Đối tác", href: "/doi-tac" },
-  { label: "Nhà đầu tư", href: "/#roadmap" },
-];
+import { useTranslations } from "next-intl";
 
 export function Footer({ className }: { className?: string }) {
+  const t = useTranslations("Footer");
+
+  const products = [
+    "BenHub Core",
+    "BenHub Driver",
+    "BenHub Fleet",
+    "BenHub Finance",
+    "BenHub Materials",
+    "BenHub AI Labs",
+  ];
+
+  const company = [
+    { label: t("company_about"), href: "/#hero" },
+    { label: t("company_news"), href: "/tin-tuc" },
+    { label: t("company_driver"), href: "/dang-ky-tai-xe" },
+    { label: t("company_hiring"), href: "#" },
+    { label: t("company_partner"), href: "/doi-tac" },
+    { label: t("company_investor"), href: "/#roadmap" },
+  ];
+
   return (
     <footer
       id="main-footer"
@@ -41,7 +45,7 @@ export function Footer({ className }: { className?: string }) {
               </span>
             </Link>
             <p className="text-slate-400 text-sm leading-relaxed mb-5 max-w-xs">
-              Hệ điều hành số cho ngành vận tải công trình Việt Nam.
+              {t("tagline")}
             </p>
             {/* Social */}
             <div className="flex gap-2.5">
@@ -87,7 +91,7 @@ export function Footer({ className }: { className?: string }) {
           {/* Col 2: Products */}
           <div>
             <h3 className="text-white font-semibold text-xs uppercase tracking-widest mb-5">
-              Sản phẩm
+              {t("products_header")}
             </h3>
             <ul className="space-y-2.5">
               {products.map((p) => (
@@ -106,7 +110,7 @@ export function Footer({ className }: { className?: string }) {
           {/* Col 3: Company */}
           <div>
             <h3 className="text-white font-semibold text-xs uppercase tracking-widest mb-5">
-              Công ty
+              {t("company_header")}
             </h3>
             <ul className="space-y-2.5">
               {company.map((c) => (
@@ -125,7 +129,7 @@ export function Footer({ className }: { className?: string }) {
           {/* Col 4: Contact */}
           <div>
             <h3 className="text-white font-semibold text-xs uppercase tracking-widest mb-5">
-              Liên hệ
+              {t("contact_header")}
             </h3>
             <ul className="space-y-4">
               <li>
@@ -136,9 +140,9 @@ export function Footer({ className }: { className?: string }) {
                   <Phone className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-white text-sm font-medium group-hover:text-orange-400 transition-colors">
-                      1800 xxx xxx
+                      {t("contact_phone")}
                     </p>
-                    <p className="text-slate-500 text-xs">Hotline miễn phí</p>
+                    <p className="text-slate-500 text-xs">{t("contact_phone_label")}</p>
                   </div>
                 </a>
               </li>
@@ -150,28 +154,24 @@ export function Footer({ className }: { className?: string }) {
                   <Mail className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
                   <div>
                     <p className="text-white text-sm font-medium group-hover:text-orange-400 transition-colors">
-                      contact@benhub.vn
+                      {t("contact_email")}
                     </p>
-                    <p className="text-slate-500 text-xs">Email chính thức</p>
+                    <p className="text-slate-500 text-xs">{t("contact_email_label")}</p>
                   </div>
                 </a>
               </li>
               <li className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-white text-sm font-medium">
-                    Hà Nội, Việt Nam
-                  </p>
-                  <p className="text-slate-500 text-xs">Trụ sở chính</p>
+                  <p className="text-white text-sm font-medium">{t("contact_address")}</p>
+                  <p className="text-slate-500 text-xs">{t("contact_address_label")}</p>
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <Clock className="w-4 h-4 text-orange-400 shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-white text-sm font-medium">
-                    T2 – T6, 8:00 – 17:30
-                  </p>
-                  <p className="text-slate-500 text-xs">Giờ làm việc</p>
+                  <p className="text-white text-sm font-medium">{t("contact_hours")}</p>
+                  <p className="text-slate-500 text-xs">{t("contact_hours_label")}</p>
                 </div>
               </li>
             </ul>
@@ -180,21 +180,19 @@ export function Footer({ className }: { className?: string }) {
 
         {/* Bottom bar */}
         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-slate-500 text-sm">
-            © 2026 Công ty Cổ phần BenHub Việt Nam. All rights reserved.
-          </p>
+          <p className="text-slate-500 text-sm">{t("copyright")}</p>
           <div className="flex items-center gap-4">
             <a
               href="#"
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors cursor-pointer"
             >
-              Chính sách bảo mật
+              {t("privacy")}
             </a>
             <a
               href="#"
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors cursor-pointer"
             >
-              Điều khoản sử dụng
+              {t("terms")}
             </a>
           </div>
         </div>

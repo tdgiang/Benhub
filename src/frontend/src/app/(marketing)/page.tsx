@@ -6,6 +6,7 @@ import { ProductsSection } from "@/components/marketing/ProductsSection";
 import { MarketSection } from "@/components/marketing/MarketSection";
 import { HowItWorksSection } from "@/components/marketing/HowItWorksSection";
 import { EcosystemSection } from "@/components/marketing/EcosystemSection";
+import { NewsSection } from "@/components/marketing/NewsSection";
 import { RoadmapSection } from "@/components/marketing/RoadmapSection";
 
 export const metadata: Metadata = {
@@ -52,6 +53,7 @@ export default function HomePage() {
       <RoadmapSection />
 
       <EcosystemSection />
+      <NewsSection />
       {/* S9 */}
       {/* <RegisterSection /> */}
     </>

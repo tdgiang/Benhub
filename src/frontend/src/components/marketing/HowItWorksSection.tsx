@@ -2,77 +2,55 @@
 
 import { useState } from "react";
 import { FileText, Cpu, Smartphone, Eye, CheckCircle2 } from "lucide-react";
-
-const steps = [
-  {
-    num: "01",
-    icon: FileText,
-    title: "Tạo lệnh vận chuyển",
-    actor: "Chủ đầu tư / Tổng thầu",
-    description:
-      "Chủ đầu tư hoặc tổng thầu tạo lệnh trên BenHub Core: số chuyến, loại vật liệu, điểm nhận – điểm trả, thời gian. Hệ thống tự tính số xe cần thiết và thời gian hoàn thành.",
-    highlights: [
-      "Nhập lệnh online, không cần gọi điện",
-      "Hệ thống tự tính xe cần thiết",
-      "Xác nhận lệnh tức thì",
-    ],
-  },
-  {
-    num: "02",
-    icon: Cpu,
-    title: "AI Smart Dispatch",
-    actor: "Hệ thống AI",
-    description:
-      "BenHub tự động matching với đội xe phù hợp nhất: gần nhất, đúng tải trọng, rating cao, có lịch trống. Không cần gọi điện. AI tối ưu tuyến đường và chi phí.",
-    highlights: [
-      "Matching tự động trong < 30 giây",
-      "Tối ưu tuyến đường, tiết kiệm nhiên liệu",
-      "Phân bổ theo rating & lịch sử",
-    ],
-  },
-  {
-    num: "03",
-    icon: Smartphone,
-    title: "Tài xế nhận chuyến",
-    actor: "Tài xế",
-    description:
-      "Tài xế nhận thông báo qua app, xác nhận, bật GPS. E-Ticket tự động tạo với mã QR, watermark thời gian + tọa độ. Mọi thông tin chuyến đều được ghi nhận.",
-    highlights: [
-      "Nhận chuyến 1-tap trên app",
-      "E-Ticket số tự tạo với mã QR",
-      "GPS bật tự động, route được dẫn đường",
-    ],
-  },
-  {
-    num: "04",
-    icon: Eye,
-    title: "Giám sát realtime",
-    actor: "Supervisor",
-    description:
-      "Supervisor theo dõi toàn bộ đội xe trên bản đồ. Phát hiện ngay nếu xe lệch tuyến, dừng bất thường, thiếu tải. Cảnh báo tức thì qua app.",
-    highlights: [
-      "Bản đồ realtime toàn đội xe",
-      "Cảnh báo tự động: lệch tuyến, dừng bất thường",
-      "Kiểm tra tải trọng từ xa",
-    ],
-  },
-  {
-    num: "05",
-    icon: CheckCircle2,
-    title: "Đối soát tự động",
-    actor: "Hệ thống",
-    description:
-      "Khi chuyến hoàn thành: hệ thống tự tổng hợp khối lượng, so sánh lệnh vs thực tế, xuất báo cáo, cập nhật công nợ tức thì. Không cần nhân lực đối soát thủ công.",
-    highlights: [
-      "Báo cáo khối lượng tức thì",
-      "Đối soát lệnh vs thực tế tự động",
-      "Cập nhật công nợ realtime",
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
 
 export function HowItWorksSection() {
   const [active, setActive] = useState(0);
+  const t = useTranslations("HowItWorks");
+
+  const steps = [
+    {
+      num: "01",
+      icon: FileText,
+      title: t("s1_title"),
+      actor: t("s1_actor"),
+      description: t("s1_desc"),
+      highlights: [t("s1_h1"), t("s1_h2"), t("s1_h3")],
+    },
+    {
+      num: "02",
+      icon: Cpu,
+      title: t("s2_title"),
+      actor: t("s2_actor"),
+      description: t("s2_desc"),
+      highlights: [t("s2_h1"), t("s2_h2"), t("s2_h3")],
+    },
+    {
+      num: "03",
+      icon: Smartphone,
+      title: t("s3_title"),
+      actor: t("s3_actor"),
+      description: t("s3_desc"),
+      highlights: [t("s3_h1"), t("s3_h2"), t("s3_h3")],
+    },
+    {
+      num: "04",
+      icon: Eye,
+      title: t("s4_title"),
+      actor: t("s4_actor"),
+      description: t("s4_desc"),
+      highlights: [t("s4_h1"), t("s4_h2"), t("s4_h3")],
+    },
+    {
+      num: "05",
+      icon: CheckCircle2,
+      title: t("s5_title"),
+      actor: t("s5_actor"),
+      description: t("s5_desc"),
+      highlights: [t("s5_h1"), t("s5_h2"), t("s5_h3")],
+    },
+  ];
+
   const step = steps[active];
   const Icon = step.icon;
 
@@ -86,7 +64,7 @@ export function HowItWorksSection() {
         {/* Header */}
         <div className="max-w-2xl mb-10">
           <p className="text-orange-500 font-semibold text-xs uppercase tracking-[0.15em] mb-4">
-            Cách hoạt động
+            {t("tag")}
           </p>
           <h2
             className="font-black text-slate-900 leading-tight mb-4"
@@ -95,14 +73,11 @@ export function HowItWorksSection() {
               fontSize: "clamp(2rem, 4vw, 3rem)",
             }}
           >
-            Từ lệnh vận chuyển
+            {t("h2_1")}
             <br />
-            đến đối soát — tự động hoàn toàn
+            {t("h2_2")}
           </h2>
-          <p className="text-slate-600 text-base leading-relaxed">
-            5 bước vận hành, toàn bộ số hóa — không một tờ giấy, không một cuộc
-            điện thoại.
-          </p>
+          <p className="text-slate-600 text-base leading-relaxed">{t("desc")}</p>
         </div>
 
         {/* Desktop: Left step list + Right detail panel */}

@@ -1,53 +1,42 @@
-const phases = [
-  {
-    period: "2025–2026",
-    tag: "Đang triển khai",
-    tagStyle: "bg-blue-500/20 text-blue-300 border border-blue-500/30",
-    title: "Xây Nền Tảng",
-    current: true,
-    kpis: [
-      "5,000+ xe tham gia hệ sinh thái",
-      "10+ dự án đang vận hành",
-      "Hoàn thiện E-Ticket & GPS Tracking",
-      "Data pipeline vận tải",
-    ],
-  },
-  {
-    period: "2026–2028",
-    tag: "Sắp tới",
-    tagStyle: "bg-slate-600/50 text-slate-400 border border-slate-600",
-    title: "Mở Rộng Hệ Sinh Thái",
-    current: false,
-    kpis: [
-      "50,000+ xe trên nền tảng",
-      "BenHub Marketplace live",
-      "BenHub Finance — ứng tiền nhanh",
-      "AI Smart Dispatch — liên tỉnh",
-    ],
-  },
-  {
-    period: "2028–2035",
-    tag: "Tầm nhìn",
-    tagStyle: "bg-slate-700/50 text-slate-500 border border-slate-700",
-    title: "Hạ Tầng Quốc Gia",
-    current: false,
-    kpis: [
-      "Construction Logistics OS toàn quốc",
-      "Mở rộng thị trường ASEAN",
-      "BenHub AI Platform & Carbon ESG",
-      "IPO trên sàn chứng khoán",
-    ],
-  },
-];
+import { useTranslations } from "next-intl";
 
 export function RoadmapSection() {
+  const t = useTranslations("Roadmap");
+
+  const phases = [
+    {
+      period: t("p1_period"),
+      tag: t("p1_tag"),
+      tagStyle: "bg-blue-500/20 text-blue-300 border border-blue-500/30",
+      title: t("p1_title"),
+      current: true,
+      kpis: [t("p1_k1"), t("p1_k2"), t("p1_k3"), t("p1_k4")],
+    },
+    {
+      period: t("p2_period"),
+      tag: t("p2_tag"),
+      tagStyle: "bg-slate-600/50 text-slate-400 border border-slate-600",
+      title: t("p2_title"),
+      current: false,
+      kpis: [t("p2_k1"), t("p2_k2"), t("p2_k3"), t("p2_k4")],
+    },
+    {
+      period: t("p3_period"),
+      tag: t("p3_tag"),
+      tagStyle: "bg-slate-700/50 text-slate-500 border border-slate-700",
+      title: t("p3_title"),
+      current: false,
+      kpis: [t("p3_k1"), t("p3_k2"), t("p3_k3"), t("p3_k4")],
+    },
+  ];
+
   return (
     <section id="roadmap" className="py-8 md:py-12 bg-slate-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="max-w-2xl mb-10">
           <p className="text-orange-400 font-semibold text-xs uppercase tracking-[0.15em] mb-4">
-            Lộ trình phát triển
+            {t("tag")}
           </p>
           <h2
             className="font-black text-white leading-tight mb-4"
@@ -56,12 +45,9 @@ export function RoadmapSection() {
               fontSize: "clamp(2rem, 4vw, 3rem)",
             }}
           >
-            Từ nền tảng đến hạ tầng quốc gia
+            {t("h2")}
           </h2>
-          <p className="text-slate-400 text-base leading-relaxed">
-            Lộ trình chiến lược 10 năm — xây dựng Construction Logistics OS đầu
-            tiên của Việt Nam.
-          </p>
+          <p className="text-slate-400 text-base leading-relaxed">{t("desc")}</p>
         </div>
 
         {/* Timeline indicator */}

@@ -9,76 +9,55 @@ import {
   Check,
   ArrowRight,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 type TabId = "fleet" | "driver" | "investor" | "partner";
 
-const tabs: { id: TabId; icon: typeof Truck; label: string }[] = [
-  { id: "fleet", icon: Truck, label: "Chủ Đội Xe" },
-  { id: "driver", icon: User, label: "Tài Xế" },
-  { id: "investor", icon: Building2, label: "Chủ Đầu Tư / Tổng Thầu" },
-  { id: "partner", icon: Briefcase, label: "Nhà Đầu Tư / Đối Tác" },
-];
-
-const content: Record<
-  TabId,
-  { headline: string; sub: string; benefits: string[]; cta: string; href: string }
-> = {
-  fleet: {
-    headline: "Có việc đều. Quản lý dễ. Thu nhập tăng.",
-    sub: "Tham gia hệ sinh thái BenHub — đội xe của bạn luôn có việc, doanh thu minh bạch, quản lý từ một app duy nhất.",
-    benefits: [
-      "Nhận cuốc xe ổn định từ mạng lưới dự án BenHub",
-      "Quản lý toàn bộ đội xe, tài xế, bảo dưỡng trên app",
-      "Theo dõi doanh thu realtime từng xe, từng ngày",
-      "Đối soát công nợ tự động — không tranh cãi cuối tháng",
-      "Tiếp cận BenHub Finance khi cần vốn vận hành",
-    ],
-    cta: "Đăng ký đội xe ngay →",
-    href: "/doi-tac",
-  },
-  driver: {
-    headline: "Cuốc xe đều. Thu nhập rõ. Không mất phiếu.",
-    sub: "Tài xế BenHub luôn có việc, thu nhập được ghi nhận đầy đủ, E-Ticket thay phiếu giấy — không lo mất, không lo gian lận.",
-    benefits: [
-      "Nhận cuốc xe hàng ngày qua app — không cần quan hệ hay cò",
-      "E-Ticket số hoá — không bao giờ mất phiếu, không tranh cãi",
-      "Thu nhập được ghi nhận từng chuyến, rõ ràng minh bạch",
-      "Ứng tiền nhanh sau mỗi chuyến — không chờ cuối tháng",
-      "Đánh giá uy tín → cuốc xe tốt hơn, thu nhập cao hơn",
-    ],
-    cta: "Đăng ký lái xe ngay →",
-    href: "/dang-ky-tai-xe",
-  },
-  investor: {
-    headline: "Kiểm soát toàn bộ. Không thất thoát. Dữ liệu realtime.",
-    sub: "BenHub cho bạn dashboard giám sát toàn bộ đội xe 24/7, phát hiện gian lận tức thì, báo cáo khối lượng tự động.",
-    benefits: [
-      "Dashboard realtime: biết mọi xe đang ở đâu, tiến độ thế nào",
-      "Phát hiện thất thoát ngay lập tức — chở thiếu tải, lệch tuyến",
-      "Báo cáo khối lượng tự động cuối ngày — không cần thủ công",
-      "Đối soát công nợ trong vài phút thay vì vài tuần",
-      "Bảo vệ tài sản chủ đầu tư bằng dữ liệu xác thực",
-    ],
-    cta: "Yêu cầu demo miễn phí →",
-    href: "/doi-tac",
-  },
-  partner: {
-    headline: "Cơ hội đầu tư vào hạ tầng số ngành xây dựng.",
-    sub: "BenHub đang xây dựng Construction Logistics OS đầu tiên của Việt Nam trong thị trường 60–80 tỷ USD với tỷ lệ số hóa < 5%.",
-    benefits: [
-      "Market size: 60–80 tỷ USD/năm, tăng trưởng 8–10%/năm",
-      "Asset-light platform model — scalable toàn quốc",
-      "5 luồng doanh thu: SaaS, Marketplace, Finance, Data, Carbon",
-      "Roadmap rõ ràng đến 2035 với tầm nhìn IPO",
-      "Mô hình Holding địa phương — mở rộng nhanh, chi phí thấp",
-    ],
-    cta: "Liên hệ đội ngũ →",
-    href: "/doi-tac",
-  },
-};
-
 export function EcosystemSection() {
   const [active, setActive] = useState<TabId>("fleet");
+  const t = useTranslations("Ecosystem");
+
+  const tabs: { id: TabId; icon: typeof Truck; label: string }[] = [
+    { id: "fleet", icon: Truck, label: t("tab_fleet") },
+    { id: "driver", icon: User, label: t("tab_driver") },
+    { id: "investor", icon: Building2, label: t("tab_investor") },
+    { id: "partner", icon: Briefcase, label: t("tab_partner") },
+  ];
+
+  const content: Record<
+    TabId,
+    { headline: string; sub: string; benefits: string[]; cta: string; href: string }
+  > = {
+    fleet: {
+      headline: t("fleet_headline"),
+      sub: t("fleet_sub"),
+      benefits: [t("fleet_b1"), t("fleet_b2"), t("fleet_b3"), t("fleet_b4"), t("fleet_b5")],
+      cta: t("fleet_cta"),
+      href: "/doi-tac",
+    },
+    driver: {
+      headline: t("driver_headline"),
+      sub: t("driver_sub"),
+      benefits: [t("driver_b1"), t("driver_b2"), t("driver_b3"), t("driver_b4"), t("driver_b5")],
+      cta: t("driver_cta"),
+      href: "/dang-ky-tai-xe",
+    },
+    investor: {
+      headline: t("investor_headline"),
+      sub: t("investor_sub"),
+      benefits: [t("investor_b1"), t("investor_b2"), t("investor_b3"), t("investor_b4"), t("investor_b5")],
+      cta: t("investor_cta"),
+      href: "/doi-tac",
+    },
+    partner: {
+      headline: t("partner_headline"),
+      sub: t("partner_sub"),
+      benefits: [t("partner_b1"), t("partner_b2"), t("partner_b3"), t("partner_b4"), t("partner_b5")],
+      cta: t("partner_cta"),
+      href: "/doi-tac",
+    },
+  };
+
   const c = content[active];
 
   return (
@@ -87,7 +66,7 @@ export function EcosystemSection() {
         {/* Header */}
         <div className="text-center max-w-xl mx-auto mb-9">
           <p className="text-orange-500 font-semibold text-xs uppercase tracking-[0.15em] mb-4">
-            Dành cho ai
+            {t("tag")}
           </p>
           <h2
             className="font-black text-slate-900 leading-tight"
@@ -96,7 +75,7 @@ export function EcosystemSection() {
               fontSize: "clamp(2rem, 4vw, 3rem)",
             }}
           >
-            BenHub dành cho ai?
+            {t("h2")}
           </h2>
         </div>
 
@@ -123,7 +102,7 @@ export function EcosystemSection() {
           <div className="grid lg:grid-cols-5">
             {/* Left dark panel */}
             <div className="lg:col-span-2 bg-slate-900 p-8 lg:p-10">
-              {/* Illustration placeholder — abstract shape */}
+              {/* Illustration placeholder */}
               <div className="mb-8 flex items-center justify-center">
                 <div className="relative w-32 h-32">
                   <div className="absolute inset-0 rounded-2xl bg-orange-500/10 border border-orange-500/20" />
@@ -162,7 +141,7 @@ export function EcosystemSection() {
             {/* Right benefits */}
             <div className="lg:col-span-3 p-8 lg:p-10">
               <p className="text-slate-400 text-xs font-semibold uppercase tracking-widest mb-6">
-                Lợi ích dành cho bạn
+                {t("benefits_header")}
               </p>
               <ul className="space-y-5">
                 {c.benefits.map((b) => (

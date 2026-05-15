@@ -1,28 +1,37 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
-import { Truck, Menu, X } from "lucide-react";
+import { Truck, Menu, X, Globe } from "lucide-react";
 import { cn } from "@/lib/utils";
-
-const navLinks = [
-  { label: "Giải pháp", href: "/#solution" },
-  { label: "Sản phẩm", href: "/#products" },
-  { label: "Hệ sinh thái", href: "/#ecosystem" },
-  { label: "Tin tức", href: "/tin-tuc" },
-  { label: "Tài xế", href: "/dang-ky-tai-xe" },
-  { label: "Đối tác", href: "/doi-tac" },
-];
+import { useTranslations, useLocale } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 
 export function Navbar({ className }: { className?: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const t = useTranslations("Navbar");
+  const locale = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
+
+  const navLinks = [
+    { label: t("nav_solution"), href: "/#solution" },
+    { label: t("nav_products"), href: "/#products" },
+    { label: t("nav_ecosystem"), href: "/#ecosystem" },
+    { label: t("nav_news"), href: "/tin-tuc" },
+    { label: t("nav_driver"), href: "/dang-ky-tai-xe" },
+    { label: t("nav_partner"), href: "/doi-tac" },
+  ];
 
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 60);
     window.addEventListener("scroll", handle, { passive: true });
     return () => window.removeEventListener("scroll", handle);
   }, []);
+
+  const toggleLocale = () => {
+    router.replace(pathname, { locale: locale === "vi" ? "en" : "vi" });
+  };
 
   return (
     <header
@@ -64,17 +73,26 @@ export function Navbar({ className }: { className?: string }) {
         </nav>
 
         {/* Right */}
-        <div className="flex items-center gap-3">
-          <a
+        <div className="flex items-center gap-2">
+          {/* Language switcher */}
+          <button
+            onClick={toggleLocale}
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/12 text-slate-300 hover:text-white text-xs font-bold transition-colors cursor-pointer"
+            aria-label="Switch language"
+          >
+            <Globe className="w-3.5 h-3.5" />
+            {t("lang_label")}
+          </button>
+          <Link
             href="/doi-tac"
             className="hidden md:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-150 cursor-pointer shadow-sm shadow-orange-500/30"
           >
-            Đăng ký đối tác →
-          </a>
+            {t("cta")}
+          </Link>
           <button
             onClick={() => setOpen((o) => !o)}
             className="md:hidden w-9 h-9 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-white transition-colors cursor-pointer border border-white/10"
-            aria-label={open ? "Đóng menu" : "Mở menu"}
+            aria-label={open ? t("aria_close") : t("aria_open")}
           >
             {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
           </button>
@@ -94,14 +112,21 @@ export function Navbar({ className }: { className?: string }) {
               {item.label}
             </a>
           ))}
-          <div className="pt-3 border-t border-white/5 mt-3">
-            <a
+          <div className="pt-3 border-t border-white/5 mt-3 space-y-2">
+            <button
+              onClick={() => { toggleLocale(); setOpen(false); }}
+              className="w-full flex items-center justify-center gap-2 border border-white/10 bg-white/5 text-slate-300 px-4 py-2.5 rounded-lg text-sm font-bold transition-colors cursor-pointer"
+            >
+              <Globe className="w-4 h-4" />
+              {t("lang_label")}
+            </button>
+            <Link
               href="/doi-tac"
               onClick={() => setOpen(false)}
               className="block text-center bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg text-sm font-semibold transition-colors cursor-pointer"
             >
-              Đăng ký đối tác →
-            </a>
+              {t("cta")}
+            </Link>
           </div>
         </div>
       )}

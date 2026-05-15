@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Check, Link2 } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 
 interface ShareButtonsProps {
   url: string
@@ -25,6 +26,7 @@ function LinkedinIcon() {
 }
 
 export function ShareButtons({ url, title }: ShareButtonsProps) {
+  const t = useTranslations('ArticleDetail')
   const [copied, setCopied] = useState(false)
 
   const handleCopy = async () => {
@@ -33,19 +35,19 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
       setCopied(true)
       setTimeout(() => setCopied(false), 2000)
     } catch {
-      // clipboard not available (non-HTTPS or denied)
+      // clipboard not available
     }
   }
 
   return (
     <div className="flex items-center gap-2">
-      <span className="mr-1 text-xs font-semibold text-slate-400">Chia sẻ:</span>
+      <span className="mr-1 text-xs font-semibold text-slate-400">{t('share')}</span>
 
       <a
         href={`https://facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Chia sẻ lên Facebook"
+        aria-label={t('share_fb')}
         className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600"
       >
         <FacebookIcon />
@@ -55,7 +57,7 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
         href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`}
         target="_blank"
         rel="noopener noreferrer"
-        aria-label="Chia sẻ lên LinkedIn"
+        aria-label={t('share_li')}
         className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-blue-700 hover:bg-blue-50 hover:text-blue-700"
       >
         <LinkedinIcon />
@@ -64,7 +66,7 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
       <button
         type="button"
         onClick={handleCopy}
-        aria-label="Sao chép liên kết"
+        aria-label={t('copy_link')}
         className="relative flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-slate-200 text-slate-400 transition hover:border-orange-400 hover:bg-orange-50 hover:text-orange-600"
       >
         {copied ? (
@@ -74,7 +76,7 @@ export function ShareButtons({ url, title }: ShareButtonsProps) {
         )}
         {copied && (
           <span className="absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-slate-900 px-2 py-1 text-[10px] whitespace-nowrap text-white shadow">
-            Đã sao chép!
+            {t('copied')}
           </span>
         )}
       </button>

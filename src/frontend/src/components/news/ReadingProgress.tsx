@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useTranslations } from 'next-intl'
 
 export function ReadingProgress() {
+  const t = useTranslations('ArticleDetail')
   const [progress, setProgress] = useState(0)
 
   useEffect(() => {
@@ -24,7 +26,7 @@ export function ReadingProgress() {
       aria-valuenow={progress}
       aria-valuemin={0}
       aria-valuemax={100}
-      aria-label="Tiến độ đọc bài"
+      aria-label={t('reading_progress')}
     />
   )
 }

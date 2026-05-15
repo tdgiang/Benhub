@@ -1,6 +1,9 @@
 import { Award, Play } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export function HeroSection() {
+  const t = useTranslations("Hero");
+
   return (
     <section
       id="hero"
@@ -40,16 +43,6 @@ export function HeroSection() {
             filter: "blur(90px)",
           }}
         />
-
-        {/* Grid */}
-        {/* <div
-          className="absolute inset-0 opacity-[0.04]"
-          style={{
-            backgroundImage:
-              "linear-gradient(rgba(255,255,255,1) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,1) 1px, transparent 1px)",
-            backgroundSize: "64px 64px",
-          }}
-        /> */}
 
         {/* Vignette bottom */}
         <div
@@ -136,9 +129,7 @@ export function HeroSection() {
             <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-green-500" />
           </span>
           <Award className="w-4 h-4 text-orange-400" />
-          <span className="text-slate-200">
-            Nền tảng logistics công trình #1 Việt Nam
-          </span>
+          <span className="text-slate-200">{t("badge")}</span>
         </div>
 
         {/* H1 */}
@@ -151,9 +142,9 @@ export function HeroSection() {
             lineHeight: "1.2",
           }}
         >
-          Số Hóa
+          {t("h1_line1")}
           <br />
-          Ngành Vận Tải
+          {t("h1_line2")}
           <br />
           <span
             className="inline-block bg-clip-text pb-2 text-transparent"
@@ -162,7 +153,7 @@ export function HeroSection() {
                 "linear-gradient(135deg, #F97316 0%, #FBBF24 45%, #F97316 100%)",
             }}
           >
-            Công Trình Việt Nam
+            {t("h1_line3")}
           </span>
         </h1>
 
@@ -171,12 +162,9 @@ export function HeroSection() {
           className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto mb-7 leading-relaxed fade-up"
           style={{ animationDelay: "0.2s" }}
         >
-          BenHub số hóa toàn bộ chuỗi logistics xây dựng — từ điều phối xe ben,
-          quản lý đội xe đến đối soát tài chính realtime.
+          {t("sub")}
           <br />
-          <span className="text-white font-semibold">
-            Minh bạch. Hiệu quả. Dữ liệu.
-          </span>
+          <span className="text-white font-semibold">{t("sub_highlight")}</span>
         </p>
 
         {/* CTAs */}
@@ -191,14 +179,14 @@ export function HeroSection() {
               background: "linear-gradient(135deg, #F97316 0%, #EA580C 100%)",
             }}
           >
-            Đăng ký đối tác →
+            {t("cta_primary")}
           </a>
           <a
             href="#how-it-works"
             className="inline-flex items-center gap-2.5 bg-white/8 backdrop-blur-xl border border-white/15 hover:bg-white/12 hover:border-white/25 text-white font-semibold px-8 py-4 rounded-2xl text-base transition-all duration-200 cursor-pointer"
           >
             <Play className="w-4 h-4 fill-white" />
-            Xem cách hoạt động
+            {t("cta_secondary")}
           </a>
         </div>
 
@@ -210,17 +198,12 @@ export function HeroSection() {
             animationDelay: "0.4s",
           }}
         >
-          {["25,000+ xe tham gia", "100+ dự án vận hành", "16+ tỉnh thành"].map(
-            (item) => (
-              <span
-                key={item}
-                className="flex items-center gap-2 text-slate-400"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
-                {item}
-              </span>
-            ),
-          )}
+          {[t("proof_1"), t("proof_2"), t("proof_3")].map((item) => (
+            <span key={item} className="flex items-center gap-2 text-slate-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
+              {item}
+            </span>
+          ))}
         </div>
       </div>
     </section>

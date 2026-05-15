@@ -1,21 +1,30 @@
 import { auth } from "@/lib/auth";
 import { NextResponse } from "next/server";
+import createIntlMiddleware from "next-intl/middleware";
+import { routing } from "@/i18n/routing";
+
+const intlMiddleware = createIntlMiddleware(routing);
+
+const PROTECTED = ["/cms", "/api/posts"];
+const SKIP_INTL = ["/api/", "/cms", "/login", "/register", "/_next"];
 
 export default auth((req) => {
   const { nextUrl, auth: session } = req;
-  const isLoggedIn = !!session;
+  const path = nextUrl.pathname;
 
-  const isProtectedRoute =
-    nextUrl.pathname.startsWith("/cms") ||
-    nextUrl.pathname.startsWith("/api/posts");
-
-  if (isProtectedRoute && !isLoggedIn) {
+  // Protect CMS/posts routes
+  if (PROTECTED.some((p) => path.startsWith(p)) && !session) {
     const loginUrl = new URL("/login", nextUrl.origin);
-    loginUrl.searchParams.set("callbackUrl", nextUrl.pathname);
+    loginUrl.searchParams.set("callbackUrl", path);
     return NextResponse.redirect(loginUrl);
   }
 
-  return NextResponse.next();
+  // Skip i18n for API, auth, static routes
+  if (SKIP_INTL.some((p) => path.startsWith(p))) {
+    return NextResponse.next();
+  }
+
+  return intlMiddleware(req as Parameters<typeof intlMiddleware>[0]);
 });
 
 export const config = {

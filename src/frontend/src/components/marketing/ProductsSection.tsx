@@ -12,91 +12,95 @@ import {
   Smartphone,
   Truck,
 } from "lucide-react";
-
-const products = [
-  {
-    icon: LayoutDashboard,
-    name: "BenHub Core",
-    tag: "Platform",
-    description: "Trung tâm điều hành toàn bộ hệ sinh thái logistics xây dựng.",
-    features: ["Dashboard & Dispatch", "Smart Reporting", "Control Tower"],
-    layer: "Điều hành",
-    accent: "from-orange-500 to-amber-400",
-    featured: "core",
-  },
-  {
-    icon: Smartphone,
-    name: "BenHub Driver",
-    tag: "Mobile",
-    description: "App tài xế — nhận chuyến, GPS, E-Ticket số, ví tiền.",
-    features: ["Nhận chuyến 1-tap", "GPS Navigation", "E-Ticket số"],
-    layer: "Tuyến đầu",
-    accent: "from-blue-500 to-cyan-400",
-  },
-  {
-    icon: Eye,
-    name: "BenHub Supervisor",
-    tag: "Monitor",
-    description: "Giám sát công trường realtime, phát hiện gian lận tức thì.",
-    features: ["Realtime tracking", "Phát hiện lệch tuyến", "Kiểm tải"],
-    layer: "Giám sát",
-    accent: "from-purple-500 to-fuchsia-400",
-  },
-  {
-    icon: Truck,
-    name: "BenHub Fleet",
-    tag: "Management",
-    description: "Quản lý toàn bộ đội xe, tài xế, bảo dưỡng và chi phí.",
-    features: ["Quản lý đội xe", "Lịch bảo dưỡng", "Báo cáo chi phí"],
-    layer: "Đội xe",
-    accent: "from-green-500 to-emerald-400",
-  },
-  {
-    icon: Globe,
-    name: "BenHub Marketplace",
-    tag: "Platform",
-    description: "Sàn kết nối cung–cầu vận tải với Dynamic Pricing.",
-    features: ["Smart Matching", "Bidding Engine", "Rating System"],
-    layer: "Thị trường",
-    accent: "from-cyan-500 to-sky-400",
-  },
-  {
-    icon: CreditCard,
-    name: "BenHub Finance",
-    tag: "Fintech",
-    description: "Tài chính vận tải — factoring, ứng tiền nhanh, ví điện tử.",
-    features: ["Ứng tiền 24h", "Factoring", "Ví điện tử"],
-    layer: "Dòng tiền",
-    accent: "from-emerald-500 to-lime-400",
-    featured: "finance",
-  },
-  {
-    icon: Package,
-    name: "BenHub Materials",
-    tag: "Marketplace",
-    description: "Sàn giao dịch vật liệu — kết nối mỏ, báo giá realtime.",
-    features: ["Kết nối mỏ đất", "Báo giá realtime", "Logistics vật liệu"],
-    layer: "Vật liệu",
-    accent: "from-amber-500 to-yellow-400",
-  },
-  {
-    icon: Cpu,
-    name: "BenHub AI Labs",
-    tag: "AI",
-    description: "AI logistics — chống gian lận, tối ưu route, dự báo nhu cầu.",
-    features: ["Phát hiện gian lận", "Route AI", "Demand Forecast"],
-    layer: "AI/Data",
-    accent: "from-violet-500 to-indigo-400",
-  },
-];
-
-const coreProduct = products.find((product) => product.featured === "core")!;
-const financeProduct = products.find(
-  (product) => product.featured === "finance",
-)!;
-const supportingProducts = products.filter((product) => !product.featured);
+import { useTranslations } from "next-intl";
 
 export function ProductsSection() {
+  const t = useTranslations("Products");
+
+  const products = [
+    {
+      icon: LayoutDashboard,
+      name: "BenHub Core",
+      tag: "Platform",
+      description: t("core_desc"),
+      features: [t("core_f1"), t("core_f2"), t("core_f3")],
+      layer: t("core_layer"),
+      accent: "from-orange-500 to-amber-400",
+      featured: "core",
+    },
+    {
+      icon: Smartphone,
+      name: "BenHub Driver",
+      tag: "Mobile",
+      description: t("driver_desc"),
+      features: [t("driver_f1"), t("driver_f2"), t("driver_f3")],
+      layer: t("driver_layer"),
+      accent: "from-blue-500 to-cyan-400",
+    },
+    {
+      icon: Eye,
+      name: "BenHub Supervisor",
+      tag: "Monitor",
+      description: t("supervisor_desc"),
+      features: [t("supervisor_f1"), t("supervisor_f2"), t("supervisor_f3")],
+      layer: t("supervisor_layer"),
+      accent: "from-purple-500 to-fuchsia-400",
+    },
+    {
+      icon: Truck,
+      name: "BenHub Fleet",
+      tag: "Management",
+      description: t("fleet_desc"),
+      features: [t("fleet_f1"), t("fleet_f2"), t("fleet_f3")],
+      layer: t("fleet_layer"),
+      accent: "from-green-500 to-emerald-400",
+    },
+    {
+      icon: Globe,
+      name: "BenHub Marketplace",
+      tag: "Platform",
+      description: t("marketplace_desc"),
+      features: [t("marketplace_f1"), t("marketplace_f2"), t("marketplace_f3")],
+      layer: t("marketplace_layer"),
+      accent: "from-cyan-500 to-sky-400",
+    },
+    {
+      icon: CreditCard,
+      name: "BenHub Finance",
+      tag: "Fintech",
+      description: t("finance_desc"),
+      features: [t("finance_f1"), t("finance_f2"), t("finance_f3")],
+      layer: t("finance_layer"),
+      accent: "from-emerald-500 to-lime-400",
+      featured: "finance",
+    },
+    {
+      icon: Package,
+      name: "BenHub Materials",
+      tag: "Marketplace",
+      description: t("materials_desc"),
+      features: [t("materials_f1"), t("materials_f2"), t("materials_f3")],
+      layer: t("materials_layer"),
+      accent: "from-amber-500 to-yellow-400",
+    },
+    {
+      icon: Cpu,
+      name: "BenHub AI Labs",
+      tag: "AI",
+      description: t("ai_desc"),
+      features: [t("ai_f1"), t("ai_f2"), t("ai_f3")],
+      layer: t("ai_layer"),
+      accent: "from-violet-500 to-indigo-400",
+    },
+  ];
+
+  const coreProduct = products.find((p) => p.featured === "core")!;
+  const financeProduct = products.find((p) => p.featured === "finance")!;
+  const supportingProducts = products.filter((p) => !p.featured);
+  const ctaText = t("cta");
+  const mapLabel = t("map_label");
+  const mapTitle = t("map_title");
+
   return (
     <section
       id="products"
@@ -110,39 +114,14 @@ export function ProductsSection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* <div className="mb-10 grid gap-8 lg:grid-cols-[0.9fr_1.1fr] lg:items-end">
-          <div>
-            <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-400/25 bg-orange-400/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-orange-300">
-              <Layers3 className="h-4 w-4" />
-              Hệ thống sản phẩm
-            </p>
-            <h2
-              className="font-black leading-none tracking-tight"
-              style={{
-                fontFamily: "var(--font-barlow), system-ui, sans-serif",
-                fontSize: "clamp(2.7rem, 6vw, 5rem)",
-              }}
-            >
-              8 sản phẩm.
-              <span className="block bg-linear-to-r from-orange-400 via-amber-300 to-orange-500 bg-clip-text text-transparent">
-                1 hệ sinh thái vận hành.
-              </span>
-            </h2>
-          </div>
-
-          <p className="max-w-2xl text-base leading-relaxed text-slate-400 md:text-lg lg:justify-self-end">
-            BenHub không chỉ là dashboard hay app tài xế. Đây là bộ sản phẩm
-            liên kết theo chuỗi: điều hành, giám sát, marketplace, tài chính,
-            vật liệu và AI.
-          </p>
-        </div> */}
         <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-400/25 bg-orange-400/10 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-orange-300">
           <Layers3 className="h-4 w-4" />
-          Hệ thống sản phẩm
+          {t("badge")}
         </p>
         <div className="grid gap-5 lg:grid-cols-12">
           <FeaturedProductCard
             product={coreProduct}
+            ctaText={ctaText}
             className="lg:col-span-7"
           />
 
@@ -150,10 +129,10 @@ export function ProductsSection() {
             <div className="mb-6 flex items-center justify-between">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-orange-300">
-                  Ecosystem map
+                  {mapLabel}
                 </p>
                 <h3 className="mt-2 text-2xl font-bold text-white">
-                  Các lớp sản phẩm kết nối nhau
+                  {mapTitle}
                 </h3>
               </div>
               <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-white/10 bg-white/5 text-orange-300">
@@ -184,6 +163,7 @@ export function ProductsSection() {
 
           <FeaturedProductCard
             product={financeProduct}
+            ctaText={ctaText}
             className="lg:col-span-5"
           />
 
@@ -198,13 +178,24 @@ export function ProductsSection() {
   );
 }
 
-type Product = (typeof products)[number];
+type Product = {
+  icon: React.ComponentType<{ className?: string }>;
+  name: string;
+  tag: string;
+  description: string;
+  features: string[];
+  layer: string;
+  accent: string;
+  featured?: string;
+};
 
 function FeaturedProductCard({
   product,
+  ctaText,
   className,
 }: {
   product: Product;
+  ctaText: string;
   className?: string;
 }) {
   const Icon = product.icon;
@@ -262,7 +253,7 @@ function FeaturedProductCard({
           href="/doi-tac"
           className="mt-8 inline-flex items-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-orange-600"
         >
-          Hợp tác triển khai
+          {ctaText}
           <ArrowRight className="h-4 w-4" />
         </a>
       </div>

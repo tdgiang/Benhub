@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { useTranslations } from 'next-intl'
 import type { Heading } from './ArticleSidebar'
 
 interface MobileTOCProps {
@@ -9,6 +10,7 @@ interface MobileTOCProps {
 }
 
 export function MobileTOC({ headings }: MobileTOCProps) {
+  const t = useTranslations('ArticleDetail')
   const [open, setOpen] = useState(false)
 
   if (headings.length < 3) return null
@@ -21,7 +23,7 @@ export function MobileTOC({ headings }: MobileTOCProps) {
         aria-expanded={open}
         className="flex w-full cursor-pointer items-center justify-between px-5 py-4 text-sm font-bold text-slate-700"
       >
-        <span>Mục lục bài viết</span>
+        <span>{t('toc_label')}</span>
         <ChevronDown
           className={`h-4 w-4 text-slate-400 transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
         />

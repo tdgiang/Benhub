@@ -7,73 +7,71 @@ import {
   Radar,
   TrendingDown,
 } from "lucide-react";
-
-const painPoints = [
-  {
-    num: "01",
-    icon: TrendingDown,
-    title: "Thất thoát vật liệu",
-    description:
-      "Xe chở thiếu tải, quay vòng khống, làm giả phiếu. Chi phí biến mất trước khi kịp phát hiện.",
-    stat: "5–20%",
-    statLabel: "giá trị dự án có thể thất thoát",
-    accent: "from-red-500 to-orange-500",
-    panel: "bg-red-50 text-red-600 border-red-100",
-    featured: true,
-  },
-  {
-    num: "02",
-    icon: Phone,
-    title: "Điều phối thủ công",
-    description:
-      "Gọi điện từng xe, nhắn Zalo từng chuyến. Khi vượt 50 xe, mọi thứ bắt đầu vỡ trận.",
-    stat: "0%",
-    statLabel: "tự động hóa",
-    accent: "from-orange-500 to-amber-500",
-    panel: "bg-orange-50 text-orange-600 border-orange-100",
-  },
-  {
-    num: "03",
-    icon: FileText,
-    title: "Phiếu giấy dễ gian lận",
-    description:
-      "Phiếu tay dễ mất, dễ sửa, khó truy vết. Đối soát phụ thuộc vào con người và niềm tin.",
-    stat: "1–2 tuần",
-    statLabel: "đối soát mỗi tháng",
-    accent: "from-amber-500 to-yellow-500",
-    panel: "bg-amber-50 text-amber-700 border-amber-100",
-  },
-  {
-    num: "04",
-    icon: Clock,
-    title: "Công nợ kéo dài",
-    description:
-      "Chủ đầu tư chậm trả, nhà thầu nợ đội xe, đội xe nợ tài xế. Dòng tiền bị khóa 30–90 ngày.",
-    stat: "30–90 ngày",
-    statLabel: "chuỗi công nợ",
-    accent: "from-purple-500 to-fuchsia-500",
-    panel: "bg-purple-50 text-purple-600 border-purple-100",
-  },
-  {
-    num: "05",
-    icon: BarChart2,
-    title: "Mù dữ liệu",
-    description:
-      "Không dashboard, không GPS, không AI. Không ai biết chính xác xe ở đâu hay tiến độ thật ra sao.",
-    stat: "0",
-    statLabel: "nguồn dữ liệu tập trung",
-    accent: "from-blue-500 to-cyan-500",
-    panel: "bg-blue-50 text-blue-600 border-blue-100",
-  },
-];
-
-const lossMetrics = [
-  { label: "Thất thoát vật liệu", value: "20%", width: "w-[78%]" },
-  { label: "Đối soát thủ công", value: "14 ngày", width: "w-[64%]" },
-  { label: "Công nợ vận hành", value: "90 ngày", width: "w-[88%]" },
-];
+import { useTranslations } from "next-intl";
 
 export function ProblemSection() {
+  const t = useTranslations("Problem");
+
+  const painPoints = [
+    {
+      num: "01",
+      icon: TrendingDown,
+      title: t("p1_title"),
+      description: t("p1_desc"),
+      stat: t("p1_stat"),
+      statLabel: t("p1_label"),
+      accent: "from-red-500 to-orange-500",
+      panel: "bg-red-50 text-red-600 border-red-100",
+      featured: true,
+    },
+    {
+      num: "02",
+      icon: Phone,
+      title: t("p2_title"),
+      description: t("p2_desc"),
+      stat: t("p2_stat"),
+      statLabel: t("p2_label"),
+      accent: "from-orange-500 to-amber-500",
+      panel: "bg-orange-50 text-orange-600 border-orange-100",
+    },
+    {
+      num: "03",
+      icon: FileText,
+      title: t("p3_title"),
+      description: t("p3_desc"),
+      stat: t("p3_stat"),
+      statLabel: t("p3_label"),
+      accent: "from-amber-500 to-yellow-500",
+      panel: "bg-amber-50 text-amber-700 border-amber-100",
+    },
+    {
+      num: "04",
+      icon: Clock,
+      title: t("p4_title"),
+      description: t("p4_desc"),
+      stat: t("p4_stat"),
+      statLabel: t("p4_label"),
+      accent: "from-purple-500 to-fuchsia-500",
+      panel: "bg-purple-50 text-purple-600 border-purple-100",
+    },
+    {
+      num: "05",
+      icon: BarChart2,
+      title: t("p5_title"),
+      description: t("p5_desc"),
+      stat: t("p5_stat"),
+      statLabel: t("p5_label"),
+      accent: "from-blue-500 to-cyan-500",
+      panel: "bg-blue-50 text-blue-600 border-blue-100",
+    },
+  ];
+
+  const lossMetrics = [
+    { label: t("loss_1"), value: t("loss_1_val"), width: "w-[78%]" },
+    { label: t("loss_2"), value: t("loss_2_val"), width: "w-[64%]" },
+    { label: t("loss_3"), value: t("loss_3_val"), width: "w-[88%]" },
+  ];
+
   return (
     <section
       id="problem"
@@ -91,7 +89,7 @@ export function ProblemSection() {
           <div className="max-w-3xl">
             <p className="mb-4 inline-flex items-center gap-2 rounded-full border border-orange-200 bg-white/80 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-orange-600 shadow-sm">
               <Radar className="h-4 w-4" />
-              Bài toán ngành
+              {t("badge")}
             </p>
             <h2
               className="font-black leading-none tracking-tight text-slate-950"
@@ -100,32 +98,20 @@ export function ProblemSection() {
                 fontSize: "clamp(2.7rem, 6vw, 5rem)",
               }}
             >
-              Một ngành rất lớn
+              {t("h2_1")}
               <br />
-              <span className="text-orange-400">
-                đang vận hành bằng niềm tin.
-              </span>
+              <span className="text-orange-400">{t("h2_2")}</span>
             </h2>
             <p className="mt-5 max-w-2xl text-base leading-relaxed text-slate-600 md:text-lg">
-              Vận tải công trình vẫn dựa vào phiếu giấy, cuộc gọi và bảng Excel.
-              Khi số xe, tuyến và nhà thầu tăng lên, chi phí thất thoát trở
-              thành một vấn đề hệ thống.
+              {t("desc")}
             </p>
           </div>
 
           <div className="overflow-hidden rounded-3xl border border-slate-800 bg-slate-950 p-5 text-white shadow-2xl shadow-slate-300">
             <div className="mb-5 flex items-start justify-between gap-4">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.18em] text-orange-300">
-                  Loss radar
-                </p>
-                <p className="mt-2 text-sm text-slate-400">
-                  Những điểm rò rỉ chi phí lớn nhất trong vận hành hiện tại.
-                </p>
+                <p className="mt-2 text-sm text-slate-400">{t("radar_label")}</p>
               </div>
-              <span className="rounded-full border border-red-400/30 bg-red-400/10 px-3 py-1 text-xs font-bold text-red-300">
-                High risk
-              </span>
             </div>
 
             <div className="space-y-4">
@@ -152,11 +138,10 @@ export function ProblemSection() {
                   fontSize: "clamp(2rem, 4vw, 3rem)",
                 }}
               >
-                1 dự án 100 tỷ
+                {t("loss_highlight")}
               </p>
               <p className="mt-2 text-sm leading-relaxed text-slate-400">
-                Có thể mất 5–20 tỷ nếu không có GPS proof, E-Ticket và đối soát
-                tự động.
+                {t("loss_detail")}
               </p>
             </div>
           </div>
@@ -239,7 +224,7 @@ export function ProblemSection() {
             <div className="relative z-10 flex h-full flex-col justify-between">
               <div>
                 <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-orange-300">
-                  Điểm nghẽn thật sự
+                  {t("insight_label")}
                 </p>
                 <h3
                   className="font-black leading-tight"
@@ -248,12 +233,10 @@ export function ProblemSection() {
                     fontSize: "clamp(1.9rem, 4vw, 2.7rem)",
                   }}
                 >
-                  Không thiếu xe. Thiếu một lớp điều hành đáng tin.
+                  {t("insight_title")}
                 </h3>
                 <p className="mt-4 text-sm leading-relaxed text-slate-400">
-                  Khi mọi dữ liệu nằm rải rác trong giấy tờ, cuộc gọi và tin
-                  nhắn, doanh nghiệp không thể tối ưu đội xe hay bảo vệ biên lợi
-                  nhuận.
+                  {t("insight_desc")}
                 </p>
               </div>
 
@@ -261,7 +244,7 @@ export function ProblemSection() {
                 href="#solution"
                 className="mt-8 inline-flex items-center gap-2 self-start rounded-2xl bg-orange-500 px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-orange-600"
               >
-                Xem BenHub giải quyết
+                {t("cta")}
                 <ArrowRight className="h-4 w-4" />
               </a>
             </div>
