@@ -14,7 +14,7 @@ export function CoreValuesSection() {
   const t = useTranslations("AboutUs");
 
   return (
-    <section className="relative overflow-hidden bg-[#F8FAFC] py-24 md:py-32">
+    <section className="relative overflow-hidden bg-[#F8FAFC] py-14 md:py-20">
       {/* Chapter watermark */}
       <div
         className="pointer-events-none absolute -right-6 top-4 select-none font-black leading-none text-slate-200"
@@ -28,7 +28,7 @@ export function CoreValuesSection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeUp className="mb-16">
+        <FadeUp className="mb-10">
           <div className="mb-4 flex items-center gap-3">
             <div className="h-px w-8 bg-[#F0B429]" />
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-[#F0B429]">

@@ -1,4 +1,5 @@
 import { Award, Play } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 export function HeroSection() {
@@ -172,7 +173,7 @@ export function HeroSection() {
           className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8 fade-up"
           style={{ animationDelay: "0.3s" }}
         >
-          <a
+          <Link
             href="/doi-tac"
             className="btn-glow inline-flex items-center gap-2 text-white font-bold px-8 py-4 rounded-2xl text-base transition-all duration-200 cursor-pointer hover:-translate-y-0.5 hover:scale-[1.02]"
             style={{
@@ -180,7 +181,7 @@ export function HeroSection() {
             }}
           >
             {t("cta_primary")}
-          </a>
+          </Link>
           <a
             href="#how-it-works"
             className="inline-flex items-center gap-2.5 bg-white/8 backdrop-blur-xl border border-white/15 hover:bg-white/12 hover:border-white/25 text-white font-semibold px-8 py-4 rounded-2xl text-base transition-all duration-200 cursor-pointer"

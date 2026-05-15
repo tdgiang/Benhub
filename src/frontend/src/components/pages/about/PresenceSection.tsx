@@ -14,7 +14,7 @@ export function PresenceSection() {
   const t = useTranslations("AboutUs");
 
   return (
-    <section className="relative overflow-hidden bg-[#F8FAFC] py-24 md:py-32">
+    <section className="relative overflow-hidden bg-[#F8FAFC] py-14 md:py-20">
       {/* Chapter watermark */}
       <div
         className="pointer-events-none absolute -right-6 bottom-0 select-none font-black leading-none text-slate-200"
@@ -28,7 +28,7 @@ export function PresenceSection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid items-start gap-14 lg:grid-cols-[5fr_6fr] lg:gap-20">
+        <div className="grid items-start gap-10 lg:grid-cols-[5fr_6fr] lg:gap-14">
           {/* Left */}
           <FadeUp>
             <div className="mb-4 flex items-center gap-3">

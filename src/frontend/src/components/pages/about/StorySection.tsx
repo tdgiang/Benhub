@@ -15,7 +15,10 @@ export function StorySection() {
   const t = useTranslations("AboutUs");
 
   return (
-    <section className="relative overflow-hidden bg-white py-24 md:py-32">
+    <section
+      id="about-story"
+      className="relative overflow-hidden bg-white py-14 md:py-20"
+    >
       {/* Chapter number watermark */}
       <div
         className="pointer-events-none absolute -right-8 top-8 select-none font-black leading-none text-slate-100"
@@ -29,7 +32,7 @@ export function StorySection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-16 lg:grid-cols-[3fr_2fr] lg:gap-24">
+        <div className="grid gap-10 lg:grid-cols-[3fr_2fr] lg:gap-16">
           {/* Left */}
           <FadeUp>
             {/* Label */}

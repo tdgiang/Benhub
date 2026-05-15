@@ -6,7 +6,7 @@ export function MissionVisionSection() {
   const t = useTranslations("AboutUs");
 
   return (
-    <section className="relative overflow-hidden bg-[#0A1628] py-24 md:py-32">
+    <section className="relative overflow-hidden bg-[#0A1628] py-14 md:py-20">
       {/* Grid */}
       <div
         className="pointer-events-none absolute inset-0"
@@ -29,7 +29,7 @@ export function MissionVisionSection() {
       </div>
 
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeUp className="mb-14 text-center">
+        <FadeUp className="mb-10 text-center">
           <div className="mb-4 flex items-center justify-center gap-3">
             <div className="h-px w-8" style={{ background: "rgba(240,180,41,0.4)" }} />
             <p className="text-xs font-bold uppercase tracking-[0.22em]" style={{ color: "rgba(240,180,41,0.7)" }}>

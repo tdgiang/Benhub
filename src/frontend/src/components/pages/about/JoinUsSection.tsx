@@ -12,7 +12,7 @@ export function JoinUsSection() {
   const t = useTranslations("AboutUs");
 
   return (
-    <section className="relative overflow-hidden bg-[#0A1628] py-28 md:py-36">
+    <section className="relative overflow-hidden bg-[#0A1628] py-16 md:py-24">
       {/* Grid */}
       <div
         className="pointer-events-none absolute inset-0"
@@ -41,7 +41,7 @@ export function JoinUsSection() {
 
       <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
         {/* Label */}
-        <div className="mb-8 inline-flex items-center gap-2.5 rounded-full border px-4 py-2"
+        <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border px-4 py-2"
           style={{ borderColor: "rgba(240,180,41,0.25)", background: "rgba(240,180,41,0.06)" }}>
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#F0B429]" />
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#F0B429]">
@@ -61,12 +61,12 @@ export function JoinUsSection() {
           <span className="block" style={{ color: "#F0B429" }}>{t("join_h2_accent")}</span>
         </h2>
 
-        <p className="mx-auto mt-8 max-w-xl text-lg leading-relaxed text-slate-400">
+        <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-slate-400">
           {t("join_sub")}
         </p>
 
         {/* CTAs */}
-        <div className="mt-12 flex flex-wrap justify-center gap-4">
+        <div className="mt-8 flex flex-wrap justify-center gap-4">
           <Link
             href="/doi-tac"
             className="group inline-flex cursor-pointer items-center gap-2.5 rounded-2xl px-8 py-4 text-sm font-bold shadow-lg transition-all duration-200 hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
@@ -89,7 +89,7 @@ export function JoinUsSection() {
         </div>
 
         {/* Divider */}
-        <div className="my-14 flex items-center gap-4">
+        <div className="my-10 flex items-center gap-4">
           <div className="flex-1 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }} />
           <span className="text-xs font-medium uppercase tracking-widest text-white/25">
             Chọn vai trò của bạn
@@ -103,7 +103,7 @@ export function JoinUsSection() {
             <Link
               key={key}
               href={href}
-              className="group flex cursor-pointer flex-col items-center gap-3 rounded-2xl p-6 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-1"
+              className="group flex cursor-pointer flex-col items-center gap-3 rounded-2xl p-5 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-1"
               style={{
                 background: "rgba(255,255,255,0.04)",
                 border: "1px solid rgba(255,255,255,0.08)",
