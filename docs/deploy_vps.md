@@ -1,6 +1,6 @@
-# Hướng dẫn Deploy BenHub lên VPS (Lần đầu)
+# Hướng dẫn Deploy BenHub lên VPS — CentOS
 
-> Tài liệu này dành cho người **chưa từng deploy** dự án lên VPS.  
+> Tài liệu này dành cho người **chưa từng deploy** dự án lên VPS chạy **CentOS 7 / CentOS 8 / CentOS Stream**.  
 > Đọc hết một lượt trước khi bắt tay thực hiện.
 
 ---
@@ -9,18 +9,19 @@
 
 1. [Yêu cầu hệ thống](#1-yêu-cầu-hệ-thống)
 2. [Chuẩn bị trên máy tính cá nhân](#2-chuẩn-bị-trên-máy-tính-cá-nhân)
-3. [Cài đặt VPS](#3-cài-đặt-vps)
-4. [Cài đặt Docker](#4-cài-đặt-docker)
-5. [Clone dự án lên VPS](#5-clone-dự-án-lên-vps)
-6. [Tạo file cấu hình `.env`](#6-tạo-file-cấu-hình-env)
-7. [Cấu hình SSL (HTTPS)](#7-cấu-hình-ssl-https)
-8. [Chạy deploy](#8-chạy-deploy)
-9. [Kiểm tra sau deploy](#9-kiểm-tra-sau-deploy)
-10. [Cấu hình tường lửa (UFW)](#10-cấu-hình-tường-lửa-ufw)
-11. [Thiết lập tự động gia hạn SSL](#11-thiết-lập-tự-động-gia-hạn-ssl)
-12. [Backup định kỳ](#12-backup-định-kỳ)
-13. [Quy trình cập nhật code sau này](#13-quy-trình-cập-nhật-code-sau-này)
-14. [Xử lý sự cố thường gặp](#14-xử-lý-sự-cố-thường-gặp)
+3. [Cập nhật hệ thống & cài công cụ cơ bản](#3-cập-nhật-hệ-thống--cài-công-cụ-cơ-bản)
+4. [Tắt hoặc cấu hình SELinux](#4-tắt-hoặc-cấu-hình-selinux)
+5. [Cài đặt Docker](#5-cài-đặt-docker)
+6. [Clone dự án lên VPS](#6-clone-dự-án-lên-vps)
+7. [Tạo file cấu hình `.env`](#7-tạo-file-cấu-hình-env)
+8. [Cấu hình SSL (HTTPS)](#8-cấu-hình-ssl-https)
+9. [Chạy deploy](#9-chạy-deploy)
+10. [Kiểm tra sau deploy](#10-kiểm-tra-sau-deploy)
+11. [Cấu hình tường lửa (firewalld)](#11-cấu-hình-tường-lửa-firewalld)
+12. [Thiết lập tự động gia hạn SSL](#12-thiết-lập-tự-động-gia-hạn-ssl)
+13. [Backup định kỳ](#13-backup-định-kỳ)
+14. [Quy trình cập nhật code sau này](#14-quy-trình-cập-nhật-code-sau-này)
+15. [Xử lý sự cố thường gặp](#15-xử-lý-sự-cố-thường-gặp)
 
 ---
 
@@ -28,20 +29,25 @@
 
 ### VPS tối thiểu
 
-| Thành phần | Yêu cầu tối thiểu | Khuyến nghị |
-|------------|-------------------|-------------|
+| Thành phần | Tối thiểu | Khuyến nghị |
+|------------|-----------|-------------|
 | RAM | 2 GB | 4 GB |
 | CPU | 2 vCPU | 2–4 vCPU |
 | Disk | 20 GB SSD | 40 GB SSD |
-| OS | Ubuntu 22.04 LTS | Ubuntu 22.04 LTS |
+| OS | CentOS 7 / CentOS 8 / CentOS Stream 8/9 | CentOS Stream 9 |
 | Port | 22, 80, 443 mở | — |
+
+> **Lưu ý phiên bản:**
+> - **CentOS 7**: dùng lệnh `yum`, hỗ trợ đến tháng 6/2024 (đã EOL — nên nâng cấp)
+> - **CentOS 8 / Stream 8/9**: dùng lệnh `dnf`
+> - Tài liệu này dùng `dnf` làm mặc định. Nếu đang dùng CentOS 7, thay `dnf` bằng `yum` ở mọi lệnh cài đặt.
 
 ### Tên miền
 
-- Đã có domain `benhub.vn` trỏ về IP của VPS (DNS A record)
-- Kiểm tra bằng lệnh: `nslookup benhub.vn` → phải trả về đúng IP VPS
+- Domain `benhub.vn` đã có DNS **A record** trỏ về IP của VPS
+- Kiểm tra: `nslookup benhub.vn` → phải trả về đúng IP VPS
 
-> **Lưu ý:** DNS cần 5–30 phút để propagate sau khi cấu hình. Hãy đợi DNS hoạt động trước khi cài SSL.
+> DNS cần 5–30 phút để propagate sau khi cấu hình. Đợi DNS hoạt động trước khi cài SSL.
 
 ---
 
@@ -50,7 +56,7 @@
 ### 2.1 Checklist trước khi bắt đầu
 
 - [ ] Có địa chỉ IP của VPS
-- [ ] Có user và password (hoặc SSH key) để SSH vào VPS
+- [ ] Có user `root` và password (hoặc SSH key) để vào VPS
 - [ ] Domain `benhub.vn` đã trỏ về IP VPS
 - [ ] Code đã được push lên GitHub
 
@@ -72,49 +78,157 @@ ssh -i ~/.ssh/id_rsa root@<IP_VPS>
 
 ---
 
-## 3. Cài đặt VPS
+## 3. Cập nhật hệ thống & cài công cụ cơ bản
 
 > Chạy các lệnh này **trên VPS** sau khi SSH vào.
 
-### 3.1 Cập nhật hệ thống
+### 3.1 Cập nhật toàn bộ gói hệ thống
 
 ```bash
-apt update && apt upgrade -y
+# CentOS 8 / Stream
+dnf update -y
+
+# CentOS 7
+# yum update -y
 ```
 
-### 3.2 Cài các công cụ cơ bản
+### 3.2 Cài các công cụ cần thiết
 
 ```bash
-apt install -y git curl wget nano ufw certbot
+# CentOS 8 / Stream
+dnf install -y git curl wget nano tar openssl
+
+# CentOS 7
+# yum install -y git curl wget nano tar openssl
 ```
 
 ### 3.3 Tạo user không phải root (tuỳ chọn nhưng khuyến nghị)
 
-```bash
-adduser benhub
-usermod -aG sudo benhub
+> Trên CentOS, nhóm admin là `wheel` (không phải `sudo` như Ubuntu).
 
-# Cấp quyền SSH cho user mới
-rsync --archive --chown=benhub:benhub ~/.ssh /home/benhub
+```bash
+# Tạo user mới
+useradd -m -s /bin/bash benhub
+
+# Đặt mật khẩu cho user
+passwd benhub
+
+# Thêm vào nhóm wheel (có quyền sudo)
+usermod -aG wheel benhub
+
+# Cấp quyền SSH cho user mới (copy SSH key từ root)
+mkdir -p /home/benhub/.ssh
+cp ~/.ssh/authorized_keys /home/benhub/.ssh/
+chown -R benhub:benhub /home/benhub/.ssh
+chmod 700 /home/benhub/.ssh
+chmod 600 /home/benhub/.ssh/authorized_keys
 ```
 
 Từ bước này có thể dùng user `benhub` thay vì `root`.
 
 ---
 
-## 4. Cài đặt Docker
+## 4. Tắt hoặc cấu hình SELinux
+
+> SELinux là tính năng bảo mật đặc trưng của CentOS. Nó có thể chặn Docker hoạt động đúng nếu không được cấu hình.
+
+### Kiểm tra trạng thái SELinux hiện tại
 
 ```bash
-# Cài Docker Engine chính thức
-curl -fsSL https://get.docker.com | sh
+getenforce
+# Kết quả: Enforcing | Permissive | Disabled
+```
 
-# Cho phép user hiện tại dùng Docker không cần sudo
+### Lựa chọn A — Chuyển sang Permissive (khuyến nghị, an toàn hơn)
+
+```bash
+# Tắt tạm thời (ngay lập tức, không cần reboot)
+setenforce 0
+
+# Tắt vĩnh viễn sau khi reboot
+sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+
+# Kiểm tra lại
+getenforce
+# Kết quả mong đợi: Permissive
+```
+
+### Lựa chọn B — Tắt hoàn toàn SELinux (đơn giản nhất)
+
+```bash
+sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config
+reboot
+# Sau khi reboot, SSH lại và tiếp tục
+```
+
+> **Tại sao cần làm bước này?**  
+> SELinux ở chế độ `Enforcing` thường chặn Docker bind-mount volumes và kết nối mạng nội bộ giữa các container, gây lỗi khó debug khi mới bắt đầu.
+
+---
+
+## 5. Cài đặt Docker
+
+Trên CentOS, Docker **không có trong repo mặc định** — phải thêm repo chính thức của Docker trước.
+
+### 5.1 Gỡ phiên bản Docker cũ (nếu có)
+
+```bash
+dnf remove -y docker docker-client docker-client-latest docker-common \
+  docker-latest docker-latest-logrotate docker-logrotate docker-engine \
+  podman runc 2>/dev/null || true
+```
+
+### 5.2 Thêm repo Docker chính thức
+
+```bash
+# Cài dnf-plugins-core để dùng dnf config-manager
+dnf install -y dnf-plugins-core
+
+# Thêm repo Docker CE cho CentOS
+dnf config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+```
+
+> **CentOS 7:** thay `dnf` bằng `yum` và dùng `yum-config-manager`:
+> ```bash
+> yum install -y yum-utils
+> yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+> ```
+
+### 5.3 Cài Docker Engine
+
+```bash
+dnf install -y docker-ce docker-ce-cli containerd.io \
+  docker-buildx-plugin docker-compose-plugin
+
+# CentOS 7:
+# yum install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+```
+
+### 5.4 Khởi động Docker và bật tự khởi động
+
+```bash
+# Khởi động Docker
+systemctl start docker
+
+# Bật tự khởi động khi VPS reboot
+systemctl enable docker
+
+# Kiểm tra Docker đang chạy
+systemctl status docker
+```
+
+Kết quả mong đợi: `Active: active (running)`
+
+### 5.5 Thêm user vào nhóm docker
+
+```bash
+# Cho phép dùng Docker không cần sudo
 usermod -aG docker $USER
 
-# Áp dụng group mới ngay lập tức (hoặc logout rồi login lại)
+# Áp dụng ngay (hoặc logout rồi login lại)
 newgrp docker
 
-# Kiểm tra Docker đã chạy chưa
+# Kiểm tra phiên bản
 docker --version
 docker compose version
 ```
@@ -127,14 +241,14 @@ Docker Compose version v2.x.x
 
 ---
 
-## 5. Clone dự án lên VPS
+## 6. Clone dự án lên VPS
 
 ```bash
 # Tạo thư mục chứa dự án
 mkdir -p /opt/benhub
 cd /opt/benhub
 
-# Clone từ GitHub (thay <repo-url> bằng URL thật)
+# Clone từ GitHub
 git clone https://github.com/tdgiang/Benhub.git .
 
 # Kiểm tra file đã có
@@ -145,18 +259,20 @@ Kết quả mong đợi: thấy `docker-compose.production.yml`, `src/`, `deploy
 
 ---
 
-## 6. Tạo file cấu hình `.env`
+## 7. Tạo file cấu hình `.env`
 
 File `.env` chứa **tất cả mật khẩu và secret** — không bao giờ commit file này lên Git.
 
-### 6.1 Tạo file `.env`
+### 7.1 Tạo file `.env`
 
 ```bash
 cd /opt/benhub
 nano .env
 ```
 
-### 6.2 Nội dung file `.env`
+> Nếu không có `nano`: dùng `vi .env` hoặc cài trước với `dnf install -y nano`
+
+### 7.2 Nội dung file `.env`
 
 Dán nội dung sau vào, **thay tất cả giá trị `<...>`**:
 
@@ -180,28 +296,19 @@ JWT_REFRESH_SECRET=<chuỗi_64_ký_tự_ngẫu_nhiên_khác>
 AUTH_SECRET=<chuỗi_32_ký_tự_ngẫu_nhiên>
 ```
 
-### 6.3 Tạo các secret ngẫu nhiên
+### 7.3 Tạo các secret ngẫu nhiên
 
-Chạy từng lệnh dưới đây để tạo secret mạnh, rồi dán vào file `.env`:
+Chạy từng lệnh dưới đây, sao chép kết quả vào file `.env`:
 
 ```bash
-# POSTGRES_PASSWORD
-openssl rand -hex 16
-
-# REDIS_PASSWORD
-openssl rand -hex 16
-
-# JWT_SECRET
-openssl rand -hex 64
-
-# JWT_REFRESH_SECRET
-openssl rand -hex 64
-
-# AUTH_SECRET
-openssl rand -base64 32
+echo "POSTGRES_PASSWORD:" && openssl rand -hex 16
+echo "REDIS_PASSWORD:"    && openssl rand -hex 16
+echo "JWT_SECRET:"        && openssl rand -hex 64
+echo "JWT_REFRESH_SECRET:"&& openssl rand -hex 64
+echo "AUTH_SECRET:"       && openssl rand -base64 32
 ```
 
-### 6.4 Ví dụ file `.env` đã điền
+### 7.4 Ví dụ file `.env` đã điền
 
 ```env
 APP_URL=https://benhub.vn
@@ -214,7 +321,7 @@ JWT_REFRESH_SECRET=1f4b7e0c3d6a9f2b5e8c1d4a7f0b3e6c9d2a5f8b1e4c7a0d3f6b9e2c5a8f1
 AUTH_SECRET=Xk7vP2mNqR9jL4wY8hB3dF6tA1eZ5uI=
 ```
 
-### 6.5 Phân quyền file `.env`
+### 7.5 Phân quyền file `.env`
 
 ```bash
 chmod 600 /opt/benhub/.env
@@ -222,15 +329,55 @@ chmod 600 /opt/benhub/.env
 
 ---
 
-## 7. Cấu hình SSL (HTTPS)
+## 8. Cấu hình SSL (HTTPS)
 
-> Bước này yêu cầu domain đã trỏ về IP VPS và port 80 đang mở.
+> Yêu cầu: domain đã trỏ đúng về IP VPS và **port 80 đang mở** trên firewall.
 
-### 7.1 Cấp chứng chỉ SSL miễn phí từ Let's Encrypt
+### 8.1 Mở port 80 tạm thời để lấy chứng chỉ
 
 ```bash
-# Dừng bất kỳ service nào đang dùng port 80 (nếu có)
-# Cấp chứng chỉ cho cả domain chính và www
+firewall-cmd --temporary --add-service=http
+```
+
+### 8.2 Cài certbot
+
+**CentOS 8 / Stream — Cài qua EPEL:**
+
+```bash
+dnf install -y epel-release
+dnf install -y certbot
+```
+
+**CentOS 7 — Cài qua EPEL:**
+
+```bash
+yum install -y epel-release
+yum install -y certbot
+```
+
+**Nếu cài EPEL không được — Cài qua Snap (mọi phiên bản CentOS):**
+
+```bash
+# Cài snapd
+dnf install -y epel-release
+dnf install -y snapd
+systemctl enable --now snapd.socket
+
+# Tạo symlink để lệnh snap hoạt động
+ln -sf /var/lib/snapd/snap /snap
+
+# Đợi 30 giây để snap khởi động
+sleep 30
+
+# Cài certbot qua snap
+snap install core && snap refresh core
+snap install --classic certbot
+ln -sf /snap/bin/certbot /usr/bin/certbot
+```
+
+### 8.3 Cấp chứng chỉ SSL từ Let's Encrypt
+
+```bash
 certbot certonly --standalone \
   -d benhub.vn \
   -d www.benhub.vn \
@@ -245,7 +392,7 @@ Congratulations! Your certificate and chain have been saved at:
 /etc/letsencrypt/live/benhub.vn/fullchain.pem
 ```
 
-### 7.2 Copy chứng chỉ vào thư mục dự án
+### 8.4 Copy chứng chỉ vào thư mục dự án
 
 ```bash
 mkdir -p /opt/benhub/deploy/certs
@@ -254,25 +401,21 @@ cp /etc/letsencrypt/live/benhub.vn/fullchain.pem /opt/benhub/deploy/certs/
 cp /etc/letsencrypt/live/benhub.vn/privkey.pem   /opt/benhub/deploy/certs/
 
 chmod 600 /opt/benhub/deploy/certs/*.pem
-```
 
-### 7.3 Kiểm tra file cert
-
-```bash
+# Kiểm tra
 ls -la /opt/benhub/deploy/certs/
-# Phải thấy: fullchain.pem và privkey.pem
 ```
 
 ---
 
-## 8. Chạy deploy
+## 9. Chạy deploy
 
 ```bash
 cd /opt/benhub
 bash deploy/deploy.sh
 ```
 
-Script sẽ tự động:
+Script tự động thực hiện:
 1. Kiểm tra các biến môi trường bắt buộc
 2. Build Docker images (backend + frontend)
 3. Khởi động PostgreSQL và Redis
@@ -282,10 +425,11 @@ Script sẽ tự động:
 
 Quá trình build lần đầu mất **5–15 phút** tuỳ tốc độ VPS và mạng.
 
-### Theo dõi tiến trình
+### Theo dõi tiến trình real-time
+
+Mở thêm một terminal khác và SSH vào VPS:
 
 ```bash
-# Trong terminal khác, xem log real-time
 docker compose -f docker-compose.production.yml logs -f
 ```
 
@@ -303,15 +447,15 @@ docker compose -f docker-compose.production.yml logs -f
 
 ---
 
-## 9. Kiểm tra sau deploy
+## 10. Kiểm tra sau deploy
 
-### 9.1 Kiểm tra containers đang chạy
+### 10.1 Kiểm tra containers đang chạy
 
 ```bash
 docker compose -f docker-compose.production.yml ps
 ```
 
-Kết quả mong đợi — tất cả status phải là `running`:
+Tất cả status phải là `running`:
 
 ```
 NAME               STATUS          PORTS
@@ -322,83 +466,105 @@ benhub_frontend    Up              3000/tcp
 benhub_nginx       Up              0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp
 ```
 
-### 9.2 Kiểm tra website
+### 10.2 Kiểm tra website bằng curl
 
 ```bash
-# Frontend — phải trả về HTML
+# Frontend — phải trả về 200 OK
 curl -I https://benhub.vn
 
 # Backend API — phải trả về JSON
 curl https://benhub.vn/api-backend/api/v1/posts
 
-# Kiểm tra redirect HTTP → HTTPS
+# Redirect HTTP → HTTPS — phải thấy 301
 curl -I http://benhub.vn
-# Phải thấy: Location: https://benhub.vn (301)
 ```
 
-### 9.3 Kiểm tra bằng trình duyệt
+### 10.3 Kiểm tra trên trình duyệt
 
 - [ ] `https://benhub.vn` — trang chủ hiển thị bình thường
-- [ ] Có biểu tượng khoá HTTPS trên thanh địa chỉ
+- [ ] Biểu tượng khoá HTTPS trên thanh địa chỉ
 - [ ] `https://benhub.vn/login` — trang đăng nhập hoạt động
 - [ ] `https://benhub.vn/cms/dashboard` — redirect về `/login` nếu chưa đăng nhập
 
-### 9.4 Kiểm tra log không có lỗi
+### 10.4 Kiểm tra log không có lỗi
 
 ```bash
-# Log backend
-docker compose -f docker-compose.production.yml logs backend --tail=50
-
-# Log frontend
+docker compose -f docker-compose.production.yml logs backend  --tail=50
 docker compose -f docker-compose.production.yml logs frontend --tail=50
-
-# Log nginx
-docker compose -f docker-compose.production.yml logs nginx --tail=20
+docker compose -f docker-compose.production.yml logs nginx    --tail=20
 ```
 
 ---
 
-## 10. Cấu hình tường lửa (UFW)
+## 11. Cấu hình tường lửa (firewalld)
 
-Chỉ cho phép port cần thiết:
+> CentOS dùng **firewalld** thay vì UFW của Ubuntu.
+
+### 11.1 Kiểm tra firewalld đang chạy chưa
 
 ```bash
-# Cho phép SSH (bắt buộc — không được bỏ)
-ufw allow 22/tcp
+systemctl status firewalld
+```
 
-# Cho phép HTTP và HTTPS
-ufw allow 80/tcp
-ufw allow 443/tcp
+Nếu chưa chạy:
 
-# Bật tường lửa
-ufw enable
+```bash
+systemctl start firewalld
+systemctl enable firewalld
+```
 
-# Kiểm tra trạng thái
-ufw status verbose
+### 11.2 Mở đúng các port cần thiết
+
+```bash
+# SSH — bắt buộc, không được bỏ
+firewall-cmd --permanent --add-service=ssh
+
+# HTTP (port 80)
+firewall-cmd --permanent --add-service=http
+
+# HTTPS (port 443)
+firewall-cmd --permanent --add-service=https
+
+# Áp dụng tất cả thay đổi
+firewall-cmd --reload
+```
+
+### 11.3 Kiểm tra cấu hình
+
+```bash
+firewall-cmd --list-all
 ```
 
 Kết quả mong đợi:
+
 ```
-Status: active
-To                   Action      From
-22/tcp               ALLOW IN    Anywhere
-80/tcp               ALLOW IN    Anywhere
-443/tcp              ALLOW IN    Anywhere
+public (active)
+  services: cockpit dhcpv6-client http https ssh
+  ports:
 ```
 
-> **Cảnh báo:** Không bao giờ block port 22 — sẽ mất quyền SSH vào VPS.
+> **Cảnh báo:** Không bao giờ block service `ssh` — sẽ mất quyền SSH vào VPS và không thể khôi phục nếu không có console VPS.
+
+### 11.4 Đóng port 80 tạm thời đã mở ở bước 8 (nếu cần)
+
+```bash
+# Lệnh tạm thời (--temporary) sẽ tự mất sau khi reload
+# firewalld đã reload ở bước 11.2 nên không cần làm gì thêm
+```
 
 ---
 
-## 11. Thiết lập tự động gia hạn SSL
+## 12. Thiết lập tự động gia hạn SSL
 
-Chứng chỉ Let's Encrypt hết hạn sau 90 ngày. Cài cron để tự gia hạn:
+Chứng chỉ Let's Encrypt hết hạn sau **90 ngày**. Cần cài cron để tự động gia hạn.
+
+### 12.1 Thêm cron job gia hạn SSL
 
 ```bash
 crontab -e
 ```
 
-Thêm vào cuối file:
+Thêm vào cuối file (nhấn `i` nếu dùng vi, `:wq` để lưu):
 
 ```cron
 # Gia hạn SSL mỗi Chủ nhật lúc 3:00 sáng
@@ -409,42 +575,56 @@ Thêm vào cuối file:
   >> /var/log/certbot-renew.log 2>&1
 ```
 
-Kiểm tra cron hoạt động:
+### 12.2 Kiểm tra certbot gia hạn hoạt động
 
 ```bash
 # Thử gia hạn (dry-run — không thực sự gia hạn)
 certbot renew --dry-run
 ```
 
+Kết quả mong đợi: `Congratulations, all simulated renewals succeeded`
+
+### 12.3 Kiểm tra ngày hết hạn cert hiện tại
+
+```bash
+openssl x509 -enddate -noout -in /opt/benhub/deploy/certs/fullchain.pem
+```
+
 ---
 
-## 12. Backup định kỳ
+## 13. Backup định kỳ
 
-### 12.1 Backup database thủ công
+### 13.1 Tạo thư mục backup
+
+```bash
+mkdir -p /opt/benhub/backups
+```
+
+### 13.2 Backup database thủ công
 
 ```bash
 cd /opt/benhub
 
-docker compose -f docker-compose.production.yml exec postgres \
+docker compose -f docker-compose.production.yml exec -T postgres \
   pg_dump -U benhub benhub \
-  > backup-db-$(date +%Y%m%d-%H%M%S).sql
+  > backups/db-$(date +%Y%m%d-%H%M%S).sql
 
-echo "Backup xong: backup-db-$(date +%Y%m%d).sql"
+echo "Backup xong: backups/db-$(date +%Y%m%d).sql"
 ```
 
-### 12.2 Backup ảnh upload
+### 13.3 Backup ảnh upload thủ công
 
 ```bash
 docker run --rm \
   -v benhub_uploads_data:/data \
-  -v /opt/benhub:/backup \
+  -v /opt/benhub/backups:/backup \
   alpine \
-  tar czf /backup/backup-uploads-$(date +%Y%m%d).tar.gz /data
+  tar czf /backup/uploads-$(date +%Y%m%d).tar.gz -C /data .
 
 echo "Backup uploads xong"
 ```
 
-### 12.3 Tự động backup hàng ngày (cron)
+### 13.4 Tự động backup hàng ngày (cron)
 
 ```bash
 crontab -e
@@ -453,20 +633,15 @@ crontab -e
 Thêm vào:
 
 ```cron
-# Backup DB mỗi ngày lúc 2:00 sáng, giữ 7 ngày gần nhất
-0 2 * * * cd /opt/benhub && docker compose -f docker-compose.production.yml exec -T postgres pg_dump -U benhub benhub > /opt/benhub/backups/db-$(date +\%Y\%m\%d).sql && find /opt/benhub/backups -name "db-*.sql" -mtime +7 -delete
-```
-
-```bash
-# Tạo thư mục backup
-mkdir -p /opt/benhub/backups
+# Backup DB lúc 2:00 sáng, giữ 7 ngày gần nhất
+0 2 * * * cd /opt/benhub && docker compose -f docker-compose.production.yml exec -T postgres pg_dump -U benhub benhub > /opt/benhub/backups/db-$(date +\%Y\%m\%d).sql 2>/dev/null && find /opt/benhub/backups -name "db-*.sql" -mtime +7 -delete
 ```
 
 ---
 
-## 13. Quy trình cập nhật code sau này
+## 14. Quy trình cập nhật code sau này
 
-Sau khi deploy lần đầu thành công, mỗi lần có code mới:
+Sau khi deploy lần đầu thành công, mỗi khi có code mới:
 
 ```bash
 cd /opt/benhub
@@ -474,39 +649,57 @@ cd /opt/benhub
 # 1. Pull code mới
 git pull origin master
 
-# 2. Build lại images (chỉ rebuild service thay đổi)
+# 2. Build lại images
 docker compose -f docker-compose.production.yml build backend frontend
 
-# 3. Restart với zero-downtime
+# 3. Restart không downtime
 docker compose -f docker-compose.production.yml up -d --no-deps backend frontend
 
-# 4. Xem log để xác nhận không có lỗi
+# 4. Xem log xác nhận không có lỗi
 docker compose -f docker-compose.production.yml logs -f backend frontend
 ```
 
-Nếu có migration database mới:
+**Nếu có migration database mới:**
 
 ```bash
-# Chạy migration trước khi restart backend
 docker compose -f docker-compose.production.yml run --rm migrate
 docker compose -f docker-compose.production.yml up -d --no-deps backend
 ```
 
 ---
 
-## 14. Xử lý sự cố thường gặp
+## 15. Xử lý sự cố thường gặp
 
 ### Website không truy cập được
 
 ```bash
-# 1. Kiểm tra containers
+# Kiểm tra containers
 docker compose -f docker-compose.production.yml ps
 
-# 2. Xem log nginx
-docker compose -f docker-compose.production.yml logs nginx
+# Kiểm tra firewall có mở port 80/443 chưa
+firewall-cmd --list-services
 
-# 3. Kiểm tra cert SSL còn hạn không
+# Xem log nginx
+docker compose -f docker-compose.production.yml logs nginx --tail=30
+
+# Kiểm tra cert còn hạn không
 openssl x509 -enddate -noout -in /opt/benhub/deploy/certs/fullchain.pem
+```
+
+### Docker lỗi permission / không chạy được container
+
+Nguyên nhân thường gặp nhất trên CentOS: **SELinux đang Enforcing**.
+
+```bash
+# Kiểm tra SELinux
+getenforce
+
+# Chuyển sang Permissive nếu đang Enforcing
+setenforce 0
+sed -i 's/^SELINUX=enforcing/SELINUX=permissive/' /etc/selinux/config
+
+# Thử lại
+docker compose -f docker-compose.production.yml up -d
 ```
 
 ### Backend lỗi 500 / không kết nối được DB
@@ -515,14 +708,50 @@ openssl x509 -enddate -noout -in /opt/benhub/deploy/certs/fullchain.pem
 # Xem log backend
 docker compose -f docker-compose.production.yml logs backend --tail=100
 
-# Kiểm tra PostgreSQL healthy không
+# Kiểm tra PostgreSQL healthy
 docker compose -f docker-compose.production.yml exec postgres pg_isready -U benhub
+
+# Kiểm tra biến DATABASE_URL trong .env
+grep DATABASE_URL /opt/benhub/.env
 ```
 
-### Frontend không hiển thị đúng (lỗi hydration, v.v.)
+### Frontend không hiển thị đúng
 
 ```bash
 docker compose -f docker-compose.production.yml logs frontend --tail=100
+```
+
+### Docker daemon không khởi động sau khi reboot VPS
+
+```bash
+# Kiểm tra trạng thái
+systemctl status docker
+
+# Khởi động lại
+systemctl start docker
+
+# Đảm bảo bật tự khởi động
+systemctl enable docker
+
+# Khởi động lại toàn bộ stack
+cd /opt/benhub
+docker compose -f docker-compose.production.yml up -d
+```
+
+### Hết dung lượng disk
+
+```bash
+# Kiểm tra dung lượng
+df -h
+
+# Xem Docker đang dùng bao nhiêu
+docker system df
+
+# Xoá cache Docker không dùng
+docker system prune -af
+
+# Xoá backup cũ hơn 30 ngày
+find /opt/benhub/backups -mtime +30 -delete
 ```
 
 ### Restart một service cụ thể
@@ -535,14 +764,14 @@ docker compose -f docker-compose.production.yml restart backend
 docker compose -f docker-compose.production.yml restart
 ```
 
-### Xoá và deploy lại hoàn toàn (dùng khi mọi cách khác thất bại)
+### Xoá và deploy lại hoàn toàn (khi mọi cách khác thất bại)
 
-> **Cảnh báo:** Lệnh này sẽ xoá database. Backup trước!
+> **Cảnh báo:** Lệnh dưới đây xoá database. Backup trước!
 
 ```bash
 # Backup trước
-docker compose -f docker-compose.production.yml exec postgres \
-  pg_dump -U benhub benhub > emergency-backup.sql
+docker compose -f docker-compose.production.yml exec -T postgres \
+  pg_dump -U benhub benhub > /opt/benhub/backups/emergency-$(date +%Y%m%d).sql
 
 # Dừng và xoá toàn bộ
 docker compose -f docker-compose.production.yml down -v
@@ -551,52 +780,52 @@ docker compose -f docker-compose.production.yml down -v
 bash deploy/deploy.sh
 ```
 
-### Hết dung lượng disk
-
-```bash
-# Kiểm tra dung lượng
-df -h
-
-# Xoá Docker cache không dùng
-docker system prune -af
-
-# Xoá backup cũ hơn 30 ngày
-find /opt/benhub/backups -mtime +30 -delete
-```
-
 ---
 
 ## Tóm tắt checklist lần đầu deploy
 
 ```
 CHUẨN BỊ
-[ ] VPS đã có (≥ 2GB RAM, Ubuntu 22.04)
-[ ] Domain benhub.vn trỏ về IP VPS (đã propagate)
-[ ] Có thể SSH vào VPS
+[ ] VPS CentOS đã có (≥ 2GB RAM)
+[ ] Domain benhub.vn đã trỏ về IP VPS (DNS đã propagate)
+[ ] Có thể SSH vào VPS bằng root
 
-TRÊN VPS
-[ ] apt update && apt upgrade -y
-[ ] Cài Docker (curl -fsSL https://get.docker.com | sh)
+TRÊN VPS — HỆ THỐNG
+[ ] dnf update -y
+[ ] dnf install -y git curl wget nano openssl
+[ ] SELinux chuyển sang Permissive (setenforce 0)
+
+TRÊN VPS — DOCKER
+[ ] Thêm repo Docker: dnf config-manager --add-repo ...
+[ ] dnf install -y docker-ce docker-ce-cli containerd.io docker-compose-plugin
+[ ] systemctl enable --now docker
+[ ] usermod -aG docker $USER
+
+TRÊN VPS — DỰ ÁN
 [ ] git clone repo vào /opt/benhub
-[ ] Tạo file .env với đầy đủ secrets
+[ ] Tạo file .env với đầy đủ secrets (openssl rand)
 [ ] chmod 600 .env
 
 SSL
+[ ] firewall-cmd --temporary --add-service=http
+[ ] dnf install -y epel-release certbot
 [ ] certbot certonly --standalone -d benhub.vn -d www.benhub.vn
-[ ] Copy certs vào deploy/certs/
+[ ] cp certs vào deploy/certs/
+[ ] chmod 600 deploy/certs/*.pem
 
 DEPLOY
 [ ] bash deploy/deploy.sh
-[ ] Xác nhận docker ps: 5 containers đều Up
+[ ] docker compose ps: 5 containers đều Up
 
 KIỂM TRA
 [ ] https://benhub.vn mở được trên trình duyệt
 [ ] HTTPS có khoá xanh
 [ ] /login và /cms/dashboard hoạt động
-[ ] curl https://benhub.vn/api-backend/api/v1/posts trả về JSON
+[ ] curl /api-backend/api/v1/posts trả về JSON
 
-BẢO MẬT SAU DEPLOY
-[ ] ufw enable (chỉ mở port 22, 80, 443)
-[ ] Cài cron gia hạn SSL tự động
-[ ] Cài cron backup DB hàng ngày
+BẢO MẬT & VẬN HÀNH
+[ ] firewall-cmd --permanent --add-service={ssh,http,https} && firewall-cmd --reload
+[ ] Cron gia hạn SSL (crontab -e)
+[ ] Cron backup DB hàng ngày (crontab -e)
+[ ] mkdir -p /opt/benhub/backups
 ```
