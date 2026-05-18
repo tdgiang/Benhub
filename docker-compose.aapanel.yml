@@ -1,0 +1,26 @@
+# ============================================================
+# docker-compose.aapanel.yml — Override cho VPS có aaPanel
+# ============================================================
+# Dùng khi VPS đã có nginx hệ thống (aaPanel/BaoTA/Webmin...)
+# chiếm port 80/443. Bỏ Docker nginx, để system nginx proxy.
+#
+# Cách chạy:
+#   docker compose -f docker-compose.production.yml -f docker-compose.aapanel.yml up -d
+#
+# ============================================================
+
+services:
+  # Tắt Docker nginx — system nginx của aaPanel đảm nhận
+  nginx:
+    profiles:
+      - standalone   # chỉ khởi động khi truyền --profile standalone
+
+  # Expose frontend ra localhost để system nginx proxy vào
+  frontend:
+    ports:
+      - "127.0.0.1:3000:3000"
+
+  # Expose backend ra localhost để system nginx proxy vào
+  backend:
+    ports:
+      - "127.0.0.1:4000:4000"
