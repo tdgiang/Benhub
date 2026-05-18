@@ -1,34 +1,29 @@
-# ─── Stage 1: Build (includes devDeps for nest CLI + Prisma generate) ─────────
+# ─── Stage 1: Build ───────────────────────────────────────────────────────────
 FROM node:22-alpine AS builder
 WORKDIR /app
 
 COPY package*.json .npmrc* ./
+# Install all deps (including devDeps needed for nest CLI + prisma generate)
 RUN npm ci --ignore-scripts
 
 COPY . .
-# Generate Prisma client then compile TypeScript
-RUN npx prisma generate && npm run build
+# Generate Prisma client, compile TypeScript, then strip dev deps
+RUN npx prisma generate \
+ && npm run build \
+ && npm prune --omit=dev
 
-# ─── Stage 2: Production-only dependencies ────────────────────────────────────
-FROM node:22-alpine AS prod-deps
-WORKDIR /app
-
-COPY package*.json .npmrc* ./
-RUN npm ci --omit=dev --ignore-scripts
-
-# ─── Stage 3: Runtime ─────────────────────────────────────────────────────────
+# ─── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
 WORKDIR /app
 
 ENV NODE_ENV=production
 
-COPY --from=prod-deps /app/node_modules ./node_modules
-# Overlay Prisma generated client from builder (has .prisma & @prisma)
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+# Copy pruned node_modules (all transitive prod deps intact) + built output
+COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
 EXPOSE 4000
 
+# dist/src/main because prisma.config.ts at root shifts TypeScript rootDir to "."
 CMD ["node", "dist/src/main"]
