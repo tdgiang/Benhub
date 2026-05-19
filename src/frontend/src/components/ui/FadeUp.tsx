@@ -13,41 +13,35 @@ export function FadeUp({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const reducedMotionRef = useRef(false);
 
   useEffect(() => {
-    let cancelled = false;
+    const el = ref.current;
+    if (!el) return;
 
-    async function init() {
-      await Promise.resolve();
-      if (cancelled) return;
-
-      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-      reducedMotionRef.current = mq.matches;
-
-      if (mq.matches) {
-        setVisible(true);
-        return;
-      }
-
-      const el = ref.current;
-      if (!el) return;
-
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            obs.disconnect();
-          }
-        },
-        { rootMargin: "-60px" },
-      );
-      obs.observe(el);
-      return () => obs.disconnect();
+    // Respect reduced motion preference
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setVisible(true);
+      return;
     }
 
-    init();
-    return () => { cancelled = true; };
+    // If element is already in viewport on mount, show immediately
+    const rect = el.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) {
+      setVisible(true);
+      return;
+    }
+
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -40px 0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
   return (

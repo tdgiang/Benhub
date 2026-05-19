@@ -26,6 +26,7 @@ export function Navbar({ className }: { className?: string }) {
 
   useEffect(() => {
     const handle = () => setScrolled(window.scrollY > 60);
+    handle(); // check scroll position immediately on mount
     window.addEventListener("scroll", handle, { passive: true });
     return () => window.removeEventListener("scroll", handle);
   }, []);
@@ -102,8 +103,12 @@ export function Navbar({ className }: { className?: string }) {
       </div>
 
       {/* Mobile drawer */}
-      {open && (
-        <div className="md:hidden bg-slate-900 border-t border-white/5 px-4 py-4 space-y-0.5">
+      <div
+        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+          open ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
+        }`}
+      >
+        <div className="bg-slate-900 border-t border-white/5 px-4 py-4 space-y-0.5">
           {navLinks.map((item) => (
             <a
               key={item.href}
@@ -134,7 +139,7 @@ export function Navbar({ className }: { className?: string }) {
             </Link>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }
