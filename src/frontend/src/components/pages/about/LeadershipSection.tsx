@@ -25,7 +25,7 @@ const leaders: Leader[] = [
   },
   {
     name: "Nguyễn Thị Thuý",
-    title: "COO",
+    title: "CTO",
     bio: "Chuyên gia về AI và hệ thống phân tán. Từng xây dựng platform cho dự án quốc gia.",
     initials: "TB",
   },
