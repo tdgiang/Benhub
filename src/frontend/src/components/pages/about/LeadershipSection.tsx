@@ -19,14 +19,14 @@ const leaders: Leader[] = [
   },
   {
     name: "Cao Quốc Thắng",
-    title: "CTO & Co-Founder",
+    title: "COO & Co-Founder",
     bio: "15 năm vận hành đội xe và dự án hạ tầng. Am hiểu sâu về bài toán logistics công trình từ thực tế hiện trường.",
     initials: "LC",
   },
   {
-    name: "Lê Văn Lộc",
+    name: "Nguyễn Thị Thuý",
     title: "COO",
-    bio: "Chuyên gia về AI và hệ thống phân tán. Từng xây dựng platform logistics cho 3 quốc gia Đông Nam Á.",
+    bio: "Chuyên gia về AI và hệ thống phân tán. Từng xây dựng platform cho dự án quốc gia.",
     initials: "TB",
   },
 ];

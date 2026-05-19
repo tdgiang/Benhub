@@ -9,7 +9,8 @@ export const metadata: Metadata = {
     default: APP_NAME,
     template: `%s — ${APP_NAME}`,
   },
-  description: "Nền tảng logistics công trình #1 Việt Nam — số hóa toàn bộ chuỗi vận tải xây dựng.",
+  description:
+    "Nền tảng vận tải công trình #1 Việt Nam — số hóa toàn bộ chuỗi vận tải xây dựng.",
 };
 
 export default async function MarketingLayout({
