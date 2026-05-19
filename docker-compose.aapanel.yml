@@ -15,12 +15,12 @@ services:
     profiles:
       - standalone   # chỉ khởi động khi truyền --profile standalone
 
-  # Expose frontend ra localhost để system nginx proxy vào
+  # Expose frontend ra public (Method B — truy cập trực tiếp qua IP:3000)
   frontend:
     ports:
-      - "127.0.0.1:3000:3000"
+      - "3000:3000"
 
-  # Expose backend ra localhost để system nginx proxy vào
+  # Expose backend ra public (Method B — truy cập trực tiếp qua IP:4000)
   backend:
     ports:
-      - "127.0.0.1:4000:4000"
+      - "4000:4000"
