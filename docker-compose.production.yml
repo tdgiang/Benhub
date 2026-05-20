@@ -68,8 +68,11 @@ services:
       context: ./src/backend
       dockerfile: Dockerfile
     container_name: benhub_migrate
+    entrypoint: []
     command: >
-      sh -c "npx prisma migrate deploy && npx prisma db execute --file /app/prisma/add-cover-image.sql --schema /app/prisma/schema.prisma || true"
+      sh -c "./node_modules/.bin/prisma migrate deploy --config prisma.config.mjs &&
+             ./node_modules/.bin/prisma db execute --file prisma/add-cover-image.sql --config prisma.config.mjs || true &&
+             node prisma/seed.mjs"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-benhub}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-benhub}?schema=public
     depends_on:
