@@ -14,7 +14,7 @@ function hasSession(req: NextRequest): boolean {
   );
 }
 
-export function middleware(req: NextRequest) {
+export function proxy(req: NextRequest) {
   const path = req.nextUrl.pathname;
 
   if (PROTECTED.some((p) => path.startsWith(p)) && !hasSession(req)) {
