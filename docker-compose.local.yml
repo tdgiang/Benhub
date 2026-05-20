@@ -12,5 +12,6 @@ services:
         NEXT_PUBLIC_APP_URL: http://localhost
     environment:
       AUTH_URL: http://localhost
+      INTERNAL_API_URL: http://backend:4000
       NEXT_PUBLIC_API_URL: http://localhost/api-backend
       NEXT_PUBLIC_APP_URL: http://localhost

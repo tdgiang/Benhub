@@ -9,8 +9,9 @@ import { ArticleSidebar, type Heading, type RelatedPost } from '@/components/new
 import { MobileTOC } from '@/components/news/MobileTOC'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { useTranslations } from 'next-intl'
+import { getServerBackendBaseUrl } from '@/lib/server-backend-url'
 
-const BACKEND = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
+const BACKEND = getServerBackendBaseUrl()
 
 const GRADIENTS = [
   'linear-gradient(135deg, #c2410c 0%, #f97316 50%, #fb923c 100%)',

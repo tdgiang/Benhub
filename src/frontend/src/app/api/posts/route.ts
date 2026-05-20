@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getServerBackendBaseUrl } from "@/lib/server-backend-url";
 
-const BACKEND = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const BACKEND = getServerBackendBaseUrl();
 
 export async function GET(request: NextRequest) {
   const { search } = new URL(request.url);

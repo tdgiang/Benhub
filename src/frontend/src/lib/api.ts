@@ -1,4 +1,6 @@
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000';
+import { getServerBackendBaseUrl } from "@/lib/server-backend-url";
+
+const API_URL = getServerBackendBaseUrl();
 
 interface ApiResponse<T> {
   success: boolean;

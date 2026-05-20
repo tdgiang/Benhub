@@ -96,6 +96,7 @@ services:
     environment:
       AUTH_SECRET: ${AUTH_SECRET}
       AUTH_URL: ${APP_URL}
+      INTERNAL_API_URL: http://backend:4000
       NEXT_PUBLIC_API_URL: ${APP_URL}/api-backend
       NEXT_PUBLIC_APP_URL: ${APP_URL}
     volumes:
