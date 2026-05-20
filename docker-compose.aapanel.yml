@@ -13,7 +13,7 @@ services:
   # Tắt Docker nginx — system nginx của aaPanel đảm nhận
   nginx:
     profiles:
-      - standalone   # chỉ khởi động khi truyền --profile standalone
+      - standalone # chỉ khởi động khi truyền --profile standalone
 
   # Expose frontend ra public (Method B — truy cập trực tiếp qua IP:3000)
   frontend:
