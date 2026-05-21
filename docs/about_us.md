@@ -84,7 +84,7 @@ headline:       "Từ bất cập thực tế
 
 paragraph-1:    "Trong quá trình nghiên cứu và tham gia triển khai các dự án
                  công nghệ, đội ngũ sáng lập BenHub nhận ra một nghịch lý lớn:
-                 ngành xây dựng có quy mô 60–80 tỷ USD mỗi năm nhưng vẫn đang
+                 Vận Tải công trình có quy mô 60–80 tỷ USD mỗi năm nhưng vẫn đang
                  vận hành bằng phiếu giấy, cuộc gọi điện thoại và bảng Excel."
 
 paragraph-2:    "Hàng nghìn chuyến xe ben mỗi ngày. Hàng triệu phiếu vận tải
