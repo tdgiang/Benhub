@@ -50,6 +50,7 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       CORS_ORIGIN: ${APP_URL}
+      UPLOAD_DIR: /app/uploads
       THROTTLE_TTL: 60000
       THROTTLE_LIMIT: 100
     volumes:

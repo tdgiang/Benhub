@@ -100,7 +100,15 @@ docker compose -f docker-compose.production.yml up -d backend frontend
 ## Lưu ý quan trọng
 
 ### ⚠️ Upload ảnh
-- Ảnh upload lưu trong Docker volume `uploads_data`
+- Ảnh upload lưu trong backend container: volume `uploads_data` → `/app/uploads`
+- URL hiển thị: `https://benhub.vn/uploads/<filename>.png`
+- **VPS dùng aaPanel (không có container `benhub_nginx`):** bắt buộc dán block `location /uploads/` từ `deploy/nginx-aapanel.conf` vào config site `benhub.vn`, rồi `nginx -t && nginx -s reload`
+- Chạy stack: `docker compose -f docker-compose.production.yml -f docker-compose.aapanel.yml up -d` (expose `127.0.0.1:4000` cho nginx host)
+- Kiểm tra trên VPS:
+  ```bash
+  curl -I http://127.0.0.1:4000/uploads/<filename>.png   # phải 200
+  curl -I https://benhub.vn/uploads/<filename>.png        # phải 200 sau khi sửa nginx
+  ```
 - **KHÔNG** bị mất khi restart/redeploy
 - Backup định kỳ: `docker run --rm -v benhub_uploads_data:/data -v $(pwd):/backup alpine tar czf /backup/uploads-$(date +%Y%m%d).tar.gz /data`
 

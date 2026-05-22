@@ -721,6 +721,66 @@ grep DATABASE_URL /opt/benhub/.env
 docker compose -f docker-compose.production.yml logs frontend --tail=100
 ```
 
+### Upload ảnh thành công nhưng URL `/uploads/...` báo 404 (aaPanel)
+
+**Triệu chứng:** CMS upload OK (`POST /api/v1/uploads` → 201), file có trong container:
+
+```bash
+docker exec benhub_backend ls /app/uploads/
+```
+
+nhưng `https://benhub.vn/uploads/xxx.png` trả 404 (thường là trang 404 của Next.js).
+
+**Nguyên nhân:** VPS dùng **aaPanel nginx** (không có container `benhub_nginx`). Request `/uploads/` đang vào frontend `:3000` thay vì backend `:4000`.
+
+**Cách sửa:**
+
+1. Chạy stack với override aaPanel (expose backend ra host):
+
+```bash
+cd /opt/benhub   # hoặc thư mục dự án trên VPS
+docker compose -f docker-compose.production.yml -f docker-compose.aapanel.yml up -d
+```
+
+2. Kiểm tra backend serve ảnh trực tiếp trên VPS:
+
+```bash
+curl -I http://127.0.0.1:4000/uploads/bbf1d174-dfb1-4628-a067-a8b648e1fe6a.png
+# Kỳ vọng: HTTP/1.1 200 OK
+```
+
+3. Thêm block nginx vào site `benhub.vn` (aaPanel → Websites → Config), copy từ `deploy/nginx-aapanel.conf`:
+
+```nginx
+location /uploads/ {
+    proxy_pass         http://127.0.0.1:4000/uploads/;
+    proxy_http_version 1.1;
+    proxy_set_header   Host              $host;
+    proxy_set_header   X-Real-IP         $remote_addr;
+    proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+    access_log off;
+    expires 7d;
+    add_header         Cache-Control "public, max-age=604800, immutable";
+}
+```
+
+> Block này phải nằm **trước** `location / { proxy_pass http://127.0.0.1:3000; ... }`.
+
+4. Reload nginx:
+
+```bash
+nginx -t && nginx -s reload
+# hoặc trên aaPanel: Save → Reload
+```
+
+5. Kiểm tra lại:
+
+```bash
+curl -I https://benhub.vn/uploads/bbf1d174-dfb1-4628-a067-a8b648e1fe6a.png
+```
+
+**Lưu ý:** Lệnh `http://backend:4000/...` chỉ chạy được **bên trong Docker network**, không chạy từ shell VPS.
+
 ### Docker daemon không khởi động sau khi reboot VPS
 
 ```bash
