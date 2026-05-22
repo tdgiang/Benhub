@@ -1,5 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { RedisModule as NestRedisModule } from '@nestjs-modules/ioredis';
 import { configValidationSchema } from './config/config.schema';
@@ -10,6 +12,7 @@ import { ProductsModule } from './modules/products/products.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { PostsModule } from './modules/posts/posts.module';
 import { StatsModule } from './modules/stats/stats.module';
+import { UploadsModule } from './modules/uploads/uploads.module';
 import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 import { CacheModule } from '@nestjs/cache-manager';
 import { APP_GUARD } from '@nestjs/core';
@@ -21,6 +24,11 @@ import { RolesGuard } from './common/guards/roles.guard';
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: configValidationSchema,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: process.env.UPLOAD_DIR || join(process.cwd(), 'uploads'),
+      serveRoot: '/uploads',
+      serveStaticOptions: { index: false },
     }),
     NestRedisModule.forRootAsync({
       useFactory: (configService: ConfigService) => ({
@@ -52,6 +60,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     LeadsModule,
     PostsModule,
     StatsModule,
+    UploadsModule,
   ],
   providers: [
     {

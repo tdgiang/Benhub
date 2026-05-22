@@ -27,6 +27,8 @@ COPY --from=builder /app/prisma.config.mjs ./prisma.config.mjs
 COPY docker-entrypoint.sh ./docker-entrypoint.sh
 RUN chmod +x docker-entrypoint.sh
 
+RUN mkdir -p /app/uploads
+
 EXPOSE 4000
 
 # dist/src/main because prisma.config.ts at root shifts TypeScript rootDir to "."
