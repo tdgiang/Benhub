@@ -53,6 +53,11 @@ export class UploadsController {
   )
   uploadFile(@UploadedFile() file: Express.Multer.File) {
     if (!file) throw new BadRequestException('Không tìm thấy file');
-    return { message: 'Upload thành công', data: { url: `/uploads/${file.filename}` } };
+    // /api-backend/uploads/... — aaPanel/nginx đã có location /api-backend/; không cần block /uploads/ riêng
+    const publicBase = process.env.UPLOAD_PUBLIC_BASE || '/api-backend/uploads';
+    return {
+      message: 'Upload thành công',
+      data: { url: `${publicBase}/${file.filename}` },
+    };
   }
 }

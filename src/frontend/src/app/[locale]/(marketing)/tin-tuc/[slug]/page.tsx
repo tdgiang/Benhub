@@ -10,6 +10,7 @@ import { MobileTOC } from '@/components/news/MobileTOC'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { useTranslations } from 'next-intl'
 import { getServerBackendBaseUrl } from '@/lib/server-backend-url'
+import { resolveUploadUrl } from '@/lib/utils'
 
 const BACKEND = getServerBackendBaseUrl()
 
@@ -349,7 +350,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
         <div className="w-full" style={{ aspectRatio: '21 / 9' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={post.coverImage}
+            src={resolveUploadUrl(post.coverImage)}
             alt={post.title}
             className="h-full w-full object-cover"
           />

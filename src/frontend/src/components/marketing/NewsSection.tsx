@@ -2,6 +2,7 @@ import Link from "next/link";
 import { ArrowRight, Clock3, Newspaper } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getServerBackendBaseUrl } from "@/lib/server-backend-url";
+import { resolveUploadUrl } from "@/lib/utils";
 
 const BACKEND = getServerBackendBaseUrl();
 
@@ -94,7 +95,7 @@ export async function NewsSection() {
               {post.coverImage ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={post.coverImage}
+                  src={resolveUploadUrl(post.coverImage)}
                   alt={post.title}
                   className="aspect-[16/9] w-full object-cover"
                 />

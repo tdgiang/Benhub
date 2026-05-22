@@ -13,6 +13,7 @@ import {
   X,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { resolveUploadUrl } from "@/lib/utils";
 
 interface ApiPost {
   id: string;
@@ -83,7 +84,7 @@ function Thumbnail({
   if (coverImage) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={coverImage} alt={title ?? ""} className={imgClass} />
+      <img src={resolveUploadUrl(coverImage)} alt={title ?? ""} className={imgClass} />
     );
   }
 
