@@ -15,12 +15,12 @@ services:
     profiles:
       - standalone # chỉ khởi động khi truyền --profile standalone
 
-  # Expose frontend ra public (Method B — truy cập trực tiếp qua IP:3000)
+  # Expose frontend ra localhost cho aaPanel nginx proxy
   frontend:
     ports:
-      - "3000:3000"
+      - "127.0.0.1:3000:3000"
 
-  # Expose backend ra public (Method B — truy cập trực tiếp qua IP:4000)
+  # Expose backend ra localhost — aaPanel nginx proxy /api-backend/ và /uploads/
   backend:
     ports:
-      - "4000:4000"
+      - "127.0.0.1:4000:4000"
