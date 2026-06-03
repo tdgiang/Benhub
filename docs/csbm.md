@@ -335,7 +335,7 @@ vì mục đích thương mại với bất kỳ bên thứ ba nào.
   </p>
   <ul className="space-y-1 text-sm text-muted">
     <li>
-      <strong>Tên công ty:</strong> Công ty TNHH Benhub Việt Nam
+      <strong>Tên công ty:</strong> Công ty cổ phần Benhub Việt Nam
     </li>
     <li>
       <strong>Địa chỉ:</strong> [Địa chỉ trụ sở Benhub], Hà Nội

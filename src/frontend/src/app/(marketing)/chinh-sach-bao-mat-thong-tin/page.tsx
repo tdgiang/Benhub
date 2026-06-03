@@ -449,7 +449,7 @@ export default function PrivacyPolicyPage() {
                 <ul className="space-y-1.5 text-sm text-slate-600">
                   <li>
                     <strong className="text-slate-700">Tên công ty:</strong>{" "}
-                    Công ty TNHH Benhub Việt Nam
+                    Công ty cổ phần Benhub Việt Nam
                   </li>
                   <li>
                     <strong className="text-slate-700">Địa chỉ:</strong> Hà Nội,
@@ -683,7 +683,7 @@ export default function PrivacyPolicyPage() {
                   </div>
                   <p className="text-xs text-slate-500 mb-1">Trụ sở công ty</p>
                   <p className="text-sm font-semibold text-slate-900">
-                    Công ty TNHH Benhub Việt Nam
+                    Công ty cổ phần Benhub Việt Nam
                   </p>
                   <p className="text-xs text-slate-400 mt-1">
                     Hà Nội, Việt Nam
