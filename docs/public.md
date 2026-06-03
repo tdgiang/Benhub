@@ -134,6 +134,12 @@ source ~/.bashrc
   -d www.benhub.vn \
   --standalone
 ```
+ mkdir -p /opt/benhub/Benhub/deploy/certs
+  ~/.acme.sh/acme.sh --install-cert -d benhub.vn \
+    --cert-file      /opt/benhub/Benhub/deploy/certs/cert.pem \
+    --key-file       /opt/benhub/Benhub/deploy/certs/privkey.pem \
+    --fullchain-file /opt/benhub/Benhub/deploy/certs/fullchain.pem \
+    --reloadcmd      "docker exec benhub_nginx nginx -s reload"
 
 > Nếu bị lỗi `port 80 in use`: kiểm tra `ss -tlnp | grep :80` và dừng service đó.
 
@@ -143,13 +149,13 @@ source ~/.bashrc
 mkdir -p ~/LandingPage/deploy/certs
 
 ~/.acme.sh/acme.sh --install-cert -d benhub.vn \
-  --cert-file      ~/LandingPage/deploy/certs/cert.pem \
-  --key-file       ~/LandingPage/deploy/certs/privkey.pem \
-  --fullchain-file ~/LandingPage/deploy/certs/fullchain.pem \
+  --cert-file     /opt/benhub/Benhub/certs/cert.pem \
+  --key-file       /opt/benhub/Benhub/certs/privkey.pem \
+  --fullchain-file /opt/benhub/Benhub/certs/fullchain.pem \
   --reloadcmd      "docker exec benhub_nginx nginx -s reload"
 
 # Kiểm tra file đã có chưa
-ls -la ~/LandingPage/deploy/certs/
+ls -la /opt/benhub/Benhub/certs/
 # Phải thấy: cert.pem  fullchain.pem  privkey.pem
 ```
 

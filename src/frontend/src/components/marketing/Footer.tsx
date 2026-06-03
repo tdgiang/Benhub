@@ -21,6 +21,7 @@ export function Footer({ className }: { className?: string }) {
     { label: t("company_hiring"), href: "#" },
     { label: t("company_partner"), href: "/doi-tac" },
     { label: t("company_investor"), href: "/#roadmap" },
+    { label: t("privacy"), href: "/chinh-sach-bao-mat-thong-tin" },
   ];
 
   return (
@@ -182,12 +183,12 @@ export function Footer({ className }: { className?: string }) {
         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-500 text-sm">{t("copyright")}</p>
           <div className="flex items-center gap-4">
-            <a
-              href="#"
+            <Link
+              href="/chinh-sach-bao-mat-thong-tin"
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors cursor-pointer"
             >
               {t("privacy")}
-            </a>
+            </Link>
             <a
               href="#"
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors cursor-pointer"
