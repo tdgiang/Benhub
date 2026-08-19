@@ -87,7 +87,7 @@ export function Navbar({ className }: { className?: string }) {
             {t("lang_label")}
           </button>
           <Link
-            href="/doi-tac"
+            href="/doi-tac#partner-form"
             className="hidden md:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-150 cursor-pointer shadow-sm shadow-orange-500/30"
           >
             {t("cta")}
@@ -131,7 +131,7 @@ export function Navbar({ className }: { className?: string }) {
               {t("lang_label")}
             </button>
             <Link
-              href="/doi-tac"
+              href="/doi-tac#partner-form"
               onClick={() => setOpen(false)}
               className="block text-center bg-orange-500 hover:bg-orange-600 text-white px-4 py-3 rounded-lg text-sm font-semibold transition-colors cursor-pointer"
             >

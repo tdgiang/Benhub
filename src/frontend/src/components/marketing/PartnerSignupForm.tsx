@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle2, Clock3, Loader2, Send, ShieldCheck } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -19,66 +19,17 @@ export function PartnerSignupForm() {
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
-  /* ─── Dropdown options (translated) ─── */
-  const partnerTypes = useMemo(
-    () => ({
-      contractor: t("type_contractor"),
-      materials: t("type_materials"),
-      fleet: t("type_fleet"),
-      finance: t("type_finance"),
-      technology: t("type_technology"),
-      investor: t("type_investor"),
-      other: t("type_other"),
+  const schema = z.object({
+    companyName: z.string().min(2, t("err_company_min")),
+    taxCode: z.string().regex(/^\d{10}(-\d{3})?$/, t("err_taxcode")),
+    address: z.string().min(5, t("err_address_min")),
+    representative: z.string().min(2, t("err_representative_min")),
+    phone: z.string().regex(/^0[0-9]{9}$/, t("err_phone")),
+    email: z.string().email(t("err_email")),
+    consent: z.literal(true, {
+      errorMap: () => ({ message: t("err_consent") }),
     }),
-    [t],
-  );
-
-  const cooperationNeeds = useMemo(
-    () => ({
-      pilot: t("need_pilot"),
-      fleet_network: t("need_fleet"),
-      material_supply: t("need_material"),
-      finance: t("need_finance"),
-      investment: t("need_investment"),
-      other: t("need_other"),
-    }),
-    [t],
-  );
-
-  /* ─── Zod schema (translated validation messages) ─── */
-  const schema = useMemo(
-    () =>
-      z.object({
-        companyName: z.string().min(2, t("err_company_min")),
-        fullName: z.string().min(2, t("err_name_min")),
-        role: z.string().max(80, t("err_role_max")).optional(),
-        phone: z.string().regex(/^0[0-9]{9}$/, t("err_phone")),
-        email: z.string().email(t("err_email")),
-        province: z.string().max(80, t("err_province_max")).optional(),
-        partnerType: z.enum([
-          "contractor",
-          "materials",
-          "fleet",
-          "finance",
-          "technology",
-          "investor",
-          "other",
-        ]),
-        cooperationNeed: z.enum([
-          "pilot",
-          "fleet_network",
-          "material_supply",
-          "finance",
-          "investment",
-          "other",
-        ]),
-        note: z.string().max(240, t("err_note_max")).optional(),
-        consent: z.literal(true, {
-          errorMap: () => ({ message: t("err_consent") }),
-        }),
-      }),
-    [t],
-  );
+  });
 
   type FormValues = z.infer<typeof schema>;
 
@@ -89,44 +40,34 @@ export function PartnerSignupForm() {
     formState: { errors },
   } = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      partnerType: "contractor",
-      cooperationNeed: "pilot",
-    },
   });
 
   async function onSubmit(values: FormValues) {
     setSubmitState("loading");
     setErrorMessage("");
 
-    const detailNote = [
-      `Partner type: ${partnerTypes[values.partnerType]}`,
-      `Role: ${values.role?.trim() || "-"}`,
-      `Cooperation need: ${cooperationNeeds[values.cooperationNeed]}`,
-      `Note: ${values.note?.trim() || "-"}`,
-    ]
-      .join("\n")
-      .slice(0, 500);
-
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-      const response = await fetch(`${apiUrl}/api/v1/leads`, {
+      const apiBase =
+        process.env.NEXT_PUBLIC_PARTNER_API_BASE_URL ??
+        "https://api-mine.benhub.vn";
+      const response = await fetch(`${apiBase}/api/Auth/register`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_PARTNER_API_TOKEN}`,
+        },
         body: JSON.stringify({
-          segment: "partner",
-          fullName: values.fullName,
+          companyName: values.companyName,
+          taxCode: values.taxCode,
+          address: values.address,
+          representative: values.representative,
           phone: values.phone,
           email: values.email,
-          province: values.province,
-          companyName: values.companyName,
-          projectScale: cooperationNeeds[values.cooperationNeed],
-          source: "partner_page",
-          note: detailNote,
+          username: values.email,
         }),
       });
 
-      if (!response.ok && response.status !== 201) {
+      if (!response.ok) {
         const body = await response.json().catch(() => ({}));
         setErrorMessage(body.message ?? t("err_server"));
         setSubmitState("error");
@@ -134,7 +75,7 @@ export function PartnerSignupForm() {
       }
 
       setSubmitState("success");
-      reset({ partnerType: "contractor", cooperationNeed: "pilot" });
+      reset();
     } catch {
       setErrorMessage(t("err_network"));
       setSubmitState("error");
@@ -151,15 +92,29 @@ export function PartnerSignupForm() {
         <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-200">
           <CheckCircle2 className="h-7 w-7" />
         </div>
-        <h2 className="text-2xl font-black text-slate-950">{t("success_title")}</h2>
-        <p className="mt-3 text-sm leading-relaxed text-slate-600">{t("success_desc")}</p>
-        <button
-          type="button"
-          onClick={() => setSubmitState("idle")}
-          className="mt-6 cursor-pointer rounded-2xl bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
-        >
-          {t("submit_another")}
-        </button>
+        <h2 className="text-2xl font-black text-slate-950">
+          {t("success_title")}
+        </h2>
+        <p className="mt-3 text-sm leading-relaxed text-slate-600">
+          {t("success_desc")}
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3">
+          <a
+            href="https://cms-mine.benhub.vn"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-black text-white transition hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200"
+          >
+            {t("success_cms_cta")}
+          </a>
+          <button
+            type="button"
+            onClick={() => setSubmitState("idle")}
+            className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-slate-950 px-5 py-3 text-sm font-bold text-white transition hover:bg-slate-800 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-emerald-200"
+          >
+            {t("submit_another")}
+          </button>
+        </div>
       </div>
     );
   }
@@ -186,18 +141,22 @@ export function PartnerSignupForm() {
         <h2 className="text-2xl font-black leading-tight text-slate-950 md:text-3xl">
           {t("heading")}
         </h2>
-        <p className="mt-3 text-sm leading-relaxed text-slate-600">{t("sub")}</p>
+        <p className="mt-3 text-sm leading-relaxed text-slate-600">
+          {t("sub")}
+        </p>
 
         <div className="mt-5 grid gap-2 sm:grid-cols-3">
-          {([t("shield_1"), t("shield_2"), t("shield_3")] as string[]).map((item) => (
-            <div
-              key={item}
-              className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600"
-            >
-              <ShieldCheck className="h-4 w-4 shrink-0 text-orange-500" />
-              {item}
-            </div>
-          ))}
+          {([t("shield_1"), t("shield_2"), t("shield_3")] as string[]).map(
+            (item) => (
+              <div
+                key={item}
+                className="flex items-center gap-2 rounded-2xl border border-slate-200 bg-white px-3 py-2 text-xs font-bold text-slate-600"
+              >
+                <ShieldCheck className="h-4 w-4 shrink-0 text-orange-500" />
+                {item}
+              </div>
+            ),
+          )}
         </div>
       </div>
 
@@ -225,34 +184,59 @@ export function PartnerSignupForm() {
           )}
         </div>
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <div className="grid gap-5">
           <div>
-            <label htmlFor="fullName" className={labelClass}>
-              {t("label_name")}
+            <label htmlFor="taxCode" className={labelClass}>
+              {t("label_taxcode")}
             </label>
             <input
-              id="fullName"
-              {...register("fullName")}
+              id="taxCode"
+              {...register("taxCode")}
               className={inputClass}
-              placeholder={t("placeholder_name")}
+              placeholder={t("placeholder_taxcode")}
             />
-            {errors.fullName && (
-              <p className={errorClass}>{errors.fullName.message}</p>
+            {errors.taxCode && (
+              <p className={errorClass}>{errors.taxCode.message}</p>
             )}
           </div>
 
           <div>
-            <label htmlFor="role" className={labelClass}>
-              {t("label_role")}
+            <label htmlFor="address" className={labelClass}>
+              {t("label_address")}
             </label>
             <input
-              id="role"
-              {...register("role")}
+              id="address"
+              {...register("address")}
               className={inputClass}
-              placeholder={t("placeholder_role")}
+              placeholder={t("placeholder_address")}
             />
-            {errors.role && <p className={errorClass}>{errors.role.message}</p>}
+            {errors.address && (
+              <p className={errorClass}>{errors.address.message}</p>
+            )}
           </div>
+        </div>
+
+        {/* ── Section 2: Representative ── */}
+        <div className="flex items-center gap-3 border-b border-slate-100 pb-3 pt-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-950 text-sm font-black text-white">
+            2
+          </span>
+          <p className="font-black text-slate-950">{t("section_2")}</p>
+        </div>
+
+        <div>
+          <label htmlFor="representative" className={labelClass}>
+            {t("label_representative")}
+          </label>
+          <input
+            id="representative"
+            {...register("representative")}
+            className={inputClass}
+            placeholder={t("placeholder_representative")}
+          />
+          {errors.representative && (
+            <p className={errorClass}>{errors.representative.message}</p>
+          )}
         </div>
 
         <div className="grid gap-5 md:grid-cols-2">
@@ -267,7 +251,9 @@ export function PartnerSignupForm() {
               className={inputClass}
               placeholder={t("placeholder_phone")}
             />
-            {errors.phone && <p className={errorClass}>{errors.phone.message}</p>}
+            {errors.phone && (
+              <p className={errorClass}>{errors.phone.message}</p>
+            )}
           </div>
 
           <div>
@@ -281,91 +267,14 @@ export function PartnerSignupForm() {
               className={inputClass}
               placeholder={t("placeholder_email")}
             />
-            {errors.email && <p className={errorClass}>{errors.email.message}</p>}
-          </div>
-        </div>
-
-        {/* ── Section 2: Cooperation model ── */}
-        <div className="flex items-center gap-3 border-b border-slate-100 pb-3 pt-2">
-          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-950 text-sm font-black text-white">
-            2
-          </span>
-          <p className="font-black text-slate-950">{t("section_2")}</p>
-        </div>
-
-        <div>
-          <label htmlFor="province" className={labelClass}>
-            {t("label_province")}
-          </label>
-          <input
-            id="province"
-            {...register("province")}
-            className={inputClass}
-            placeholder={t("placeholder_province")}
-          />
-          {errors.province && (
-            <p className={errorClass}>{errors.province.message}</p>
-          )}
-        </div>
-
-        <div className="grid gap-5 md:grid-cols-2">
-          <div>
-            <label htmlFor="partnerType" className={labelClass}>
-              {t("label_type")}
-            </label>
-            <select
-              id="partnerType"
-              {...register("partnerType")}
-              className={`${inputClass} cursor-pointer`}
-            >
-              {Object.entries(partnerTypes).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-            {errors.partnerType && (
-              <p className={errorClass}>{errors.partnerType.message}</p>
+            {errors.email && (
+              <p className={errorClass}>{errors.email.message}</p>
             )}
           </div>
-
-          <div>
-            <label htmlFor="cooperationNeed" className={labelClass}>
-              {t("label_need")}
-            </label>
-            <select
-              id="cooperationNeed"
-              {...register("cooperationNeed")}
-              className={`${inputClass} cursor-pointer`}
-            >
-              {Object.entries(cooperationNeeds).map(([value, label]) => (
-                <option key={value} value={value}>
-                  {label}
-                </option>
-              ))}
-            </select>
-            {errors.cooperationNeed && (
-              <p className={errorClass}>{errors.cooperationNeed.message}</p>
-            )}
-          </div>
-        </div>
-
-        <div>
-          <label htmlFor="note" className={labelClass}>
-            {t("label_note")}
-          </label>
-          <textarea
-            id="note"
-            {...register("note")}
-            rows={4}
-            className={inputClass}
-            placeholder={t("placeholder_note")}
-          />
-          {errors.note && <p className={errorClass}>{errors.note.message}</p>}
         </div>
 
         {/* Consent */}
-        <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-600 transition hover:border-orange-200 hover:bg-orange-50/40">
+        {/* <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-600 transition hover:border-orange-200 hover:bg-orange-50/40">
           <input
             type="checkbox"
             {...register("consent")}
@@ -373,7 +282,9 @@ export function PartnerSignupForm() {
           />
           <span>{t("consent")}</span>
         </label>
-        {errors.consent && <p className={errorClass}>{errors.consent.message}</p>}
+        {errors.consent && (
+          <p className={errorClass}>{errors.consent.message}</p>
+        )} */}
 
         {/* API error */}
         {submitState === "error" && (
