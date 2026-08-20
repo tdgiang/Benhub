@@ -1,9 +1,14 @@
-# Hướng dẫn Deploy BenHub lên VPS — CentOS
+# Hướng dẫn Deploy BenHub lên VPS — CentOS & Windows Server
 
-> Tài liệu này dành cho người **chưa từng deploy** dự án lên VPS chạy **CentOS 7 / CentOS 8 / CentOS Stream**.  
+> Tài liệu này dành cho người **chưa từng deploy** dự án lên VPS.  
 > Đọc hết một lượt trước khi bắt tay thực hiện.
 
+> **Đang chuyển server sang Windows?** Toàn bộ **Phần I** dưới đây là cho VPS CentOS (giữ lại để tham khảo / rollback).  
+> Hướng dẫn build Docker trên **Windows Server 2019/2022** nằm ở **[Phần II](#phần-ii--deploy-trên-windows-server-20192022)**, cuối tài liệu.
+
 ---
+
+# Phần I — Deploy trên VPS CentOS
 
 ## Mục lục
 
@@ -888,4 +893,493 @@ BẢO MẬT & VẬN HÀNH
 [ ] Cron gia hạn SSL (crontab -e)
 [ ] Cron backup DB hàng ngày (crontab -e)
 [ ] mkdir -p /opt/benhub/backups
+```
+
+---
+
+# Phần II — Deploy trên Windows Server (2019/2022)
+
+> Áp dụng cho VPS thuê chạy **Windows Server 2019** hoặc **2022** (Standard/Datacenter).  
+> **Docker Desktop không được hỗ trợ chính thức trên Windows Server** (chỉ hỗ trợ Windows 10/11) — nên lộ trình dưới đây cài **Docker Engine bên trong WSL2 (Ubuntu 22.04)**, y hệt cách Docker chạy trên một VPS Linux thật. Images của dự án (`node:22-alpine`) là Linux container nên **bắt buộc** phải chạy qua WSL2, không dùng được Windows Containers.
+
+## Mục lục — Phần II
+
+1. [Yêu cầu hệ thống](#w1-yêu-cầu-hệ-thống)
+2. [Kết nối vào Windows Server](#w2-kết-nối-vào-windows-server)
+3. [Bật WSL2](#w3-bật-wsl2)
+4. [Cài Ubuntu 22.04 vào WSL2 (không cần Microsoft Store)](#w4-cài-ubuntu-2204-vào-wsl2-không-cần-microsoft-store)
+5. [Bật systemd trong WSL2](#w5-bật-systemd-trong-wsl2)
+6. [Cài Docker Engine trong WSL2](#w6-cài-docker-engine-trong-wsl2)
+7. [Clone dự án, tạo `.env`, cài SSL](#w7-clone-dự-án-tạo-env-cài-ssl)
+8. [Chạy deploy](#w8-chạy-deploy)
+9. [Port-forward Windows ↔ WSL2 (bắt buộc)](#w9-port-forward-windows--wsl2-bắt-buộc)
+10. [Windows Firewall](#w10-windows-firewall)
+11. [Tự khởi động khi Windows Server reboot](#w11-tự-khởi-động-khi-windows-server-reboot)
+12. [Backup, cập nhật code, xử lý sự cố](#w12-backup-cập-nhật-code-xử-lý-sự-cố)
+13. [Checklist Windows Server](#w13-checklist-windows-server)
+
+---
+
+## W1. Yêu cầu hệ thống
+
+| Thành phần | Tối thiểu | Khuyến nghị |
+|------------|-----------|-------------|
+| RAM | 4 GB | 8 GB (WSL2 + Docker ăn RAM hơn Linux thuần) |
+| CPU | 2 vCPU | 4 vCPU |
+| Disk | 40 GB SSD | 60 GB SSD |
+| OS | Windows Server 2019 (build ≥ 1809) / 2022 | Windows Server 2022 |
+| Ảo hoá | Nested virtualization **phải bật** ở phía nhà cung cấp VPS cho WSL2 chạy | — |
+| Port | RDP 3389, HTTP 80, HTTPS 443 mở | — |
+
+> **Quan trọng:** WSL2 dùng Hyper-V bên dưới. Nếu VPS là máy ảo (hầu hết VPS Windows đều vậy), nhà cung cấp phải bật **nested virtualization** cho gói VPS của bạn, nếu không `wsl --set-default-version 2` sẽ báo lỗi. Hỏi trước nhà cung cấp nếu không chắc.
+
+Domain trỏ về IP VPS: làm giống hệt [mục 1 Phần I](#1-yêu-cầu-hệ-thống) (`nslookup benhub.vn`).
+
+---
+
+## W2. Kết nối vào Windows Server
+
+Dùng **Remote Desktop (RDP)** — không dùng SSH như CentOS:
+
+1. Trên máy cá nhân, mở **Remote Desktop Connection** (Windows) hoặc **Microsoft Remote Desktop** (macOS).
+2. Nhập IP VPS, đăng nhập bằng user `Administrator` và password được cấp.
+3. Mở **PowerShell as Administrator** trên VPS — mọi lệnh ở Phần II chạy trong PowerShell trừ khi ghi rõ là chạy trong WSL/bash.
+
+> Muốn thao tác qua terminal SSH quen thuộc thay vì RDP: cài **OpenSSH Server** (tính năng có sẵn trong Windows Server):
+> ```powershell
+> Add-WindowsCapability -Online -Name OpenSSH.Server~~~~0.0.1.0
+> Start-Service sshd
+> Set-Service -Name sshd -StartupType Automatic
+> New-NetFirewallRule -Name sshd -DisplayName "OpenSSH Server" -Enabled True -Direction Inbound -Protocol TCP -Action Allow -LocalPort 22
+> ```
+> Sau đó `ssh Administrator@<IP_VPS>` từ máy cá nhân, vào PowerShell y như RDP.
+
+---
+
+## W3. Bật WSL2
+
+Chạy trong **PowerShell (Administrator)**:
+
+```powershell
+# 1. Bật 2 tính năng bắt buộc cho WSL2
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+# 2. Khởi động lại server để tính năng có hiệu lực
+Restart-Computer
+```
+
+Sau khi RDP lại vào, mở PowerShell (Administrator) và tiếp tục:
+
+```powershell
+# 3. Cài gói cập nhật kernel Linux cho WSL2 (Windows Server không có sẵn, khác Windows 10/11)
+Invoke-WebRequest -Uri "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi" -OutFile "$env:TEMP\wsl_update_x64.msi"
+Start-Process msiexec.exe -ArgumentList "/i `"$env:TEMP\wsl_update_x64.msi`" /quiet" -Wait
+
+# 4. Đặt WSL2 làm phiên bản mặc định cho mọi distro cài sau này
+wsl --set-default-version 2
+
+# 5. Kiểm tra
+wsl --status
+```
+
+Kết quả mong đợi ở `wsl --status`: `Default Version: 2`.
+
+> Nếu lệnh `wsl --set-default-version 2` báo lỗi liên quan đến ảo hoá (`WSL_E_HYPERV_NOT_SUPPORTED` hoặc tương tự) — nhà cung cấp VPS chưa bật nested virtualization. Liên hệ họ, xem lại lưu ý ở [W1](#w1-yêu-cầu-hệ-thống).
+
+---
+
+## W4. Cài Ubuntu 22.04 vào WSL2 (không cần Microsoft Store)
+
+Windows Server không có Microsoft Store, nên **import thủ công** file rootfs của Ubuntu thay vì `wsl --install -d Ubuntu`:
+
+```powershell
+# 1. Tạo thư mục lưu WSL distro
+New-Item -ItemType Directory -Force -Path C:\WSL\Ubuntu-22.04
+
+# 2. Tải rootfs Ubuntu 22.04 chính thức (dựng riêng cho WSL)
+Invoke-WebRequest -Uri "https://cloud-images.ubuntu.com/wsl/jammy/current/ubuntu-jammy-wsl-amd64-wsl.rootfs.tar.gz" -OutFile "$env:TEMP\ubuntu-22.04.tar.gz"
+
+# 3. Import vào WSL2
+wsl --import Ubuntu-22.04 C:\WSL\Ubuntu-22.04 "$env:TEMP\ubuntu-22.04.tar.gz" --version 2
+
+# 4. Kiểm tra
+wsl -l -v
+```
+
+Kết quả mong đợi:
+```
+  NAME            STATE           VERSION
+* Ubuntu-22.04    Running         2
+```
+
+### 4.1 Tạo user thường (rootfs import mặc định chạy bằng `root`)
+
+```powershell
+wsl -d Ubuntu-22.04 -u root
+```
+
+Trong shell Ubuntu vừa mở (đây là **bash**, không phải PowerShell nữa):
+
+```bash
+adduser benhub
+usermod -aG sudo benhub
+exit
+```
+
+---
+
+## W5. Bật systemd trong WSL2
+
+Ubuntu 22.04 trên WSL2 hỗ trợ `systemd` — cần bật để `systemctl enable docker`, cron, v.v. hoạt động như Linux thật.
+
+Trong PowerShell:
+
+```powershell
+wsl -d Ubuntu-22.04 -u root
+```
+
+Trong bash:
+
+```bash
+cat <<'EOF' > /etc/wsl.conf
+[boot]
+systemd=true
+
+[user]
+default=benhub
+EOF
+exit
+```
+
+Khởi động lại WSL để áp dụng:
+
+```powershell
+wsl --shutdown
+wsl -d Ubuntu-22.04
+```
+
+Kiểm tra systemd đã chạy (trong bash, giờ đăng nhập sẵn là user `benhub`):
+
+```bash
+systemctl status
+# Kỳ vọng: thấy "State: running", KHÔNG phải "System has not been booted with systemd"
+```
+
+> Từ đây, mọi lệnh bash ở các mục W6–W12 chạy **bên trong WSL2** (`wsl -d Ubuntu-22.04`), và về cơ bản **giống hệt Ubuntu/Debian thật** — chỉ khác CentOS ở chỗ dùng `apt` thay vì `dnf`, không cần SELinux.
+
+---
+
+## W6. Cài Docker Engine trong WSL2
+
+Trong bash (WSL2, user `benhub`, có quyền `sudo`):
+
+```bash
+# 1. Cập nhật hệ thống + công cụ cơ bản
+sudo apt update && sudo apt upgrade -y
+sudo apt install -y ca-certificates curl gnupg lsb-release git nano openssl
+
+# 2. Thêm GPG key + repo chính thức của Docker
+sudo install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+sudo chmod a+r /etc/apt/keyrings/docker.gpg
+
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | \
+  sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# 3. Cài Docker Engine
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# 4. Bật Docker qua systemd (chạy được vì đã bật systemd ở W5)
+sudo systemctl enable --now docker
+
+# 5. Dùng Docker không cần sudo
+sudo usermod -aG docker $USER
+newgrp docker
+
+# 6. Kiểm tra
+docker --version
+docker compose version
+```
+
+Kết quả mong đợi giống hệt [mục 5.5 Phần I](#55-thêm-user-vào-nhóm-docker):
+```
+Docker version 26.x.x, build ...
+Docker Compose version v2.x.x
+```
+
+---
+
+## W7. Clone dự án, tạo `.env`, cài SSL
+
+Vẫn trong bash (WSL2). **Clone vào filesystem của Linux (`~/benhub`), không clone vào `/mnt/c/...`** — I/O qua ranh giới Windows↔WSL rất chậm, sẽ làm `docker build` chậm gấp nhiều lần:
+
+```bash
+mkdir -p ~/benhub
+cd ~/benhub
+git clone https://github.com/tdgiang/Benhub.git .
+ls
+```
+
+Từ đây, các bước sau **giống hệt Phần I**, chỉ đổi `dnf`/`yum` → `apt` khi cần cài gói, và đường dẫn `/opt/benhub` → `~/benhub`:
+
+- **Tạo `.env`**: làm y hệt [mục 7 Phần I](#7-tạo-file-cấu-hình-env) (`nano .env`, sinh secret bằng `openssl rand`, `chmod 600 .env`).
+- **Cài SSL certbot**:
+  ```bash
+  sudo apt install -y certbot
+  sudo certbot certonly --standalone \
+    -d benhub.vn -d www.benhub.vn \
+    --email admin@benhub.vn --agree-tos --non-interactive
+  mkdir -p ~/benhub/deploy/certs
+  sudo cp /etc/letsencrypt/live/benhub.vn/fullchain.pem ~/benhub/deploy/certs/
+  sudo cp /etc/letsencrypt/live/benhub.vn/privkey.pem   ~/benhub/deploy/certs/
+  sudo chown $USER:$USER ~/benhub/deploy/certs/*.pem
+  chmod 600 ~/benhub/deploy/certs/*.pem
+  ```
+  (Chi tiết đầy đủ, gồm cả phương án Snap nếu `apt` không lấy được cert: xem [mục 8 Phần I](#8-cấu-hình-ssl-https).)
+
+> Port 80 cần mở **trên Windows Firewall** (không phải `firewall-cmd`) để certbot xin chứng chỉ thành công — xem [W10](#w10-windows-firewall) trước khi chạy `certbot`.
+
+---
+
+## W8. Chạy deploy
+
+Vẫn trong bash (WSL2):
+
+```bash
+cd ~/benhub
+bash deploy/deploy.sh
+```
+
+Script chạy y hệt mô tả ở [mục 9 Phần I](#9-chạy-deploy) — build image, migrate DB, start toàn bộ stack. Theo dõi log:
+
+```bash
+docker compose -f docker-compose.production.yml logs -f
+```
+
+Kiểm tra containers **bên trong WSL** trước:
+
+```bash
+curl -I http://localhost:443 --insecure
+docker compose -f docker-compose.production.yml ps
+```
+
+Nếu 2 lệnh trên OK nhưng `https://benhub.vn` chưa vào được từ bên ngoài — bình thường, còn thiếu bước **W9** (port-forward Windows ra ngoài).
+
+---
+
+## W9. Port-forward Windows ↔ WSL2 (bắt buộc)
+
+Đây là khác biệt lớn nhất so với VPS Linux thuần: **card mạng public của VPS gắn vào Windows host**, còn container Docker chạy **bên trong WSL2** — một máy ảo NAT riêng với IP nội bộ (`172.x.x.x`) đổi mỗi lần reboot. Không forward port thì request từ Internet vào port 80/443 của Windows **không bao giờ tới được** container.
+
+### 9.1 Lấy IP hiện tại của WSL2
+
+Trong PowerShell:
+
+```powershell
+wsl -d Ubuntu-22.04 -- hostname -I
+```
+
+Kết quả ví dụ: `172.28.144.5`
+
+### 9.2 Tạo port-forward (PowerShell, Administrator)
+
+```powershell
+$wslIp = (wsl -d Ubuntu-22.04 -- hostname -I).Trim().Split(" ")[0]
+
+foreach ($port in 80, 443) {
+    netsh interface portproxy delete v4tov4 listenport=$port listenaddress=0.0.0.0 2>$null
+    netsh interface portproxy add    v4tov4 listenport=$port listenaddress=0.0.0.0 connectport=$port connectaddress=$wslIp
+}
+
+netsh interface portproxy show v4tov4
+```
+
+Kết quả mong đợi:
+```
+Listen on ipv4:             Connect to ipv4:
+
+Address         Port        Address         Port
+--------------- ----------  --------------- ----------
+0.0.0.0         80          172.28.144.5    80
+0.0.0.0         443         172.28.144.5    443
+```
+
+> **IP của WSL2 đổi mỗi lần Windows Server reboot** → rule portproxy ở trên sẽ trỏ sai IP sau khi restart nếu không làm lại. Giải quyết dứt điểm ở [W11](#w11-tự-khởi-động-khi-windows-server-reboot) bằng script tự refresh khi khởi động.
+
+### 9.3 Kiểm tra từ máy cá nhân
+
+```bash
+curl -I https://benhub.vn
+```
+
+Nếu vẫn không vào được, kiểm tra tiếp [W10](#w10-windows-firewall).
+
+---
+
+## W10. Windows Firewall
+
+Thay cho `firewall-cmd` của CentOS. Chạy trong **PowerShell (Administrator)**:
+
+```powershell
+New-NetFirewallRule -DisplayName "HTTP"  -Direction Inbound -Protocol TCP -LocalPort 80  -Action Allow
+New-NetFirewallRule -DisplayName "HTTPS" -Direction Inbound -Protocol TCP -LocalPort 443 -Action Allow
+
+# Kiểm tra
+Get-NetFirewallRule -DisplayName "HTTP","HTTPS" | Select-Object DisplayName, Enabled, Direction, Action
+```
+
+> **Cảnh báo:** không tắt/xoá rule cho port RDP (3389) hoặc SSH (22 nếu đã bật ở W2) — sẽ mất quyền truy cập VPS và phải nhờ nhà cung cấp can thiệp qua console riêng.
+
+---
+
+## W11. Tự khởi động khi Windows Server reboot
+
+WSL2 **không tự chạy** khi Windows khởi động lại — cần Task Scheduler khởi động distro và refresh port-forward mỗi lần reboot.
+
+### 11.1 Tạo script refresh port-forward
+
+Trong PowerShell (Administrator), lưu file `C:\WSL\refresh-portproxy.ps1`:
+
+```powershell
+New-Item -ItemType Directory -Force -Path C:\WSL | Out-Null
+
+@'
+$wslIp = (wsl -d Ubuntu-22.04 -- hostname -I).Trim().Split(" ")[0]
+foreach ($port in 80, 443) {
+    netsh interface portproxy delete v4tov4 listenport=$port listenaddress=0.0.0.0 2>$null
+    netsh interface portproxy add    v4tov4 listenport=$port listenaddress=0.0.0.0 connectport=$port connectaddress=$wslIp
+}
+'@ | Out-File -Encoding utf8 C:\WSL\refresh-portproxy.ps1
+```
+
+### 11.2 Đăng ký 2 Scheduled Task chạy lúc khởi động
+
+```powershell
+# Task 1 — khởi động WSL2 distro (dockerd tự chạy nhờ systemd đã bật ở W5)
+$action1 = New-ScheduledTaskAction -Execute "wsl.exe" -Argument "-d Ubuntu-22.04 -u root -e /bin/true"
+$trigger1 = New-ScheduledTaskTrigger -AtStartup
+$principal = New-ScheduledTaskPrincipal -UserId "SYSTEM" -LogonType ServiceAccount -RunLevel Highest
+$settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -DontStopOnIdleEnd -ExecutionTimeLimit ([TimeSpan]::Zero)
+
+Register-ScheduledTask -TaskName "WSL-Start-Ubuntu" -Action $action1 -Trigger $trigger1 -Principal $principal -Settings $settings -Force
+
+# Task 2 — refresh port-forward, chạy trễ 30s để chắc WSL2 đã lên hẳn
+$action2 = New-ScheduledTaskAction -Execute "powershell.exe" -Argument "-ExecutionPolicy Bypass -File C:\WSL\refresh-portproxy.ps1"
+$trigger2 = New-ScheduledTaskTrigger -AtStartup
+$trigger2.Delay = "PT30S"
+
+Register-ScheduledTask -TaskName "WSL-PortProxy-Refresh" -Action $action2 -Trigger $trigger2 -Principal $principal -Settings $settings -Force
+```
+
+### 11.3 Kiểm tra
+
+```powershell
+Restart-Computer
+```
+
+Sau khi Windows khởi động lại và RDP vào lại được:
+
+```powershell
+wsl -l -v                        # Ubuntu-22.04 phải ở trạng thái Running
+netsh interface portproxy show v4tov4   # phải thấy đúng IP WSL2 mới
+```
+
+```bash
+# trong WSL
+docker compose -f ~/benhub/docker-compose.production.yml ps   # tất cả container phải Up
+```
+
+---
+
+## W12. Backup, cập nhật code, xử lý sự cố
+
+Vì Docker chạy trong WSL2 Ubuntu **với systemd bật**, mọi thứ ở đây **giống hệt Linux thật** — chạy trong bash (`wsl -d Ubuntu-22.04`), không cần viết lại riêng cho Windows:
+
+- **Backup định kỳ**: làm y hệt [mục 13 Phần I](#13-backup-định-kỳ) — `crontab -e` hoạt động bình thường vì `cron` chạy qua systemd. Cài `cron` nếu thiếu: `sudo apt install -y cron && sudo systemctl enable --now cron`.
+- **Gia hạn SSL tự động**: y hệt [mục 12 Phần I](#12-thiết-lập-tự-động-gia-hạn-ssl), cron job giống nguyên văn.
+- **Cập nhật code sau này**: y hệt [mục 14 Phần I](#14-quy-trình-cập-nhật-code-sau-này) (`git pull` → `docker compose build` → `up -d --no-deps`), chạy trong `~/benhub`.
+- **Xử lý sự cố chung** (container không chạy, backend 500, hết dung lượng disk...): y hệt [mục 15 Phần I](#15-xử-lý-sự-cố-thường-gặp) — **bỏ qua phần SELinux** (không tồn tại trên Ubuntu/WSL2) và phần aaPanel (đặc thù panel Linux, không dùng trên Windows).
+
+### Sự cố đặc thù Windows Server / WSL2
+
+**`https://benhub.vn` không vào được nhưng container chạy bình thường trong WSL:**
+
+```powershell
+# 1. Kiểm tra WSL2 có đang chạy không
+wsl -l -v
+
+# 2. Kiểm tra port-forward còn trỏ đúng IP không (IP đổi sau mỗi lần WSL2 restart)
+netsh interface portproxy show v4tov4
+wsl -d Ubuntu-22.04 -- hostname -I
+
+# Nếu IP lệch nhau → chạy lại script refresh
+powershell -ExecutionPolicy Bypass -File C:\WSL\refresh-portproxy.ps1
+```
+
+**WSL2 báo lỗi liên quan Hyper-V / ảo hoá khi khởi động:**
+
+Nested virtualization chưa bật ở tầng hypervisor của nhà cung cấp VPS — xem lại [W1](#w1-yêu-cầu-hệ-thống), liên hệ nhà cung cấp.
+
+**Docker build rất chậm (>15 phút cho lần đầu):**
+
+Repo đang nằm ở `/mnt/c/...` thay vì filesystem Linux của WSL2. Clone lại vào `~/benhub` (xem [W7](#w7-clone-dự-án-tạo-env-cài-ssl)).
+
+**Sau khi Windows Update / reboot, mất kết nối tới website:**
+
+Windows Update đôi khi reset Scheduled Task hoặc rule portproxy. Chạy lại 2 lệnh kiểm tra ở mục "container chạy bình thường trong WSL" phía trên; nếu Task Scheduler bị vô hiệu hoá, chạy lại toàn bộ [W11.2](#w11-tự-khởi-động-khi-windows-server-reboot).
+
+---
+
+## W13. Checklist Windows Server
+
+```
+CHUẨN BỊ
+[ ] VPS Windows Server 2019/2022 đã có (≥ 4GB RAM)
+[ ] Nested virtualization đã được nhà cung cấp bật (WSL2 cần Hyper-V)
+[ ] Domain benhub.vn đã trỏ về IP VPS
+[ ] RDP vào được VPS bằng Administrator
+
+WSL2 + UBUNTU
+[ ] dism.exe bật Microsoft-Windows-Subsystem-Linux + VirtualMachinePlatform
+[ ] Restart-Computer
+[ ] Cài wsl_update_x64.msi, wsl --set-default-version 2
+[ ] wsl --import Ubuntu-22.04 ... (tải rootfs từ cloud-images.ubuntu.com/wsl)
+[ ] Tạo user thường (adduser benhub, usermod -aG sudo)
+[ ] /etc/wsl.conf bật systemd=true, default user benhub
+[ ] wsl --shutdown && wsl -d Ubuntu-22.04 → systemctl status chạy "running"
+
+DOCKER (trong WSL2, giống Ubuntu thật)
+[ ] apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
+[ ] sudo systemctl enable --now docker
+[ ] usermod -aG docker $USER
+
+DỰ ÁN (trong WSL2)
+[ ] git clone vào ~/benhub (KHÔNG phải /mnt/c/...)
+[ ] Tạo .env với đầy đủ secrets
+[ ] chmod 600 .env
+[ ] certbot certonly --standalone -d benhub.vn -d www.benhub.vn
+[ ] cp certs vào deploy/certs/, chown về user, chmod 600
+
+DEPLOY
+[ ] bash deploy/deploy.sh (trong WSL2)
+[ ] docker compose ps: 5 containers đều Up (kiểm tra trong WSL)
+
+MẠNG WINDOWS ↔ WSL2 (bước dễ quên nhất)
+[ ] netsh interface portproxy add v4tov4 cho port 80 và 443 trỏ đúng IP WSL2
+[ ] New-NetFirewallRule mở port 80/443 trên Windows Firewall
+[ ] Task Scheduler "WSL-Start-Ubuntu" chạy AtStartup
+[ ] Task Scheduler "WSL-PortProxy-Refresh" chạy AtStartup (delay 30s)
+[ ] Restart-Computer thử lại — verify portproxy show v4tov4 tự cập nhật đúng
+
+KIỂM TRA
+[ ] https://benhub.vn mở được từ máy ngoài VPS
+[ ] HTTPS có khoá xanh
+[ ] /login và /cms/dashboard hoạt động
+
+BẢO MẬT & VẬN HÀNH
+[ ] cron trong WSL2 cho gia hạn SSL + backup DB (giống Linux, nhờ systemd)
+[ ] mkdir -p ~/benhub/backups
 ```
