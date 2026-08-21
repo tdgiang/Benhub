@@ -21,14 +21,19 @@ export function PartnerSignupForm() {
 
   const schema = z.object({
     companyName: z.string().min(2, t("err_company_min")),
-    taxCode: z.string().regex(/^\d{10}(-\d{3})?$/, t("err_taxcode")),
+    taxCode: z
+      .string()
+      .min(1, t("err_taxcode_required"))
+      .regex(/^(\d{10}|\d{13})$/, t("err_taxcode_format")),
     address: z.string().min(5, t("err_address_min")),
     representative: z.string().min(2, t("err_representative_min")),
     phone: z.string().regex(/^0[0-9]{9}$/, t("err_phone")),
     email: z.string().email(t("err_email")),
-    consent: z.literal(true, {
-      errorMap: () => ({ message: t("err_consent") }),
-    }),
+    username: z
+      .string()
+      .min(1, t("err_username_required"))
+      .max(32, t("err_username_max"))
+      .regex(/^[a-zA-Z0-9]+$/, t("err_username_format")),
   });
 
   type FormValues = z.infer<typeof schema>;
@@ -63,7 +68,7 @@ export function PartnerSignupForm() {
           representative: values.representative,
           phone: values.phone,
           email: values.email,
-          username: values.email,
+          username: values.username,
         }),
       });
 
@@ -273,6 +278,23 @@ export function PartnerSignupForm() {
           </div>
         </div>
 
+        <div>
+          <label htmlFor="username" className={labelClass}>
+            {t("label_username")}
+          </label>
+          <input
+            id="username"
+            {...register("username")}
+            className={inputClass}
+            placeholder={t("placeholder_username")}
+            autoCapitalize="none"
+            autoCorrect="off"
+          />
+          {errors.username && (
+            <p className={errorClass}>{errors.username.message}</p>
+          )}
+        </div>
+
         {/* Consent */}
         {/* <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4 text-sm leading-relaxed text-slate-600 transition hover:border-orange-200 hover:bg-orange-50/40">
           <input
@@ -311,6 +333,26 @@ export function PartnerSignupForm() {
             </>
           )}
         </button>
+
+        <div className="mt-4 text-center text-sm text-slate-600 ">
+          <a
+            href="https://cms-mine.benhub.vn"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Đã có tài khoản?{" "}
+            <span
+              style={{
+                textDecoration: "underline",
+                color: "#f97316",
+                fontWeight: "bold",
+                fontSize: "14px",
+              }}
+            >
+              Đăng nhập
+            </span>
+          </a>
+        </div>
       </div>
     </form>
   );
