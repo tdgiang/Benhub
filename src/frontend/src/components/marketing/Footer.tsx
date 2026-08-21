@@ -21,6 +21,7 @@ export function Footer({ className }: { className?: string }) {
     { label: t("company_hiring"), href: "#" },
     { label: t("company_partner"), href: "/doi-tac" },
     { label: t("company_investor"), href: "/#roadmap" },
+    { label: t("company_help"), href: "/trung-tam-tro-giup" },
     { label: t("privacy"), href: "/chinh-sach-bao-mat-thong-tin" },
   ];
 
