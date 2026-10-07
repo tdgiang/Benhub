@@ -370,7 +370,7 @@ export function RegisterSection() {
                         <input
                           id="fullName"
                           {...register("fullName")}
-                          placeholder="Nguyễn Văn Thi"
+                          placeholder="Nguyễn Văn An"
                           className={inputCls}
                         />
                         {errors.fullName && (

@@ -53,7 +53,9 @@ describe('App (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     app.setGlobalPrefix('api/v1');
-    app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
+    app.useGlobalPipes(
+      new ValidationPipe({ whitelist: true, transform: true }),
+    );
     app.useGlobalInterceptors(new TransformInterceptor());
     await app.init();
   });
@@ -83,7 +85,9 @@ describe('App (e2e)', () => {
     });
 
     it('returns 404 for non-existent route', () => {
-      return request(app.getHttpServer()).get('/api/v1/non-existent').expect(404);
+      return request(app.getHttpServer())
+        .get('/api/v1/non-existent')
+        .expect(404);
     });
   });
 
@@ -93,7 +97,7 @@ describe('App (e2e)', () => {
       const mockLead = {
         id: 'uuid-1',
         segment: 'driver',
-        fullName: 'Nguyễn Văn Thi',
+        fullName: 'Nguyễn Văn An',
         phone: '0912345678',
         province: 'Hồ Chí Minh',
         source: 'driver_signup_page',
@@ -107,7 +111,7 @@ describe('App (e2e)', () => {
         .post('/api/v1/leads')
         .send({
           segment: 'driver',
-          fullName: 'Nguyễn Văn Thi',
+          fullName: 'Nguyễn Văn An',
           phone: '0912345678',
           province: 'Hồ Chí Minh',
           source: 'driver_signup_page',
@@ -116,17 +120,30 @@ describe('App (e2e)', () => {
         .expect((res) => {
           expect(res.body.statusCode).toBe(201);
           expect(res.body.data.segment).toBe('driver');
-          expect(res.body.data.fullName).toBe('Nguyễn Văn Thi');
+          expect(res.body.data.fullName).toBe('Nguyễn Văn An');
         });
     });
 
     it('returns 201 with valid partner lead', () => {
-      const mockLead = { id: 'uuid-2', segment: 'partner', fullName: 'B', phone: '0987654321', createdAt: new Date(), updatedAt: new Date(), deletedAt: null };
+      const mockLead = {
+        id: 'uuid-2',
+        segment: 'partner',
+        fullName: 'B',
+        phone: '0987654321',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
       mockPrismaService.lead.create.mockResolvedValue(mockLead);
 
       return request(app.getHttpServer())
         .post('/api/v1/leads')
-        .send({ segment: 'partner', fullName: 'Công ty B', phone: '0987654321', companyName: 'Cty B' })
+        .send({
+          segment: 'partner',
+          fullName: 'Công ty B',
+          phone: '0987654321',
+          companyName: 'Cty B',
+        })
         .expect(201);
     });
 
@@ -167,7 +184,9 @@ describe('App (e2e)', () => {
 
   describe('GET /api/v1/leads/export/csv (admin)', () => {
     it('returns 401 without token', () => {
-      return request(app.getHttpServer()).get('/api/v1/leads/export/csv').expect(401);
+      return request(app.getHttpServer())
+        .get('/api/v1/leads/export/csv')
+        .expect(401);
     });
   });
 
@@ -189,13 +208,22 @@ describe('App (e2e)', () => {
 
     it('returns 200 with posts list', () => {
       const mockPosts = [
-        { id: 'p1', title: 'Post 1', slug: 'post-1', status: 'PUBLISHED', content: '<p>test</p>', createdAt: new Date(), updatedAt: new Date(), deletedAt: null },
+        {
+          id: 'p1',
+          title: 'Post 1',
+          slug: 'post-1',
+          status: 'PUBLISHED',
+          content: '<p>test</p>',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+          deletedAt: null,
+        },
       ];
       mockPrismaService.post.findMany.mockResolvedValue(mockPosts);
       mockPrismaService.post.count.mockResolvedValue(1);
 
       return request(app.getHttpServer())
-        .get('/api/v1/posts?page=2&limit=5')   // different cache key
+        .get('/api/v1/posts?page=2&limit=5') // different cache key
         .expect(200)
         .expect((res) => {
           expect(res.body.success).toBe(true);
@@ -238,7 +266,16 @@ describe('App (e2e)', () => {
     });
 
     it('returns 200 for existing slug', () => {
-      const post = { id: 'p1', slug: 'my-post', title: 'My Post', content: '<p>c</p>', status: 'PUBLISHED', createdAt: new Date(), updatedAt: new Date(), deletedAt: null };
+      const post = {
+        id: 'p1',
+        slug: 'my-post',
+        title: 'My Post',
+        content: '<p>c</p>',
+        status: 'PUBLISHED',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
       mockPrismaService.post.findFirst.mockResolvedValue(post);
 
       return request(app.getHttpServer())

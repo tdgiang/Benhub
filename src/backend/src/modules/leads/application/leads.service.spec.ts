@@ -45,23 +45,31 @@ describe('LeadsService', () => {
   describe('create', () => {
     const dto = {
       segment: LeadSegment.driver,
-      fullName: 'Nguyễn Văn Thi',
+      fullName: 'Nguyễn Văn An',
       phone: '0912345678',
       province: 'Hồ Chí Minh',
       source: 'driver_signup_page',
     };
 
     it('saves the lead and returns it', async () => {
-      const saved = { id: 'uuid-1', ...dto, createdAt: new Date(), updatedAt: new Date(), deletedAt: null };
+      const saved = {
+        id: 'uuid-1',
+        ...dto,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
       mockRepository.create.mockResolvedValue(saved);
 
       const result = await service.create(dto);
 
-      expect(mockRepository.create).toHaveBeenCalledWith(expect.objectContaining({
-        segment: LeadSegment.driver,
-        fullName: 'Nguyễn Văn Thi',
-        phone: '0912345678',
-      }));
+      expect(mockRepository.create).toHaveBeenCalledWith(
+        expect.objectContaining({
+          segment: LeadSegment.driver,
+          fullName: 'Nguyễn Văn An',
+          phone: '0912345678',
+        }),
+      );
       expect(result.id).toBe('uuid-1');
     });
 
@@ -70,7 +78,13 @@ describe('LeadsService', () => {
       mockRepository.findAll.mockResolvedValue([[], 0]);
       await service.findAll({ page: 1, limit: 10 } as any);
 
-      mockRepository.create.mockResolvedValue({ id: 'x', ...dto, createdAt: new Date(), updatedAt: new Date(), deletedAt: null });
+      mockRepository.create.mockResolvedValue({
+        id: 'x',
+        ...dto,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      });
       mockCache.del.mockClear();
 
       await service.create(dto);
@@ -85,7 +99,13 @@ describe('LeadsService', () => {
         phone: '0987654321',
         companyName: 'Công ty TNHH ABC',
       };
-      const saved = { id: 'uuid-2', ...partnerDto, createdAt: new Date(), updatedAt: new Date(), deletedAt: null };
+      const saved = {
+        id: 'uuid-2',
+        ...partnerDto,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        deletedAt: null,
+      };
       mockRepository.create.mockResolvedValue(saved);
 
       const result = await service.create(partnerDto);
@@ -97,8 +117,22 @@ describe('LeadsService', () => {
   /* ─── findAll ─── */
   describe('findAll', () => {
     const mockLeads = [
-      { id: '1', segment: 'driver', fullName: 'A', phone: '09', createdAt: new Date(), deletedAt: null },
-      { id: '2', segment: 'partner', fullName: 'B', phone: '08', createdAt: new Date(), deletedAt: null },
+      {
+        id: '1',
+        segment: 'driver',
+        fullName: 'A',
+        phone: '09',
+        createdAt: new Date(),
+        deletedAt: null,
+      },
+      {
+        id: '2',
+        segment: 'partner',
+        fullName: 'B',
+        phone: '08',
+        createdAt: new Date(),
+        deletedAt: null,
+      },
     ];
 
     it('returns paginated list', async () => {
@@ -114,7 +148,11 @@ describe('LeadsService', () => {
     it('filters by segment', async () => {
       mockRepository.findAll.mockResolvedValue([[mockLeads[0]], 1]);
 
-      await service.findAll({ segment: LeadSegment.driver, page: 1, limit: 10 } as any);
+      await service.findAll({
+        segment: LeadSegment.driver,
+        page: 1,
+        limit: 10,
+      } as any);
 
       expect(mockRepository.findAll).toHaveBeenCalledWith(
         expect.objectContaining({
@@ -143,7 +181,8 @@ describe('LeadsService', () => {
       await service.findAll({
         dateFrom: '2026-01-01',
         dateTo: '2026-12-31',
-        page: 1, limit: 10,
+        page: 1,
+        limit: 10,
       } as any);
 
       expect(mockRepository.findAll).toHaveBeenCalledWith(
@@ -159,7 +198,10 @@ describe('LeadsService', () => {
     });
 
     it('returns cached result if available', async () => {
-      const cached = { items: mockLeads, meta: { total: 2, page: 1, limit: 10, totalPages: 1 } };
+      const cached = {
+        items: mockLeads,
+        meta: { total: 2, page: 1, limit: 10, totalPages: 1 },
+      };
       mockCache.get.mockResolvedValue(cached);
 
       const result = await service.findAll({ page: 1, limit: 10 } as any);
@@ -183,11 +225,16 @@ describe('LeadsService', () => {
     it('throws NotFoundException when lead not found', async () => {
       mockRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.findOne('missing')).rejects.toThrow(NotFoundException);
+      await expect(service.findOne('missing')).rejects.toThrow(
+        NotFoundException,
+      );
     });
 
     it('throws NotFoundException when lead is soft-deleted', async () => {
-      mockRepository.findOne.mockResolvedValue({ id: 'x', deletedAt: new Date() });
+      mockRepository.findOne.mockResolvedValue({
+        id: 'x',
+        deletedAt: new Date(),
+      });
 
       await expect(service.findOne('x')).rejects.toThrow(NotFoundException);
     });
@@ -203,7 +250,10 @@ describe('LeadsService', () => {
 
       const lead = { id: 'uuid-1', deletedAt: null };
       mockRepository.findOne.mockResolvedValue(lead);
-      mockRepository.softRemove.mockResolvedValue({ ...lead, deletedAt: new Date() });
+      mockRepository.softRemove.mockResolvedValue({
+        ...lead,
+        deletedAt: new Date(),
+      });
 
       const result = await service.remove('uuid-1');
 
@@ -215,7 +265,9 @@ describe('LeadsService', () => {
     it('throws NotFoundException when lead does not exist', async () => {
       mockRepository.findOne.mockResolvedValue(null);
 
-      await expect(service.remove('missing')).rejects.toThrow(NotFoundException);
+      await expect(service.remove('missing')).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 
@@ -261,7 +313,10 @@ describe('LeadsService', () => {
     it('applies both dateFrom and dateTo', async () => {
       mockRepository.findAll.mockResolvedValue([[], 0]);
 
-      await service.findAllForExport({ dateFrom: '2026-01-01', dateTo: '2026-12-31' } as any);
+      await service.findAllForExport({
+        dateFrom: '2026-01-01',
+        dateTo: '2026-12-31',
+      } as any);
 
       const call = mockRepository.findAll.mock.calls[0][0];
       expect(call.where.createdAt.gte).toBeInstanceOf(Date);

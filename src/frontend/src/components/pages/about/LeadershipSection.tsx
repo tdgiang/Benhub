@@ -12,7 +12,7 @@ interface Leader {
 
 const leaders: Leader[] = [
   {
-    name: "Nguyễn Văn Thi",
+    name: "Nguyễn Văn An",
     title: "CEO & Co-Founder",
     bio: "10+ năm kinh nghiệm trong ngành logistics và công nghệ. Cựu quản lý cấp cao tại các tập đoàn xây dựng lớn tại Việt Nam.",
     initials: "NA",

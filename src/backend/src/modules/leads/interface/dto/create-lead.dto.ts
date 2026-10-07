@@ -13,12 +13,15 @@ import {
 import { LeadSegment } from '@prisma/client';
 
 export class CreateLeadDto {
-  @ApiProperty({ enum: LeadSegment, description: 'Phân khúc: driver hoặc partner' })
+  @ApiProperty({
+    enum: LeadSegment,
+    description: 'Phân khúc: driver hoặc partner',
+  })
   @IsEnum(LeadSegment)
   @IsNotEmpty()
   segment: LeadSegment;
 
-  @ApiProperty({ description: 'Họ tên', example: 'Nguyễn Văn Thi' })
+  @ApiProperty({ description: 'Họ tên', example: 'Nguyễn Văn An' })
   @IsString()
   @IsNotEmpty()
   @MaxLength(120)
@@ -27,7 +30,9 @@ export class CreateLeadDto {
   @ApiProperty({ description: 'Số điện thoại', example: '0912345678' })
   @IsString()
   @IsNotEmpty()
-  @Matches(/^0[0-9]{9}$/, { message: 'Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0)' })
+  @Matches(/^0[0-9]{9}$/, {
+    message: 'Số điện thoại không hợp lệ (10 số, bắt đầu bằng 0)',
+  })
   phone: string;
 
   @ApiPropertyOptional({ description: 'Email liên hệ' })
@@ -65,7 +70,9 @@ export class CreateLeadDto {
   @IsOptional()
   fleetSize?: number;
 
-  @ApiPropertyOptional({ description: 'Nguồn (driver_signup_page, partner_page…)' })
+  @ApiPropertyOptional({
+    description: 'Nguồn (driver_signup_page, partner_page…)',
+  })
   @IsString()
   @IsOptional()
   @MaxLength(80)

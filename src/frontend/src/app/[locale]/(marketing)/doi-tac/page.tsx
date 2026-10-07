@@ -15,7 +15,7 @@ import {
   Truck,
   Zap,
 } from "lucide-react";
-import { PartnerSignupForm } from "@/components/marketing/PartnerSignupForm";
+import { PartnerSignupTabs } from "@/components/marketing/PartnerSignupTabs";
 import { Link } from "@/i18n/navigation";
 
 export async function generateMetadata({
@@ -438,7 +438,7 @@ export default async function PartnerPage({
               </div>
             </div>
             <div>
-              <PartnerSignupForm />
+              <PartnerSignupTabs defaultTab="business" source="partner_page" />
             </div>
           </div>
         </div>

@@ -25,6 +25,9 @@ export function PartnerSignupForm({
   const t = useTranslations("PartnerForm");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  /** Mine variant uses `mine_<key>` copy when present, else the shared key. */
+  const tv = (key: string) =>
+    variant === "mine" && t.has(`mine_${key}`) ? t(`mine_${key}`) : t(key);
 
   const schema = z.object({
     companyName: z.string().min(2, t("err_company_min")),
@@ -97,10 +100,7 @@ export function PartnerSignupForm({
   /* ─── Success state ─── */
   if (submitState === "success") {
     return (
-      <div
-        id="partner-form"
-        className="rounded-[2rem] border border-emerald-200 bg-emerald-50 p-6 shadow-2xl shadow-emerald-950/10 md:p-8"
-      >
+      <div className="rounded-[2rem] border border-emerald-200 bg-emerald-50 p-6 shadow-2xl shadow-emerald-950/10 md:p-8">
         <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-200">
           <CheckCircle2 className="h-7 w-7" />
         </div>
@@ -108,7 +108,7 @@ export function PartnerSignupForm({
           {t("success_title")}
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-slate-600">
-          {t("success_desc")}
+          {tv("success_desc")}
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
           <a
@@ -117,7 +117,7 @@ export function PartnerSignupForm({
             rel="noopener noreferrer"
             className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-orange-500 px-5 py-3 text-sm font-black text-white transition hover:bg-orange-600 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200"
           >
-            {t("success_cms_cta")}
+            {tv("success_cms_cta")}
           </a>
           <button
             type="button"
@@ -134,7 +134,6 @@ export function PartnerSignupForm({
   /* ─── Form ─── */
   return (
     <form
-      id="partner-form"
       onSubmit={handleSubmit(onSubmit)}
       className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-2xl shadow-slate-950/20"
     >
@@ -143,7 +142,7 @@ export function PartnerSignupForm({
         <div className="mb-5 flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-white">
             <Send className="h-3.5 w-3.5" />
-            {t(variant === "mine" ? "mine_badge" : "badge")}
+            {tv("badge")}
           </span>
           <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
             <Clock3 className="h-3.5 w-3.5 text-orange-500" />
@@ -151,14 +150,14 @@ export function PartnerSignupForm({
           </span>
         </div>
         <h2 className="text-2xl font-black leading-tight text-slate-950 md:text-3xl">
-          {t(variant === "mine" ? "mine_heading" : "heading")}
+          {tv("heading")}
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-slate-600">
-          {t("sub")}
+          {tv("sub")}
         </p>
 
         <div className="mt-5 grid gap-2 sm:grid-cols-3">
-          {([t("shield_1"), t("shield_2"), t("shield_3")] as string[]).map(
+          {([tv("shield_1"), tv("shield_2"), tv("shield_3")] as string[]).map(
             (item) => (
               <div
                 key={item}
@@ -178,7 +177,7 @@ export function PartnerSignupForm({
           <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-slate-950 text-sm font-black text-white">
             1
           </span>
-          <p className="font-black text-slate-950">{t("section_1")}</p>
+          <p className="font-black text-slate-950">{tv("section_1")}</p>
         </div>
 
         <div>
@@ -189,7 +188,7 @@ export function PartnerSignupForm({
             id="companyName"
             {...register("companyName")}
             className={inputClass}
-            placeholder={t("placeholder_company")}
+            placeholder={tv("placeholder_company")}
           />
           {errors.companyName && (
             <p className={errorClass}>{errors.companyName.message}</p>
@@ -335,7 +334,7 @@ export function PartnerSignupForm({
             </>
           ) : (
             <>
-              {t(variant === "mine" ? "mine_submit" : "submit")}
+              {tv("submit")}
               <Send className="h-4 w-4" />
             </>
           )}
@@ -347,7 +346,7 @@ export function PartnerSignupForm({
             target="_blank"
             rel="noopener noreferrer"
           >
-            Đã có tài khoản?{" "}
+            {t("has_account")}{" "}
             <span
               style={{
                 textDecoration: "underline",
@@ -356,7 +355,7 @@ export function PartnerSignupForm({
                 fontSize: "14px",
               }}
             >
-              Đăng nhập
+              {t("login")}
             </span>
           </a>
         </div>

@@ -35,7 +35,7 @@ import {
   Wallet,
   Workflow,
 } from "lucide-react";
-import { PartnerSignupForm } from "@/components/marketing/PartnerSignupForm";
+import { PartnerSignupTabs } from "@/components/marketing/PartnerSignupTabs";
 import { SITE_URL } from "@/lib/constants";
 import { MINE_PLACEHOLDER as PLACEHOLDER } from "@/lib/mine-placeholders";
 
@@ -1224,7 +1224,7 @@ export default async function BenHubMinePage({
               </div>
             </div>
             <div>
-              <PartnerSignupForm variant="mine" />
+              <PartnerSignupTabs defaultTab="mine" source="mine_page" />
             </div>
           </div>
         </div>
