@@ -8,9 +8,11 @@ export function Footer({ className }: { className?: string }) {
   const products = [
     "BenHub Core",
     "BenHub Driver",
+    "BenHub Supervisor",
     "BenHub Fleet",
+    "BenHub Marketplace",
     "BenHub Finance",
-    "BenHub Materials",
+    "BenHub Mine",
     "BenHub AI Labs",
   ];
 

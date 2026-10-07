@@ -29,8 +29,8 @@ export async function generateMetadata({
       ? "Hợp Tác Đối Tác | BenHub — Logistics Công Trình"
       : "Partner With Us | BenHub — Construction Logistics",
     description: isVi
-      ? "Tham gia hệ sinh thái BenHub với tư cách chủ đầu tư, đội xe, mỏ vật liệu, tổ chức tài chính hoặc nhà đầu tư."
-      : "Join BenHub's ecosystem as an investor, fleet owner, material supplier, financial institution or strategic investor.",
+      ? "Tham gia hệ sinh thái BenHub với tư cách chủ đầu tư, đội xe, doanh nghiệp mỏ, tổ chức tài chính hoặc nhà đầu tư."
+      : "Join BenHub's ecosystem as an investor, fleet owner, quarry business, financial institution or strategic investor.",
   };
 }
 
@@ -55,12 +55,15 @@ const segments = [
   },
   {
     icon: Factory,
-    titleVi: "Mỏ Vật Liệu / Nhà Cung Ứng",
-    titleEn: "Material Suppliers",
+    titleVi: "Doanh Nghiệp Mỏ",
+    titleEn: "Quarry Businesses",
     descVi:
-      "Kết nối trực tiếp với hàng trăm dự án xây dựng, báo giá realtime và đặt hàng dễ dàng.",
+      "Dùng BenHub Mine quản lý kế hoạch khai thác, phiếu cân điện tử, công nợ và tiền lương trên một nền tảng.",
     descEn:
-      "Connect directly with hundreds of construction projects, realtime pricing and easy ordering.",
+      "Use BenHub Mine to manage extraction plans, digital weighbridge tickets, receivables and payroll on one platform.",
+    href: "/benhub-mine",
+    linkVi: "Tìm hiểu BenHub Mine",
+    linkEn: "Explore BenHub Mine",
   },
   {
     icon: Landmark,
@@ -252,7 +255,7 @@ export default async function PartnerPage({
           </div>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {segments.map(
-              ({ icon: Icon, titleVi, titleEn, descVi, descEn }) => (
+              ({ icon: Icon, titleVi, titleEn, descVi, descEn, ...link }) => (
                 <div
                   key={titleVi}
                   className="group rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:border-orange-200 hover:shadow-xl hover:shadow-orange-100/60"
@@ -266,6 +269,15 @@ export default async function PartnerPage({
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     {isVi ? descVi : descEn}
                   </p>
+                  {"href" in link && (
+                    <a
+                      href={link.href}
+                      className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-sm font-bold text-orange-600 transition hover:text-orange-700"
+                    >
+                      {isVi ? link.linkVi : link.linkEn}
+                      <ArrowRight className="h-4 w-4" />
+                    </a>
+                  )}
                 </div>
               ),
             )}

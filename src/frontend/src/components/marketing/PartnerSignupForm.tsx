@@ -14,7 +14,14 @@ const inputClass =
 const labelClass = "mb-2 block text-sm font-bold text-slate-800";
 const errorClass = "mt-1.5 text-xs font-medium text-red-500";
 
-export function PartnerSignupForm() {
+type PartnerSignupFormProps = {
+  /** "mine" shows BenHub Mine trial copy; registration flow is identical. */
+  variant?: "partner" | "mine";
+};
+
+export function PartnerSignupForm({
+  variant = "partner",
+}: PartnerSignupFormProps) {
   const t = useTranslations("PartnerForm");
   const [submitState, setSubmitState] = useState<SubmitState>("idle");
   const [errorMessage, setErrorMessage] = useState("");
@@ -136,7 +143,7 @@ export function PartnerSignupForm() {
         <div className="mb-5 flex flex-wrap items-center gap-2">
           <span className="inline-flex items-center gap-2 rounded-full bg-orange-500 px-3 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-white">
             <Send className="h-3.5 w-3.5" />
-            {t("badge")}
+            {t(variant === "mine" ? "mine_badge" : "badge")}
           </span>
           <span className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-xs font-bold text-slate-600">
             <Clock3 className="h-3.5 w-3.5 text-orange-500" />
@@ -144,7 +151,7 @@ export function PartnerSignupForm() {
           </span>
         </div>
         <h2 className="text-2xl font-black leading-tight text-slate-950 md:text-3xl">
-          {t("heading")}
+          {t(variant === "mine" ? "mine_heading" : "heading")}
         </h2>
         <p className="mt-3 text-sm leading-relaxed text-slate-600">
           {t("sub")}
@@ -328,7 +335,7 @@ export function PartnerSignupForm() {
             </>
           ) : (
             <>
-              {t("submit")}
+              {t(variant === "mine" ? "mine_submit" : "submit")}
               <Send className="h-4 w-4" />
             </>
           )}

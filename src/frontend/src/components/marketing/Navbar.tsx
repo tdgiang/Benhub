@@ -17,6 +17,7 @@ export function Navbar({ className }: { className?: string }) {
   const navLinks = [
     { label: t("nav_solution"), href: "/#solution" },
     { label: t("nav_products"), href: "/#products" },
+    { label: t("nav_mine"), href: "/benhub-mine" },
     { label: t("nav_ecosystem"), href: "/#ecosystem" },
     { label: t("nav_news"), href: "/tin-tuc" },
     { label: t("nav_driver"), href: "/dang-ky-tai-xe" },
@@ -63,7 +64,7 @@ export function Navbar({ className }: { className?: string }) {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden xl:flex items-center gap-1">
           {navLinks.map((item) => (
             <a
               key={item.href}
@@ -80,7 +81,7 @@ export function Navbar({ className }: { className?: string }) {
           {/* Language switcher */}
           <button
             onClick={toggleLocale}
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/12 text-slate-300 hover:text-white text-xs font-bold transition-colors cursor-pointer"
+            className="hidden xl:flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-white/10 bg-white/5 hover:bg-white/12 text-slate-300 hover:text-white text-xs font-bold transition-colors cursor-pointer"
             aria-label="Switch language"
           >
             <Globe className="w-3.5 h-3.5" />
@@ -88,13 +89,13 @@ export function Navbar({ className }: { className?: string }) {
           </button>
           <Link
             href="/doi-tac#partner-form"
-            className="hidden md:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-150 cursor-pointer shadow-sm shadow-orange-500/30"
+            className="hidden xl:inline-flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors duration-150 cursor-pointer shadow-sm shadow-orange-500/30"
           >
             {t("cta")}
           </Link>
           <button
             onClick={() => setOpen((o) => !o)}
-            className="md:hidden w-9 h-9 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-white transition-colors cursor-pointer border border-white/10"
+            className="xl:hidden w-9 h-9 rounded-lg bg-white/10 hover:bg-white/15 flex items-center justify-center text-white transition-colors cursor-pointer border border-white/10"
             aria-label={open ? t("aria_close") : t("aria_open")}
           >
             {open ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -104,7 +105,7 @@ export function Navbar({ className }: { className?: string }) {
 
       {/* Mobile drawer */}
       <div
-        className={`md:hidden overflow-hidden transition-all duration-300 ease-in-out ${
+        className={`xl:hidden overflow-hidden transition-all duration-300 ease-in-out ${
           open ? "max-h-[600px] opacity-100" : "max-h-0 opacity-0 pointer-events-none"
         }`}
       >
