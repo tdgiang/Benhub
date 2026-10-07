@@ -18,19 +18,8 @@ export function FadeUp({
     const el = ref.current;
     if (!el) return;
 
-    // Respect reduced motion preference
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
-
-    // If element is already in viewport on mount, show immediately
-    const rect = el.getBoundingClientRect();
-    if (rect.top < window.innerHeight && rect.bottom > 0) {
-      setVisible(true);
-      return;
-    }
-
+    // Fires right after observe() for elements already in the viewport.
+    // Reduced-motion users are handled in CSS (motion-reduce:*) below.
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -47,7 +36,7 @@ export function FadeUp({
   return (
     <div
       ref={ref}
-      className={`transition-all ease-out ${
+      className={`transition-all ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
       } ${className}`}
       style={{

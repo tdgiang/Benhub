@@ -1,5 +1,5 @@
 import { ArrowDown, Award, Building2 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { StatCounter } from "@/components/ui/StatCounter";
 

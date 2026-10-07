@@ -16,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import { PartnerSignupForm } from "@/components/marketing/PartnerSignupForm";
+import { Link } from "@/i18n/navigation";
 
 export async function generateMetadata({
   params,
@@ -269,14 +270,14 @@ export default async function PartnerPage({
                   <p className="mt-2 text-sm leading-relaxed text-slate-600">
                     {isVi ? descVi : descEn}
                   </p>
-                  {"href" in link && (
-                    <a
+                  {link.href && (
+                    <Link
                       href={link.href}
                       className="mt-4 inline-flex cursor-pointer items-center gap-1.5 text-sm font-bold text-orange-600 transition hover:text-orange-700"
                     >
                       {isVi ? link.linkVi : link.linkEn}
                       <ArrowRight className="h-4 w-4" />
-                    </a>
+                    </Link>
                   )}
                 </div>
               ),

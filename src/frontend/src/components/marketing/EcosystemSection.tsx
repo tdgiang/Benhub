@@ -11,6 +11,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 type TabId = "fleet" | "driver" | "investor" | "mine" | "partner";
 
@@ -138,13 +139,13 @@ export function EcosystemSection() {
                 {c.sub}
               </p>
 
-              <a
+              <Link
                 href={c.href}
                 className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-xl font-semibold text-sm transition-colors cursor-pointer group"
               >
                 {c.cta}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </a>
+              </Link>
             </div>
 
             {/* Right benefits */}

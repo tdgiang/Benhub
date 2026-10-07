@@ -1,5 +1,5 @@
 import { Award, Play } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 export function HeroSection() {
@@ -199,12 +199,17 @@ export function HeroSection() {
             animationDelay: "0.4s",
           }}
         >
-          {[t("proof_1"), t("proof_2"), t("proof_3")].map((item) => (
-            <span key={item} className="flex items-center gap-2 text-slate-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
-              {item}
-            </span>
-          ))}
+          {[t("proof_1"), t("proof_2"), t("proof_3"), t("proof_4")].map(
+            (item) => (
+              <span
+                key={item}
+                className="flex items-center gap-2 text-slate-400"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
+                {item}
+              </span>
+            ),
+          )}
         </div>
       </div>
     </section>

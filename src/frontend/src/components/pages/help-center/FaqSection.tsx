@@ -1,4 +1,4 @@
-import { Building2, ChevronDown, Truck, UserCircle } from "lucide-react";
+import { Building2, ChevronDown, Mountain, Truck, UserCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { FadeUp } from "@/components/ui/FadeUp";
 
@@ -17,6 +17,11 @@ const CATEGORIES = [
     icon: Building2,
     labelKey: "cat_partner",
     items: ["faq_partner_1", "faq_partner_2", "faq_partner_3"],
+  },
+  {
+    icon: Mountain,
+    labelKey: "cat_mine",
+    items: ["faq_mine_1", "faq_mine_2", "faq_mine_3"],
   },
 ] as const;
 

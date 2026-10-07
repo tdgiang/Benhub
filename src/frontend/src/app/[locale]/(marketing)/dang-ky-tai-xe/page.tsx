@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import Link from "next/link";
 import {
   ArrowRight,
   BadgeCheck,

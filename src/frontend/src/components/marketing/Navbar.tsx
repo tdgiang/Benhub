@@ -66,13 +66,13 @@ export function Navbar({ className }: { className?: string }) {
         {/* Desktop nav */}
         <nav className="hidden xl:flex items-center gap-1">
           {navLinks.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="px-4 py-2 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/8 transition-all duration-150 cursor-pointer"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -111,14 +111,14 @@ export function Navbar({ className }: { className?: string }) {
       >
         <div className="bg-slate-900 border-t border-white/5 px-4 py-4 space-y-0.5">
           {navLinks.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               onClick={() => setOpen(false)}
               className="block px-4 py-3 rounded-lg text-sm font-medium text-slate-300 hover:text-white hover:bg-white/8 transition-colors cursor-pointer"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
           <div className="pt-3 border-t border-white/5 mt-3 space-y-2">
             <button

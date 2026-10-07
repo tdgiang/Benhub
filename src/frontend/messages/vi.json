@@ -48,7 +48,8 @@
     "cta_secondary": "Xem cách hoạt động",
     "proof_1": "25,000+ xe tham gia",
     "proof_2": "100+ dự án vận hành",
-    "proof_3": "16+ tỉnh thành"
+    "proof_3": "16+ tỉnh thành",
+    "proof_4": "20+ mỏ kết nối"
   },
   "Problem": {
     "badge": "Bài toán ngành",
@@ -105,7 +106,9 @@
     "s4_after": "Realtime Reconciliation — báo cáo tức thì",
     "s5_before": "Công nợ kẹt 30–90 ngày",
     "s5_after": "BenHub Finance — ứng tiền ngay sau chuyến xong",
-    "tagline": "BenHub — Hệ điều hành số cho ngành vận tải công trình."
+    "tagline": "BenHub — Hệ điều hành số cho ngành vận tải công trình.",
+    "s6_before": "Phiếu cân giấy tại mỏ, sổ sách và Excel rời rạc",
+    "s6_after": "BenHub Mine — phiếu cân, sản lượng, công nợ trên một hệ thống"
   },
   "Products": {
     "badge": "Hệ thống sản phẩm",
@@ -210,7 +213,7 @@
     "tag": "Cách hoạt động",
     "h2_1": "Từ lệnh vận chuyển",
     "h2_2": "đến đối soát — tự động hoàn toàn",
-    "desc": "5 bước vận hành, toàn bộ số hóa — không một tờ giấy, không một cuộc điện thoại.",
+    "desc": "6 bước vận hành, toàn bộ số hóa — không một tờ giấy, không một cuộc điện thoại.",
     "s1_title": "Tạo lệnh vận chuyển",
     "s1_actor": "Chủ đầu tư / Tổng thầu",
     "s1_desc": "Chủ đầu tư hoặc tổng thầu tạo lệnh trên BenHub Core: số chuyến, loại vật liệu, điểm nhận – điểm trả, thời gian.",
@@ -229,6 +232,12 @@
     "s3_h1": "Nhận chuyến 1-tap trên app",
     "s3_h2": "E-Ticket số tự tạo với mã QR",
     "s3_h3": "GPS bật tự động, route được dẫn đường",
+    "sm_title": "Xuất hàng tại mỏ",
+    "sm_actor": "Doanh nghiệp mỏ",
+    "sm_desc": "Xe check-in tại mỏ, cân hàng và nhận phiếu cân điện tử từ BenHub Mine. Sản lượng xuất bán và công nợ khách hàng cập nhật ngay khi phiếu hoàn thành.",
+    "sm_h1": "Check-in/check-out xe tại cổng mỏ",
+    "sm_h2": "Phiếu cân điện tử — khách hàng xác nhận trên hệ thống",
+    "sm_h3": "Công nợ tự sinh từ phiếu cân hoàn thành",
     "s4_title": "Giám sát realtime",
     "s4_actor": "Supervisor",
     "s4_desc": "Supervisor theo dõi toàn bộ đội xe trên bản đồ. Phát hiện ngay nếu xe lệch tuyến, dừng bất thường, thiếu tải.",
@@ -303,6 +312,7 @@
     "p1_k2": "10+ dự án đang vận hành",
     "p1_k3": "Hoàn thiện E-Ticket & GPS Tracking",
     "p1_k4": "Data pipeline vận tải",
+    "p1_k5": "Ra mắt BenHub Mine cho doanh nghiệp mỏ",
     "p2_period": "2026–2028",
     "p2_tag": "Sắp tới",
     "p2_title": "Mở Rộng Hệ Sinh Thái",
@@ -535,7 +545,7 @@
     "tl_2023": "Nghiên cứu thị trường, xác định bài toán",
     "tl_2024": "Xây dựng nền tảng công nghệ, thử nghiệm",
     "tl_2025": "Ra mắt chính thức, triển khai pilot",
-    "tl_2026": "Mở rộng 6 tỉnh thành, 5,000+ xe",
+    "tl_2026": "Mở rộng 6 tỉnh thành, 5,000+ xe, ra mắt BenHub Mine",
     "tl_2027": "Mục tiêu 50,000+ xe, liên tỉnh toàn quốc",
     "mv_label": "SỨ MỆNH & TẦM NHÌN",
     "mv_mission_tag": "SỨ MỆNH",
@@ -636,6 +646,7 @@
     "cat_account": "Tài khoản & Chung",
     "cat_driver": "Tài xế",
     "cat_partner": "Đối tác & Doanh nghiệp",
+    "cat_mine": "Doanh nghiệp mỏ (BenHub Mine)",
     "faq_account_1_q": "Trung tâm trợ giúp này dành cho ai?",
     "faq_account_1_a": "Dành cho tài xế, đối tác vận tải, nhà thầu và bất kỳ ai đang tìm hiểu về BenHub. Chọn đúng nhóm câu hỏi bên dưới để tìm câu trả lời nhanh nhất.",
     "faq_account_2_q": "Tôi quên mật khẩu tài khoản, phải làm sao?",
@@ -656,7 +667,13 @@
     "faq_partner_3_a": "Đội vận hành BenHub phản hồi trong vòng 1–2 ngày làm việc kể từ khi nhận được thông tin đăng ký.",
     "contact_label": "Vẫn cần hỗ trợ?",
     "contact_h2": "Liên hệ trực tiếp với chúng tôi.",
-    "contact_desc": "Đội ngũ BenHub sẵn sàng hỗ trợ bạn qua các kênh sau."
+    "contact_desc": "Đội ngũ BenHub sẵn sàng hỗ trợ bạn qua các kênh sau.",
+    "faq_mine_1_q": "BenHub Mine là gì?",
+    "faq_mine_1_a": "BenHub Mine là phần mềm quản lý mỏ khai thác: giấy phép, kế hoạch và sản lượng, phiếu cân điện tử, hợp đồng, công nợ, nhân sự, chấm công và tiền lương trên một nền tảng web và di động.",
+    "faq_mine_2_q": "Làm sao để dùng thử BenHub Mine?",
+    "faq_mine_2_a": "Điền form đăng ký dùng thử tại trang BenHub Mine. Mật khẩu được gửi về email để bạn đăng nhập trang quản trị, đội ngũ BenHub sẽ liên hệ tư vấn và demo trên quy trình của mỏ.",
+    "faq_mine_3_q": "Tài xế và công nhân của mỏ có cần cài ứng dụng không?",
+    "faq_mine_3_a": "Có. Tài xế dùng app để nhận chuyến, check-in/check-out tại mỏ và xem phiếu cân; công nhân dùng app để chấm công và xin nghỉ phép. Văn phòng dùng bản web."
   },
   "DriverForm": {
     "experience_under1": "Dưới 1 năm",

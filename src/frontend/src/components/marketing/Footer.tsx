@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Truck, Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -101,7 +101,7 @@ export function Footer({ className }: { className?: string }) {
               {products.map((p) => (
                 <li key={p}>
                   <Link
-                    href="/#products"
+                    href={p === "BenHub Mine" ? "/benhub-mine" : "/#products"}
                     className="text-slate-400 hover:text-orange-400 text-sm transition-colors cursor-pointer"
                   >
                     {p}

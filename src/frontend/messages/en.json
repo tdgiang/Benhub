@@ -48,7 +48,8 @@
     "cta_secondary": "See how it works",
     "proof_1": "25,000+ vehicles",
     "proof_2": "100+ active projects",
-    "proof_3": "16+ provinces"
+    "proof_3": "16+ provinces",
+    "proof_4": "20+ quarries connected"
   },
   "Problem": {
     "badge": "Industry challenges",
@@ -105,7 +106,9 @@
     "s4_after": "Realtime Reconciliation — instant reports",
     "s5_before": "Payment stuck for 30–90 days",
     "s5_after": "BenHub Finance — advance payment after delivery",
-    "tagline": "BenHub — The digital operating system for construction logistics."
+    "tagline": "BenHub — The digital operating system for construction logistics.",
+    "s6_before": "Paper weighbridge slips, scattered ledgers and spreadsheets",
+    "s6_after": "BenHub Mine — tickets, output and receivables in one system"
   },
   "Products": {
     "badge": "Product ecosystem",
@@ -210,7 +213,7 @@
     "tag": "How it works",
     "h2_1": "From transport order",
     "h2_2": "to reconciliation — fully automated",
-    "desc": "5 operational steps, fully digitized — not a single piece of paper, not a single phone call.",
+    "desc": "6 operational steps, fully digital — no paper, no phone calls.",
     "s1_title": "Create transport order",
     "s1_actor": "Investor / General Contractor",
     "s1_desc": "The investor or general contractor creates an order on BenHub Core: trip count, material type, pickup-delivery points, schedule. System auto-calculates vehicles needed.",
@@ -229,6 +232,12 @@
     "s3_h1": "Accept trip 1-tap on app",
     "s3_h2": "Digital E-Ticket with QR code auto-created",
     "s3_h3": "GPS auto-activates, route navigation",
+    "sm_title": "Dispatch at the quarry",
+    "sm_actor": "Quarry business",
+    "sm_desc": "Trucks check in at the quarry, get weighed and receive a digital weighbridge ticket from BenHub Mine. Sales output and customer receivables update as soon as the ticket is completed.",
+    "sm_h1": "Truck check-in/check-out at the quarry gate",
+    "sm_h2": "Digital weighbridge ticket — confirmed by the customer in-system",
+    "sm_h3": "Receivables generated from completed tickets",
     "s4_title": "Realtime monitoring",
     "s4_actor": "Supervisor",
     "s4_desc": "Supervisor monitors the entire fleet on map. Instant detection of route deviations, unusual stops, underloading. Immediate in-app alerts.",
@@ -303,6 +312,7 @@
     "p1_k2": "10+ active projects",
     "p1_k3": "Complete E-Ticket & GPS Tracking",
     "p1_k4": "Transport data pipeline",
+    "p1_k5": "Launch BenHub Mine for quarry businesses",
     "p2_period": "2026–2028",
     "p2_tag": "Coming soon",
     "p2_title": "Ecosystem Expansion",
@@ -535,7 +545,7 @@
     "tl_2023": "Market research, problem identification",
     "tl_2024": "Technology platform development, testing",
     "tl_2025": "Official launch, pilot deployment",
-    "tl_2026": "Expansion to 6 provinces, 5,000+ vehicles",
+    "tl_2026": "Expansion to 6 provinces, 5,000+ vehicles, BenHub Mine launch",
     "tl_2027": "Target 50,000+ vehicles, inter-provincial nationwide",
     "mv_label": "MISSION & VISION",
     "mv_mission_tag": "MISSION",
@@ -636,6 +646,7 @@
     "cat_account": "Account & General",
     "cat_driver": "Drivers",
     "cat_partner": "Partners & Business",
+    "cat_mine": "Quarry businesses (BenHub Mine)",
     "faq_account_1_q": "Who is this Help Center for?",
     "faq_account_1_a": "Drivers, transport partners, contractors, and anyone learning about BenHub. Pick the right category below to find answers fastest.",
     "faq_account_2_q": "I forgot my account password — what do I do?",
@@ -656,7 +667,13 @@
     "faq_partner_3_a": "BenHub's operations team responds within 1–2 business days of receiving your registration.",
     "contact_label": "Still need help?",
     "contact_h2": "Reach out to us directly.",
-    "contact_desc": "The BenHub team is ready to support you through the following channels."
+    "contact_desc": "The BenHub team is ready to support you through the following channels.",
+    "faq_mine_1_q": "What is BenHub Mine?",
+    "faq_mine_1_a": "BenHub Mine is quarry management software: licenses, extraction planning and output, digital weighbridge tickets, contracts, receivables, staff, attendance and payroll on one web and mobile platform.",
+    "faq_mine_2_q": "How do I try BenHub Mine?",
+    "faq_mine_2_a": "Fill in the trial form on the BenHub Mine page. Your password is emailed to you so you can sign in to the admin portal, and the BenHub team will reach out to advise and demo on your quarry's workflows.",
+    "faq_mine_3_q": "Do quarry drivers and workers need to install an app?",
+    "faq_mine_3_a": "Yes. Drivers use the app to accept trips, check in/out at the quarry and view tickets; workers use it to clock in and request leave. The office uses the web version."
   },
   "DriverForm": {
     "experience_under1": "Under 1 year",

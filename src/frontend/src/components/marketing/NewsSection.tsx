@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowRight, Clock3, Newspaper } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { getServerBackendBaseUrl } from "@/lib/server-backend-url";

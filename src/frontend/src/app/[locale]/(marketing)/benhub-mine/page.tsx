@@ -36,6 +36,7 @@ import {
   Workflow,
 } from "lucide-react";
 import { PartnerSignupForm } from "@/components/marketing/PartnerSignupForm";
+import { SITE_URL } from "@/lib/constants";
 
 /**
  * PLACEHOLDER — temporary figures and links pending real data.
@@ -109,6 +110,29 @@ export async function generateMetadata({
           "digital weighbridge ticket",
           "construction materials quarry",
         ],
+    openGraph: {
+      url: `${SITE_URL}${isVi ? "" : "/en"}/benhub-mine`,
+      siteName: "BenHub",
+      locale: isVi ? "vi_VN" : "en_US",
+      type: "website",
+      images: [
+        {
+          url: `${SITE_URL}/mine/dashboard.png`,
+          width: 1280,
+          height: 1502,
+          alt: isVi
+            ? "Bảng điều khiển điều hành mỏ BenHub Mine"
+            : "BenHub Mine executive dashboard",
+        },
+      ],
+    },
+    alternates: {
+      canonical: `${SITE_URL}${isVi ? "" : "/en"}/benhub-mine`,
+      languages: {
+        vi: `${SITE_URL}/benhub-mine`,
+        en: `${SITE_URL}/en/benhub-mine`,
+      },
+    },
   };
 }
 

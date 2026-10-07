@@ -1,7 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { FileText, Cpu, Smartphone, Eye, CheckCircle2 } from "lucide-react";
+import {
+  FileText,
+  Cpu,
+  Smartphone,
+  Mountain,
+  Eye,
+  CheckCircle2,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export function HowItWorksSection() {
@@ -35,6 +42,14 @@ export function HowItWorksSection() {
     },
     {
       num: "04",
+      icon: Mountain,
+      title: t("sm_title"),
+      actor: t("sm_actor"),
+      description: t("sm_desc"),
+      highlights: [t("sm_h1"), t("sm_h2"), t("sm_h3")],
+    },
+    {
+      num: "05",
       icon: Eye,
       title: t("s4_title"),
       actor: t("s4_actor"),
@@ -42,7 +57,7 @@ export function HowItWorksSection() {
       highlights: [t("s4_h1"), t("s4_h2"), t("s4_h3")],
     },
     {
-      num: "05",
+      num: "06",
       icon: CheckCircle2,
       title: t("s5_title"),
       actor: t("s5_actor"),

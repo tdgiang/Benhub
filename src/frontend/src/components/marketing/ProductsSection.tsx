@@ -13,7 +13,7 @@ import {
   Smartphone,
   Truck,
 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 /** 2×4 cell centers (viewBox 0–100) — lines radiate from shared Core hub */
