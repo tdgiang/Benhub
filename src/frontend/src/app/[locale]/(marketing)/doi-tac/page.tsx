@@ -135,7 +135,7 @@ export default async function PartnerPage({
   const isVi = locale !== "en";
 
   return (
-    <main>
+    <>
       {/* Hero */}
       <section
         className="relative overflow-hidden pb-12 pt-24 md:pb-16 md:pt-28"
@@ -443,6 +443,6 @@ export default async function PartnerPage({
           </div>
         </div>
       </section>
-    </main>
+    </>
   );
 }

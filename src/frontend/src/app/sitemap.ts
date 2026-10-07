@@ -24,13 +24,13 @@ const ROUTES: {
 export default function sitemap(): MetadataRoute.Sitemap {
   return ROUTES.map(({ path, changeFrequency, priority }) => ({
     url: `${SITE_URL}${path}`,
-    lastModified: new Date(),
     changeFrequency,
     priority,
     alternates: {
       languages: {
         vi: `${SITE_URL}${path}`,
         en: `${SITE_URL}/en${path}`,
+        "x-default": `${SITE_URL}${path}`,
       },
     },
   }));

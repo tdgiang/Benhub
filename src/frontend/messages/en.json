@@ -49,7 +49,7 @@
     "proof_1": "25,000+ vehicles",
     "proof_2": "100+ active projects",
     "proof_3": "16+ provinces",
-    "proof_4": "20+ quarries connected"
+    "proof_4": "{quarries} quarries connected"
   },
   "Problem": {
     "badge": "Industry challenges",
@@ -234,10 +234,10 @@
     "s3_h3": "GPS auto-activates, route navigation",
     "sm_title": "Dispatch at the quarry",
     "sm_actor": "Quarry business",
-    "sm_desc": "Trucks check in at the quarry, get weighed and receive a digital weighbridge ticket from BenHub Mine. Sales output and customer receivables update as soon as the ticket is completed.",
+    "sm_desc": "Trucks check in at the quarry, get weighed and receive a digital weighbridge ticket from BenHub Mine. Sales output is recorded right away; customer receivable documents are generated periodically from completed tickets.",
     "sm_h1": "Truck check-in/check-out at the quarry gate",
     "sm_h2": "Digital weighbridge ticket — confirmed by the customer in-system",
-    "sm_h3": "Receivables generated from completed tickets",
+    "sm_h3": "Receivables generated periodically from completed tickets",
     "s4_title": "Realtime monitoring",
     "s4_actor": "Supervisor",
     "s4_desc": "Supervisor monitors the entire fleet on map. Instant detection of route deviations, unusual stops, underloading. Immediate in-app alerts.",
@@ -673,7 +673,7 @@
     "faq_mine_2_q": "How do I try BenHub Mine?",
     "faq_mine_2_a": "Fill in the trial form on the BenHub Mine page. Your password is emailed to you so you can sign in to the admin portal, and the BenHub team will reach out to advise and demo on your quarry's workflows.",
     "faq_mine_3_q": "Do quarry drivers and workers need to install an app?",
-    "faq_mine_3_a": "Yes. Drivers use the app to accept trips, check in/out at the quarry and view tickets; workers use it to clock in and request leave. The office uses the web version."
+    "faq_mine_3_a": "Yes. Drivers use the app to accept trips, check in/out at the quarry and view tickets; workers use it to clock in and request leave. The office uses the web version. App install links are sent when your company registers for a trial."
   },
   "DriverForm": {
     "experience_under1": "Under 1 year",
@@ -744,8 +744,8 @@
     "submit": "Register as partner",
     "submitting": "Submitting registration...",
     "mine_badge": "BenHub Mine trial",
-    "mine_heading": "Start your BenHub Mine free trial.",
-    "mine_submit": "Start free trial",
+    "mine_heading": "Request your BenHub Mine trial.",
+    "mine_submit": "Request a trial",
     "success_title": "Registration successful!",
     "success_desc": "Your login password has been sent to your email. Please check your inbox to sign in.",
     "success_cms_cta": "Go to the admin dashboard",

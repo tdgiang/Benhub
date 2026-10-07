@@ -37,49 +37,7 @@ import {
 } from "lucide-react";
 import { PartnerSignupForm } from "@/components/marketing/PartnerSignupForm";
 import { SITE_URL } from "@/lib/constants";
-
-/**
- * PLACEHOLDER — temporary figures and links pending real data.
- * Replace every value in this block before public launch.
- */
-const PLACEHOLDER = {
-  stats: [
-    { value: "20+", labelVi: "Mỏ đang sử dụng", labelEn: "Quarries onboard" },
-    {
-      value: "500.000+",
-      labelVi: "Phiếu cân đã xử lý",
-      labelEn: "Tickets processed",
-    },
-    { value: "3.000+", labelVi: "Người dùng", labelEn: "Users" },
-    {
-      value: "2–4 tuần",
-      labelVi: "Thời gian triển khai",
-      labelEn: "Rollout time",
-      valueEn: "2–4 weeks",
-    },
-  ],
-  rolloutVi: "Thời gian triển khai dự kiến: 2–4 tuần cho một mỏ.",
-  rolloutEn: "Expected rollout: 2–4 weeks per quarry.",
-  hostingVi: "Triển khai trên cloud hoặc máy chủ riêng tại doanh nghiệp.",
-  hostingEn: "Deploy on the cloud or on your own on-premise server.",
-  /** Empty string renders the badge as "coming soon". */
-  appStoreUrl: "",
-  googlePlayUrl: "",
-  faqs: [
-    {
-      qVi: "Có tùy chỉnh theo quy trình riêng của doanh nghiệp không?",
-      qEn: "Can it be tailored to our own workflows?",
-      aVi: "Có. Danh mục, luồng duyệt và phân quyền được cấu hình theo cơ cấu doanh nghiệp. Các tích hợp riêng như trạm cân hay phần mềm kế toán được báo giá theo yêu cầu.",
-      aEn: "Yes. Catalogs, approval flows and permissions are configured to your organization. Custom integrations such as weighbridges or accounting software are quoted on request.",
-    },
-    {
-      qVi: "Chi phí như thế nào?",
-      qEn: "How is it priced?",
-      aVi: "Thuê bao theo từng mỏ, thanh toán theo tháng hoặc gói năm. Dùng thử miễn phí 30 ngày, báo giá chi tiết sau buổi khảo sát.",
-      aEn: "Subscription per quarry, billed monthly or annually. 30-day free trial; detailed quote after the assessment.",
-    },
-  ],
-};
+import { MINE_PLACEHOLDER as PLACEHOLDER } from "@/lib/mine-placeholders";
 
 export async function generateMetadata({
   params,
@@ -89,9 +47,11 @@ export async function generateMetadata({
   const { locale } = await params;
   const isVi = locale !== "en";
   return {
-    title: isVi
-      ? "BenHub Mine | Phần Mềm Quản Lý Mỏ Khai Thác Toàn Diện"
-      : "BenHub Mine | All-in-One Quarry Management Software",
+    title: {
+      absolute: isVi
+        ? "BenHub Mine — Phần Mềm Quản Lý Mỏ Khai Thác Toàn Diện"
+        : "BenHub Mine — All-in-One Quarry Management Software",
+    },
     description: isVi
       ? "Phần mềm quản lý mỏ: kế hoạch khai thác, sản lượng, phiếu cân điện tử, tồn kho, hợp đồng, công nợ, chấm công và tiền lương trên một nền tảng web và di động."
       : "Quarry management software: extraction planning, output, digital weighbridge tickets, inventory, contracts, receivables, attendance and payroll on one web and mobile platform.",
@@ -647,7 +607,7 @@ export default async function BenHubMinePage({
   const isVi = locale !== "en";
 
   return (
-    <main>
+    <>
       {/* Hero */}
       <section
         className="relative overflow-hidden pb-12 pt-24 md:pb-16 md:pt-28"
@@ -713,7 +673,7 @@ export default async function BenHubMinePage({
                   href="#dang-ky"
                   className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-orange-500 px-6 py-3.5 text-sm font-black text-white shadow-xl shadow-orange-950/30 transition hover:-translate-y-0.5 hover:bg-orange-600"
                 >
-                  {isVi ? "Đăng ký dùng thử" : "Start free trial"}
+                  {isVi ? "Đăng ký dùng thử" : "Request a trial"}
                   <ArrowRight className="h-4 w-4" />
                 </a>
                 <a
@@ -928,7 +888,7 @@ export default async function BenHubMinePage({
                   {isVi ? "Tất cả trong một nền tảng." : "All in one platform."}
                 </p>
                 <p className="mt-3 inline-flex items-center gap-2 text-sm font-bold">
-                  {isVi ? "Đăng ký dùng thử" : "Start free trial"}
+                  {isVi ? "Đăng ký dùng thử" : "Request a trial"}
                   <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
                 </p>
               </div>
@@ -1043,8 +1003,8 @@ export default async function BenHubMinePage({
                           ? "Tải trên"
                           : "Get it on"
                         : isVi
-                          ? "Sắp ra mắt"
-                          : "Coming soon"}
+                          ? "Nhận link cài đặt"
+                          : "Get install link"}
                     </span>
                     <span className="block text-sm font-bold">{store}</span>
                   </span>
@@ -1063,9 +1023,13 @@ export default async function BenHubMinePage({
                   {content}
                 </a>
               ) : (
-                <span key={store} className={`${cls} opacity-70`}>
+                <a
+                  key={store}
+                  href="#dang-ky"
+                  className={`${cls} cursor-pointer transition hover:bg-slate-800`}
+                >
                   {content}
-                </span>
+                </a>
               );
             })}
           </div>
@@ -1192,7 +1156,7 @@ export default async function BenHubMinePage({
           <div className="divide-y divide-slate-200 rounded-[2rem] border border-slate-200">
             {[...faqs, ...PLACEHOLDER.faqs].map(({ qVi, qEn, aVi, aEn }) => (
               <details key={qVi} className="group px-6 py-5">
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-bold text-slate-950">
+                <summary className="flex cursor-pointer list-none items-center [&::-webkit-details-marker]:hidden justify-between gap-4 text-base font-bold text-slate-950">
                   {isVi ? qVi : qEn}
                   <ChevronDown className="h-5 w-5 shrink-0 text-slate-400 transition group-open:rotate-180" />
                 </summary>
@@ -1215,7 +1179,7 @@ export default async function BenHubMinePage({
           <div className="grid gap-12 lg:grid-cols-[1fr_560px]">
             <div className="flex flex-col justify-center">
               <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-orange-300">
-                {isVi ? "Đăng ký dùng thử" : "Free trial"}
+                {isVi ? "Đăng ký dùng thử" : "Trial"}
               </p>
               <h2
                 className="font-black leading-[0.95] tracking-tight text-white"
@@ -1234,8 +1198,8 @@ export default async function BenHubMinePage({
                 {[
                   {
                     icon: Wallet,
-                    vi: "Dùng thử miễn phí, tư vấn miễn phí",
-                    en: "Free trial and free consultation",
+                    vi: "Tư vấn miễn phí",
+                    en: "Free consultation",
                   },
                   {
                     icon: LayoutDashboard,
@@ -1265,6 +1229,6 @@ export default async function BenHubMinePage({
           </div>
         </div>
       </section>
-    </main>
+    </>
   );
 }

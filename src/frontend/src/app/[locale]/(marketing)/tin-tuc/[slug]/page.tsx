@@ -203,7 +203,7 @@ function CTABanner() {
         <p className="text-base text-orange-100">{t('cta_sub')}</p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link
-            href="/#register"
+            href="/doi-tac#partner-form"
             className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-white px-6 py-3 text-sm font-bold text-orange-600 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
           >
             {t('cta_btn')}

@@ -3,9 +3,9 @@ import { ArrowRight, Truck, User, Building2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 const CARDS = [
-  { key: "join_c1", icon: Truck, href: "/doi-tac/chu-doi-xe", color: "#F0B429" },
+  { key: "join_c1", icon: Truck, href: "/doi-tac#hinh-thuc", color: "#F0B429" },
   { key: "join_c2", icon: User, href: "/dang-ky-tai-xe", color: "#F97316" },
-  { key: "join_c3", icon: Building2, href: "/doi-tac/chu-dau-tu", color: "#3B82F6" },
+  { key: "join_c3", icon: Building2, href: "/doi-tac#hinh-thuc", color: "#3B82F6" },
 ] as const;
 
 export function JoinUsSection() {

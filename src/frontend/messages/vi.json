@@ -49,7 +49,7 @@
     "proof_1": "25,000+ xe tham gia",
     "proof_2": "100+ dự án vận hành",
     "proof_3": "16+ tỉnh thành",
-    "proof_4": "20+ mỏ kết nối"
+    "proof_4": "{quarries} mỏ kết nối"
   },
   "Problem": {
     "badge": "Bài toán ngành",
@@ -234,10 +234,10 @@
     "s3_h3": "GPS bật tự động, route được dẫn đường",
     "sm_title": "Xuất hàng tại mỏ",
     "sm_actor": "Doanh nghiệp mỏ",
-    "sm_desc": "Xe check-in tại mỏ, cân hàng và nhận phiếu cân điện tử từ BenHub Mine. Sản lượng xuất bán và công nợ khách hàng cập nhật ngay khi phiếu hoàn thành.",
+    "sm_desc": "Xe check-in tại mỏ, cân hàng và nhận phiếu cân điện tử từ BenHub Mine. Sản lượng xuất bán được ghi nhận ngay; chứng từ công nợ khách hàng được sinh định kỳ từ các phiếu cân đã hoàn thành.",
     "sm_h1": "Check-in/check-out xe tại cổng mỏ",
     "sm_h2": "Phiếu cân điện tử — khách hàng xác nhận trên hệ thống",
-    "sm_h3": "Công nợ tự sinh từ phiếu cân hoàn thành",
+    "sm_h3": "Công nợ sinh định kỳ từ phiếu cân hoàn thành",
     "s4_title": "Giám sát realtime",
     "s4_actor": "Supervisor",
     "s4_desc": "Supervisor theo dõi toàn bộ đội xe trên bản đồ. Phát hiện ngay nếu xe lệch tuyến, dừng bất thường, thiếu tải.",
@@ -673,7 +673,7 @@
     "faq_mine_2_q": "Làm sao để dùng thử BenHub Mine?",
     "faq_mine_2_a": "Điền form đăng ký dùng thử tại trang BenHub Mine. Mật khẩu được gửi về email để bạn đăng nhập trang quản trị, đội ngũ BenHub sẽ liên hệ tư vấn và demo trên quy trình của mỏ.",
     "faq_mine_3_q": "Tài xế và công nhân của mỏ có cần cài ứng dụng không?",
-    "faq_mine_3_a": "Có. Tài xế dùng app để nhận chuyến, check-in/check-out tại mỏ và xem phiếu cân; công nhân dùng app để chấm công và xin nghỉ phép. Văn phòng dùng bản web."
+    "faq_mine_3_a": "Có. Tài xế dùng app để nhận chuyến, check-in/check-out tại mỏ và xem phiếu cân; công nhân dùng app để chấm công và xin nghỉ phép. Văn phòng dùng bản web. Link cài đặt ứng dụng được gửi khi doanh nghiệp đăng ký dùng thử."
   },
   "DriverForm": {
     "experience_under1": "Dưới 1 năm",
