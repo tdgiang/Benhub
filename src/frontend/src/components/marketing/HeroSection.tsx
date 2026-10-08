@@ -1,6 +1,7 @@
 import { Award, Play } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
+import { MINE_PLACEHOLDER } from "@/lib/mine-placeholders";
 
 export function HeroSection() {
   const t = useTranslations("Hero");
@@ -199,7 +200,12 @@ export function HeroSection() {
             animationDelay: "0.4s",
           }}
         >
-          {[t("proof_1"), t("proof_2"), t("proof_3")].map((item) => (
+          {[
+            t("proof_1"),
+            t("proof_2"),
+            t("proof_3"),
+            t("proof_4", { quarries: MINE_PLACEHOLDER.quarriesConnected }),
+          ].map((item) => (
             <span key={item} className="flex items-center gap-2 text-slate-400">
               <span className="w-1.5 h-1.5 rounded-full bg-orange-500 shrink-0" />
               {item}

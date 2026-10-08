@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
-import { getTranslations } from "next-intl/server";
 import { HeroSection } from "@/components/marketing/HeroSection";
 import { ProblemSection } from "@/components/marketing/ProblemSection";
 import { SolutionSection } from "@/components/marketing/SolutionSection";
@@ -23,8 +22,8 @@ export async function generateMetadata({
       ? "BenHub — Hệ Điều Hành Số Cho Vận Tải Công Trình Việt Nam"
       : "BenHub — Digital Operating System for Vietnam Construction Logistics",
     description: isVi
-      ? "BenHub số hóa toàn bộ chuỗi logistics xây dựng: điều phối xe ben, quản lý đội xe, E-Ticket, GPS tracking và đối soát tài chính realtime."
-      : "BenHub digitalizes the entire construction logistics chain: vehicle dispatch, fleet management, E-Ticket, GPS tracking and real-time financial reconciliation.",
+      ? "BenHub số hóa toàn bộ chuỗi logistics xây dựng: điều phối xe ben, quản lý đội xe, E-Ticket, GPS tracking, đối soát tài chính realtime và phần mềm quản lý mỏ BenHub Mine."
+      : "BenHub digitalizes the entire construction logistics chain: vehicle dispatch, fleet management, E-Ticket, GPS tracking, real-time financial reconciliation and BenHub Mine quarry management software.",
     openGraph: {
       url: "https://benhub.vn",
       siteName: "BenHub",

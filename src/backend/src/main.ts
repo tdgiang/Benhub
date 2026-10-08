@@ -1,7 +1,10 @@
 import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe, Logger } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
+import { join } from 'path';
+import * as express from 'express';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { PrismaClientExceptionFilter } from './common/filters/prisma-client-exception.filter';
@@ -26,11 +29,18 @@ async function bootstrap() {
     ],
   });
 
-  const app = await NestFactory.create(AppModule, {
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger,
   });
 
   const httpAdapterHost = app.get(HttpAdapterHost);
+
+  // Serve uploaded files at /uploads/* (before global prefix; aaPanel proxies /api-backend/ → here)
+  const uploadDir = process.env.UPLOAD_DIR || join(process.cwd(), 'uploads');
+  app.use(
+    '/uploads',
+    express.static(uploadDir, { index: false, dotfiles: 'deny', fallthrough: false }),
+  );
 
   // Security: Enable CORS
   app.enableCors({

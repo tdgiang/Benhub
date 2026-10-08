@@ -13,47 +13,30 @@ export function FadeUp({
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
-  const reducedMotionRef = useRef(false);
 
   useEffect(() => {
-    let cancelled = false;
+    const el = ref.current;
+    if (!el) return;
 
-    async function init() {
-      await Promise.resolve();
-      if (cancelled) return;
-
-      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-      reducedMotionRef.current = mq.matches;
-
-      if (mq.matches) {
-        setVisible(true);
-        return;
-      }
-
-      const el = ref.current;
-      if (!el) return;
-
-      const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            obs.disconnect();
-          }
-        },
-        { rootMargin: "-60px" },
-      );
-      obs.observe(el);
-      return () => obs.disconnect();
-    }
-
-    init();
-    return () => { cancelled = true; };
+    // Fires right after observe() for elements already in the viewport.
+    // Reduced-motion users are handled in CSS (motion-reduce:*) below.
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          obs.disconnect();
+        }
+      },
+      { rootMargin: "0px 0px -40px 0px" },
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
   }, []);
 
   return (
     <div
       ref={ref}
-      className={`transition-all ease-out ${
+      className={`transition-all ease-out motion-reduce:translate-y-0 motion-reduce:opacity-100 motion-reduce:transition-none ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-5"
       } ${className}`}
       style={{

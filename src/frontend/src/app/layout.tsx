@@ -45,6 +45,7 @@ export default function RootLayout({
   return (
     <html
       lang="vi"
+      data-scroll-behavior="smooth"
       className={`${jakartaSans.variable} ${barlowCondensed.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >

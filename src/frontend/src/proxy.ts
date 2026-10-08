@@ -1,31 +1,42 @@
-import { auth } from "@/lib/auth";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import createIntlMiddleware from "next-intl/middleware";
 import { routing } from "@/i18n/routing";
 
 const intlMiddleware = createIntlMiddleware(routing);
 
 const PROTECTED = ["/cms"];
-const SKIP_INTL = ["/api/", "/cms", "/login", "/register", "/_next"];
+const SKIP_INTL = [
+  "/api/",
+  "/cms",
+  "/login",
+  "/register",
+  "/_next",
+  "/sitemap.xml",
+  "/robots.txt",
+];
 
-export default auth((req) => {
-  const { nextUrl, auth: session } = req;
-  const path = nextUrl.pathname;
+function hasSession(req: NextRequest): boolean {
+  return !!(
+    req.cookies.get("__Secure-authjs.session-token") ??
+    req.cookies.get("authjs.session-token")
+  );
+}
 
-  // Protect CMS/posts routes
-  if (PROTECTED.some((p) => path.startsWith(p)) && !session) {
-    const loginUrl = new URL("/login", nextUrl.origin);
+export function proxy(req: NextRequest) {
+  const path = req.nextUrl.pathname;
+
+  if (PROTECTED.some((p) => path.startsWith(p)) && !hasSession(req)) {
+    const loginUrl = new URL("/login", req.nextUrl.origin);
     loginUrl.searchParams.set("callbackUrl", path);
     return NextResponse.redirect(loginUrl);
   }
 
-  // Skip i18n for API, auth, static routes
   if (SKIP_INTL.some((p) => path.startsWith(p))) {
     return NextResponse.next();
   }
 
-  return intlMiddleware(req as Parameters<typeof intlMiddleware>[0]);
-});
+  return intlMiddleware(req);
+}
 
 export const config = {
   matcher: [

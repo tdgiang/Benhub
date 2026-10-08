@@ -6,12 +6,14 @@ import {
   User,
   Building2,
   Briefcase,
+  Mountain,
   Check,
   ArrowRight,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
-type TabId = "fleet" | "driver" | "investor" | "partner";
+type TabId = "fleet" | "driver" | "investor" | "mine" | "partner";
 
 export function EcosystemSection() {
   const [active, setActive] = useState<TabId>("fleet");
@@ -21,6 +23,7 @@ export function EcosystemSection() {
     { id: "fleet", icon: Truck, label: t("tab_fleet") },
     { id: "driver", icon: User, label: t("tab_driver") },
     { id: "investor", icon: Building2, label: t("tab_investor") },
+    { id: "mine", icon: Mountain, label: t("tab_mine") },
     { id: "partner", icon: Briefcase, label: t("tab_partner") },
   ];
 
@@ -48,6 +51,13 @@ export function EcosystemSection() {
       benefits: [t("investor_b1"), t("investor_b2"), t("investor_b3"), t("investor_b4"), t("investor_b5")],
       cta: t("investor_cta"),
       href: "/doi-tac",
+    },
+    mine: {
+      headline: t("mine_headline"),
+      sub: t("mine_sub"),
+      benefits: [t("mine_b1"), t("mine_b2"), t("mine_b3"), t("mine_b4"), t("mine_b5")],
+      cta: t("mine_cta"),
+      href: "/benhub-mine",
     },
     partner: {
       headline: t("partner_headline"),
@@ -129,13 +139,13 @@ export function EcosystemSection() {
                 {c.sub}
               </p>
 
-              <a
+              <Link
                 href={c.href}
                 className="inline-flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-5 py-3 rounded-xl font-semibold text-sm transition-colors cursor-pointer group"
               >
                 {c.cta}
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-              </a>
+              </Link>
             </div>
 
             {/* Right benefits */}

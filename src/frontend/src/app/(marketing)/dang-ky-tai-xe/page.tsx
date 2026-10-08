@@ -709,7 +709,7 @@ function FormSection() {
 export default function DriverSignupPage() {
   return (
     <main>
-      <HeroSection />
+      {/* <HeroSection /> */}
       <TrustStats />
       <BenefitsSection />
       <HowItWorksSection />

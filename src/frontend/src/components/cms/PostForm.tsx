@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ImagePlus, Loader2, Save, X } from "lucide-react";
 import type { Post } from "@/types";
-import { slugify } from "@/lib/utils";
+import { resolveUploadUrl, slugify } from "@/lib/utils";
 import { RichTextEditor } from "@/components/cms/RichTextEditor";
 
 const postSchema = z.object({
@@ -196,7 +196,7 @@ export function PostForm({ post, onSubmit }: PostFormProps) {
                 <div className="relative group">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src={coverImageValue}
+                    src={resolveUploadUrl(coverImageValue)}
                     alt="Ảnh bìa"
                     className="w-full aspect-video object-cover rounded-lg border"
                   />

@@ -7,8 +7,10 @@ import { ReadingProgress } from '@/components/news/ReadingProgress'
 import { ShareButtons } from '@/components/news/ShareButtons'
 import { ArticleSidebar, type Heading, type RelatedPost } from '@/components/news/ArticleSidebar'
 import { MobileTOC } from '@/components/news/MobileTOC'
+import { getServerBackendBaseUrl } from '@/lib/server-backend-url'
+import { resolveUploadUrl } from '@/lib/utils'
 
-const BACKEND = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
+const BACKEND = getServerBackendBaseUrl()
 
 const GRADIENTS = [
   'linear-gradient(135deg, #c2410c 0%, #f97316 50%, #fb923c 100%)',
@@ -254,7 +256,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
         <div className="w-full" style={{ aspectRatio: '21 / 9' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={post.coverImage}
+            src={resolveUploadUrl(post.coverImage)}
             alt={post.title}
             className="h-full w-full object-cover"
           />

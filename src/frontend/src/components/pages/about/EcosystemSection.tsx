@@ -6,7 +6,7 @@ import {
   Truck,
   Store,
   CreditCard,
-  Package,
+  Mountain,
   BrainCircuit,
 } from "lucide-react";
 import { FadeUp } from "@/components/ui/FadeUp";
@@ -18,7 +18,7 @@ const PRODUCTS = [
   { icon: Truck, nameKey: "prod4_name", descKey: "prod4_desc", featured: false, color: "#22C55E" },
   { icon: Store, nameKey: "prod5_name", descKey: "prod5_desc", featured: false, color: "#8B5CF6" },
   { icon: CreditCard, nameKey: "prod6_name", descKey: "prod6_desc", featured: false, color: "#EC4899" },
-  { icon: Package, nameKey: "prod7_name", descKey: "prod7_desc", featured: false, color: "#14B8A6" },
+  { icon: Mountain, nameKey: "prod7_name", descKey: "prod7_desc", featured: false, color: "#14B8A6" },
   { icon: BrainCircuit, nameKey: "prod8_name", descKey: "prod8_desc", featured: false, color: "#F59E0B" },
 ] as const;
 

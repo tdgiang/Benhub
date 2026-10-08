@@ -1,9 +1,14 @@
 # Hướng dẫn Deploy BenHub lên VPS — CentOS
 
-> Tài liệu này dành cho người **chưa từng deploy** dự án lên VPS chạy **CentOS 7 / CentOS 8 / CentOS Stream**.  
+> Tài liệu này dành cho người **chưa từng deploy** dự án lên VPS.  
 > Đọc hết một lượt trước khi bắt tay thực hiện.
 
+> **Đang deploy lên VPS Windows Server?** Toàn bộ tài liệu này là cho VPS CentOS/Linux.  
+> Hướng dẫn build Docker trên **Windows Server 2019/2022** (qua WSL2) nằm ở file riêng: **[`docs/deploy_windown.md`](./deploy_windown.md)**.
+
 ---
+
+# Phần I — Deploy trên VPS CentOS
 
 ## Mục lục
 
@@ -646,11 +651,11 @@ Sau khi deploy lần đầu thành công, mỗi khi có code mới:
 ```bash
 cd /opt/benhub
 
-# 1. Pull code mới
+# 1. Pull code mới (compose file, nginx config...)
 git pull origin master
 
-# 2. Build lại images
-docker compose -f docker-compose.production.yml build backend frontend
+# 2. Pull images do GitHub Actions build sẵn (xem ghi chú bên dưới)
+docker compose -f docker-compose.production.yml pull backend migrate frontend
 
 # 3. Restart không downtime
 docker compose -f docker-compose.production.yml up -d --no-deps backend frontend
@@ -658,6 +663,13 @@ docker compose -f docker-compose.production.yml up -d --no-deps backend frontend
 # 4. Xem log xác nhận không có lỗi
 docker compose -f docker-compose.production.yml logs -f backend frontend
 ```
+
+> **Vì sao không build trên VPS:** CentOS 7 dùng kernel 3.10. Seccomp mặc định của Docker trên kernel này chặn một syscall mà Node 22/pnpm cần, nên `pnpm install` báo `EPERM: operation not permitted, write`. Images được build bởi `.github/workflows/docker-publish.yml` mỗi khi push lên `master` và đẩy lên `ghcr.io/tdgiang/benhub-{backend,frontend}`.
+>
+> - Đợi workflow chạy xong (tab **Actions** trên GitHub) rồi mới `pull`.
+> - Repo variable `APP_URL` (Settings → Secrets and variables → Actions → Variables) phải được đặt, vì `NEXT_PUBLIC_*` được nhúng vào bundle lúc build.
+> - Nếu package GHCR là private: `docker login ghcr.io -u <github_user>` với Personal Access Token có quyền `read:packages`.
+> - Rollback về bản cũ: `IMAGE_TAG=<commit_sha> docker compose -f docker-compose.production.yml up -d --no-deps backend frontend`.
 
 **Nếu có migration database mới:**
 
@@ -720,6 +732,66 @@ grep DATABASE_URL /opt/benhub/.env
 ```bash
 docker compose -f docker-compose.production.yml logs frontend --tail=100
 ```
+
+### Upload ảnh thành công nhưng URL `/uploads/...` báo 404 (aaPanel)
+
+**Triệu chứng:** CMS upload OK (`POST /api/v1/uploads` → 201), file có trong container:
+
+```bash
+docker exec benhub_backend ls /app/uploads/
+```
+
+nhưng `https://benhub.vn/uploads/xxx.png` trả 404 (thường là trang 404 của Next.js).
+
+**Nguyên nhân:** VPS dùng **aaPanel nginx** (không có container `benhub_nginx`). Request `/uploads/` đang vào frontend `:3000` thay vì backend `:4000`.
+
+**Cách sửa:**
+
+1. Chạy stack với override aaPanel (expose backend ra host):
+
+```bash
+cd /opt/benhub   # hoặc thư mục dự án trên VPS
+docker compose -f docker-compose.production.yml -f docker-compose.aapanel.yml up -d
+```
+
+2. Kiểm tra backend serve ảnh trực tiếp trên VPS:
+
+```bash
+curl -I http://127.0.0.1:4000/uploads/bbf1d174-dfb1-4628-a067-a8b648e1fe6a.png
+# Kỳ vọng: HTTP/1.1 200 OK
+```
+
+3. Thêm block nginx vào site `benhub.vn` (aaPanel → Websites → Config), copy từ `deploy/nginx-aapanel.conf`:
+
+```nginx
+location /uploads/ {
+    proxy_pass         http://127.0.0.1:4000/uploads/;
+    proxy_http_version 1.1;
+    proxy_set_header   Host              $host;
+    proxy_set_header   X-Real-IP         $remote_addr;
+    proxy_set_header   X-Forwarded-For   $proxy_add_x_forwarded_for;
+    access_log off;
+    expires 7d;
+    add_header         Cache-Control "public, max-age=604800, immutable";
+}
+```
+
+> Block này phải nằm **trước** `location / { proxy_pass http://127.0.0.1:3000; ... }`.
+
+4. Reload nginx:
+
+```bash
+nginx -t && nginx -s reload
+# hoặc trên aaPanel: Save → Reload
+```
+
+5. Kiểm tra lại:
+
+```bash
+curl -I https://benhub.vn/uploads/bbf1d174-dfb1-4628-a067-a8b648e1fe6a.png
+```
+
+**Lưu ý:** Lệnh `http://backend:4000/...` chỉ chạy được **bên trong Docker network**, không chạy từ shell VPS.
 
 ### Docker daemon không khởi động sau khi reboot VPS
 
@@ -829,3 +901,9 @@ BẢO MẬT & VẬN HÀNH
 [ ] Cron backup DB hàng ngày (crontab -e)
 [ ] mkdir -p /opt/benhub/backups
 ```
+
+---
+
+# Phần II — Deploy trên Windows Server
+
+> Hướng dẫn deploy lên VPS **Windows Server 2019/2022** (qua WSL2 + Docker Engine) đã được tách ra file riêng để dễ bảo trì: **[`docs/deploy_windown.md`](./deploy_windown.md)**.

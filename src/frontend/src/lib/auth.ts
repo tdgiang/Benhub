@@ -1,9 +1,11 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import { getServerBackendBaseUrl } from "@/lib/server-backend-url";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const API_URL = getServerBackendBaseUrl();
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     Credentials({
       name: "Credentials",

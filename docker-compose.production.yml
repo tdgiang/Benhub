@@ -35,6 +35,7 @@ services:
 
   # ─── Backend (NestJS) ──────────────────────────────────────────────────────
   backend:
+    image: ghcr.io/tdgiang/benhub-backend:${IMAGE_TAG:-latest}
     build:
       context: ./src/backend
       dockerfile: Dockerfile
@@ -50,8 +51,11 @@ services:
       JWT_SECRET: ${JWT_SECRET}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
       CORS_ORIGIN: ${APP_URL}
+      UPLOAD_DIR: /app/uploads
       THROTTLE_TTL: 60000
       THROTTLE_LIMIT: 100
+    volumes:
+      - uploads_data:/app/uploads
     depends_on:
       postgres:
         condition: service_healthy
@@ -59,17 +63,22 @@ services:
         condition: service_healthy
     networks:
       - internal
+      - web
     labels:
       - "traefik.enable=false"
 
   # ─── DB Migration (runs once) ──────────────────────────────────────────────
   migrate:
+    image: ghcr.io/tdgiang/benhub-backend:${IMAGE_TAG:-latest}
     build:
       context: ./src/backend
       dockerfile: Dockerfile
     container_name: benhub_migrate
+    entrypoint: []
     command: >
-      sh -c "npx prisma migrate deploy && npx prisma db execute --file /app/prisma/add-cover-image.sql --schema /app/prisma/schema.prisma || true"
+      sh -c "./node_modules/.bin/prisma migrate deploy --config prisma.config.mjs &&
+             ./node_modules/.bin/prisma db execute --file prisma/add-cover-image.sql --config prisma.config.mjs || true &&
+             node prisma/seed.mjs"
     environment:
       DATABASE_URL: postgresql://${POSTGRES_USER:-benhub}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-benhub}?schema=public
     depends_on:
@@ -81,6 +90,7 @@ services:
 
   # ─── Frontend (Next.js) ────────────────────────────────────────────────────
   frontend:
+    image: ghcr.io/tdgiang/benhub-frontend:${IMAGE_TAG:-latest}
     build:
       context: ./src/frontend
       dockerfile: Dockerfile
@@ -93,10 +103,9 @@ services:
     environment:
       AUTH_SECRET: ${AUTH_SECRET}
       AUTH_URL: ${APP_URL}
+      INTERNAL_API_URL: http://backend:4000
       NEXT_PUBLIC_API_URL: ${APP_URL}/api-backend
       NEXT_PUBLIC_APP_URL: ${APP_URL}
-    volumes:
-      - uploads_data:/app/public/uploads
     depends_on:
       - backend
     networks:

@@ -4,6 +4,7 @@ import { auth } from "@/lib/auth";
 import { Topbar } from "@/components/cms/Topbar";
 import { EditPostFormWrapper } from "./EditPostFormWrapper";
 import type { Post } from "@/types";
+import { getServerBackendBaseUrl } from "@/lib/server-backend-url";
 
 export const metadata: Metadata = {
   title: "Chỉnh sửa bài viết — CMS",
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 
 async function getPost(id: string): Promise<Post | null> {
   try {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+    const apiUrl = getServerBackendBaseUrl();
     const res = await fetch(`${apiUrl}/api/v1/posts/${id}`, { cache: "no-store" });
     if (!res.ok) return null;
     const { data } = await res.json();

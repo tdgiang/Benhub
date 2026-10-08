@@ -1,6 +1,6 @@
 import { cache } from 'react'
 import type { Metadata } from 'next'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { notFound } from 'next/navigation'
 import { ArrowLeft, ArrowRight, CalendarDays, Clock3, Home } from 'lucide-react'
 import { ReadingProgress } from '@/components/news/ReadingProgress'
@@ -9,8 +9,10 @@ import { ArticleSidebar, type Heading, type RelatedPost } from '@/components/new
 import { MobileTOC } from '@/components/news/MobileTOC'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { useTranslations } from 'next-intl'
+import { getServerBackendBaseUrl } from '@/lib/server-backend-url'
+import { resolveUploadUrl } from '@/lib/utils'
 
-const BACKEND = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:4000'
+const BACKEND = getServerBackendBaseUrl()
 
 const GRADIENTS = [
   'linear-gradient(135deg, #c2410c 0%, #f97316 50%, #fb923c 100%)',
@@ -201,7 +203,7 @@ function CTABanner() {
         <p className="text-base text-orange-100">{t('cta_sub')}</p>
         <div className="flex flex-wrap justify-center gap-3">
           <Link
-            href="/#register"
+            href="/doi-tac#partner-form"
             className="inline-flex cursor-pointer items-center gap-2 rounded-2xl bg-white px-6 py-3 text-sm font-bold text-orange-600 shadow-lg transition hover:-translate-y-0.5 hover:shadow-xl"
           >
             {t('cta_btn')}
@@ -348,7 +350,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
         <div className="w-full" style={{ aspectRatio: '21 / 9' }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src={post.coverImage}
+            src={resolveUploadUrl(post.coverImage)}
             alt={post.title}
             className="h-full w-full object-cover"
           />

@@ -1,5 +1,7 @@
 export const APP_NAME = process.env.NEXT_PUBLIC_APP_NAME ?? "BenHub";
 export const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000";
+/** Canonical public origin, used for sitemap/robots/OpenGraph. */
+export const SITE_URL = "https://benhub.vn";
 
 export const HARDCODED_USERS = [
   {

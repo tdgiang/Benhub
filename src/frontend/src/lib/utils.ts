@@ -13,6 +13,15 @@ export function formatDate(date: Date | string): string {
   }).format(new Date(date));
 }
 
+/** Chuẩn hóa URL ảnh upload — hỗ trợ bản cũ /uploads/ qua nginx /api-backend/ */
+export function resolveUploadUrl(url: string | null | undefined): string {
+  if (!url) return "";
+  if (url.startsWith("/uploads/")) {
+    return url.replace("/uploads/", "/api-backend/uploads/");
+  }
+  return url;
+}
+
 export function slugify(text: string): string {
   return text
     .toLowerCase()

@@ -1,17 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
-import { randomUUID } from "crypto";
 import { auth } from "@/lib/auth";
 
-const UPLOAD_DIR = join(process.cwd(), "public", "uploads");
-const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
-const ALLOWED_TYPES = new Set([
-  "image/jpeg",
-  "image/png",
-  "image/webp",
-  "image/gif",
-]);
+// In Docker: INTERNAL_API_URL=http://backend:4000
+// In aaPanel (direct): defaults to http://localhost:4000
+const BACKEND_URL = process.env.INTERNAL_API_URL || "http://localhost:4000";
 
 export async function POST(request: NextRequest) {
   const session = await auth();
@@ -31,27 +23,27 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: "Không tìm thấy file" }, { status: 400 });
   }
 
-  if (!ALLOWED_TYPES.has(file.type)) {
+  const outForm = new FormData();
+  outForm.append("file", file, file.name);
+
+  let res: Response;
+  try {
+    res = await fetch(`${BACKEND_URL}/api/v1/uploads`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${session.accessToken}` },
+      body: outForm,
+    });
+  } catch {
+    return NextResponse.json({ message: "Không kết nối được backend" }, { status: 502 });
+  }
+
+  const body = await res.json();
+  if (!res.ok) {
     return NextResponse.json(
-      { message: "Chỉ chấp nhận ảnh JPG, PNG, WebP, GIF" },
-      { status: 400 },
+      { message: body?.message ?? "Upload thất bại" },
+      { status: res.status },
     );
   }
 
-  if (file.size > MAX_SIZE) {
-    return NextResponse.json(
-      { message: "File quá lớn (tối đa 10 MB)" },
-      { status: 400 },
-    );
-  }
-
-  const ext = file.name.split(".").pop()?.toLowerCase() ?? "jpg";
-  const filename = `${randomUUID()}.${ext}`;
-
-  await mkdir(UPLOAD_DIR, { recursive: true });
-
-  const bytes = await file.arrayBuffer();
-  await writeFile(join(UPLOAD_DIR, filename), Buffer.from(bytes));
-
-  return NextResponse.json({ url: `/uploads/${filename}` });
+  return NextResponse.json({ url: body.data?.url });
 }

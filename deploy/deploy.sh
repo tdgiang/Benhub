@@ -50,10 +50,18 @@ fi
 
 # ── Build & deploy ──────────────────────────────────────────────
 log "Pulling latest code..."
-git pull origin main 2>/dev/null || warn "Not a git repo or no remote"
+git pull origin master 2>/dev/null || warn "Not a git repo or no remote"
 
-log "Building Docker images..."
-$COMPOSE -f docker-compose.production.yml build --no-cache
+# Images are built by GitHub Actions (.github/workflows/docker-publish.yml) and
+# pushed to GHCR — building on CentOS 7 (kernel 3.10) fails with EPERM.
+# Set BUILD_LOCAL=1 to build on this host instead.
+if [ "${BUILD_LOCAL:-0}" = "1" ]; then
+  log "Building Docker images locally..."
+  $COMPOSE -f docker-compose.production.yml build --no-cache backend migrate frontend
+else
+  log "Pulling Docker images (tag: ${IMAGE_TAG:-latest})..."
+  $COMPOSE -f docker-compose.production.yml pull backend migrate frontend
+fi
 
 log "Starting infrastructure (postgres + redis)..."
 $COMPOSE -f docker-compose.production.yml up -d postgres redis

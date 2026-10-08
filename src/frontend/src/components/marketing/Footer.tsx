@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Truck, Phone, Mail, MapPin, Clock } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -8,9 +8,11 @@ export function Footer({ className }: { className?: string }) {
   const products = [
     "BenHub Core",
     "BenHub Driver",
+    "BenHub Supervisor",
     "BenHub Fleet",
+    "BenHub Marketplace",
     "BenHub Finance",
-    "BenHub Materials",
+    "BenHub Mine",
     "BenHub AI Labs",
   ];
 
@@ -21,6 +23,8 @@ export function Footer({ className }: { className?: string }) {
     { label: t("company_hiring"), href: "#" },
     { label: t("company_partner"), href: "/doi-tac" },
     { label: t("company_investor"), href: "/#roadmap" },
+    { label: t("company_help"), href: "/trung-tam-tro-giup" },
+    { label: t("privacy"), href: "/chinh-sach-bao-mat-thong-tin" },
   ];
 
   return (
@@ -97,7 +101,7 @@ export function Footer({ className }: { className?: string }) {
               {products.map((p) => (
                 <li key={p}>
                   <Link
-                    href="/#products"
+                    href={p === "BenHub Mine" ? "/benhub-mine" : "/#products"}
                     className="text-slate-400 hover:text-orange-400 text-sm transition-colors cursor-pointer"
                   >
                     {p}
@@ -182,12 +186,12 @@ export function Footer({ className }: { className?: string }) {
         <div className="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="text-slate-500 text-sm">{t("copyright")}</p>
           <div className="flex items-center gap-4">
-            <a
-              href="#"
+            <Link
+              href="/chinh-sach-bao-mat-thong-tin"
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors cursor-pointer"
             >
               {t("privacy")}
-            </a>
+            </Link>
             <a
               href="#"
               className="text-slate-500 hover:text-slate-300 text-sm transition-colors cursor-pointer"

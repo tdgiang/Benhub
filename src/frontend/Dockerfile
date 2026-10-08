@@ -4,6 +4,10 @@ WORKDIR /app
 
 RUN corepack enable && corepack prepare pnpm@10.33.0 --activate
 
+# copy import method: avoids EPERM on hosts where the Docker storage driver
+# doesn't support hardlinks cleanly (e.g. vfs driver)
+ENV npm_config_package_import_method=copy
+
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
 # --ignore-scripts: skip native build scripts; SWC/sharp use pre-built binaries
 RUN pnpm install --frozen-lockfile --ignore-scripts
@@ -48,9 +52,6 @@ RUN addgroup --system --gid 1001 nodejs && \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-
-# Persistent uploads volume mount point
-RUN mkdir -p ./public/uploads && chown -R nextjs:nodejs ./public/uploads
 
 USER nextjs
 

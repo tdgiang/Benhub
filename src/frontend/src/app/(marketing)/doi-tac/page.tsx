@@ -152,7 +152,7 @@ const marketStats = [
   {
     value: "60–80",
     unit: "tỷ USD",
-    label: "Quy mô ngành xây dựng VN mỗi năm",
+    label: "Quy mô Vận Tải công trình VN mỗi năm",
     icon: BarChart3,
     sub: "Tăng trưởng ổn định 8–10%/năm",
   },
@@ -288,9 +288,9 @@ function HeroSection() {
             </h1>
 
             <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-300 md:text-lg">
-              Chúng tôi đang tìm kiếm đối tác ở mọi mắt xích của chuỗi — từ
-              chủ đầu tư, đội xe, mỏ vật liệu đến tổ chức tài chính và công
-              nghệ. Cùng nhau số hóa ngành 60–80 tỷ USD.
+              Chúng tôi đang tìm kiếm đối tác ở mọi mắt xích của chuỗi — từ chủ
+              đầu tư, đội xe, mỏ vật liệu đến tổ chức tài chính và công nghệ.
+              Cùng nhau số hóa ngành 60–80 tỷ USD.
             </p>
 
             {/* Trust signals */}
@@ -337,27 +337,63 @@ function HeroSection() {
               </p>
               <div className="space-y-2.5">
                 {[
-                  { icon: Building2, label: "Chủ Đầu Tư / Tổng Thầu", color: "text-blue-400", bg: "bg-blue-500/15" },
-                  { icon: Truck, label: "Đội Xe Địa Phương", color: "text-orange-400", bg: "bg-orange-500/15" },
-                  { icon: Factory, label: "Mỏ Vật Liệu / Nhà Cung Ứng", color: "text-teal-400", bg: "bg-teal-500/15" },
-                  { icon: Landmark, label: "Tài Chính / Bảo Hiểm", color: "text-slate-300", bg: "bg-slate-500/20" },
-                  { icon: Cpu, label: "Công Nghệ / Tích Hợp", color: "text-violet-400", bg: "bg-violet-500/15" },
-                  { icon: TrendingUp, label: "Nhà Đầu Tư Chiến Lược", color: "text-amber-400", bg: "bg-amber-500/15" },
+                  {
+                    icon: Building2,
+                    label: "Chủ Đầu Tư / Tổng Thầu",
+                    color: "text-blue-400",
+                    bg: "bg-blue-500/15",
+                  },
+                  {
+                    icon: Truck,
+                    label: "Đội Xe Địa Phương",
+                    color: "text-orange-400",
+                    bg: "bg-orange-500/15",
+                  },
+                  {
+                    icon: Factory,
+                    label: "Mỏ Vật Liệu / Nhà Cung Ứng",
+                    color: "text-teal-400",
+                    bg: "bg-teal-500/15",
+                  },
+                  {
+                    icon: Landmark,
+                    label: "Tài Chính / Bảo Hiểm",
+                    color: "text-slate-300",
+                    bg: "bg-slate-500/20",
+                  },
+                  {
+                    icon: Cpu,
+                    label: "Công Nghệ / Tích Hợp",
+                    color: "text-violet-400",
+                    bg: "bg-violet-500/15",
+                  },
+                  {
+                    icon: TrendingUp,
+                    label: "Nhà Đầu Tư Chiến Lược",
+                    color: "text-amber-400",
+                    bg: "bg-amber-500/15",
+                  },
                 ].map(({ icon: Icon, label, color, bg }) => (
                   <div
                     key={label}
                     className="flex items-center gap-3 rounded-2xl border border-white/8 bg-white/5 px-4 py-3 transition hover:border-white/15 hover:bg-white/8"
                   >
-                    <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${bg}`}>
+                    <div
+                      className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl ${bg}`}
+                    >
                       <Icon className={`h-4 w-4 ${color}`} />
                     </div>
-                    <span className="text-sm font-semibold text-slate-200">{label}</span>
+                    <span className="text-sm font-semibold text-slate-200">
+                      {label}
+                    </span>
                     <BadgeCheck className="ml-auto h-4 w-4 shrink-0 text-orange-400/70" />
                   </div>
                 ))}
               </div>
               <div className="mt-5 flex items-center justify-between border-t border-white/8 pt-4">
-                <p className="text-xs text-slate-400">Tất cả kết nối qua BenHub Platform</p>
+                <p className="text-xs text-slate-400">
+                  Tất cả kết nối qua BenHub Platform
+                </p>
                 <span className="flex h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_6px_2px_rgba(52,211,153,0.5)]" />
               </div>
             </div>
@@ -375,7 +411,10 @@ function QuickStatsBar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 divide-x divide-slate-100 sm:grid-cols-4">
           {quickStats.map(({ value, label, icon: Icon }) => (
-            <div key={label} className="flex items-center gap-3 px-4 py-5 sm:px-6">
+            <div
+              key={label}
+              className="flex items-center gap-3 px-4 py-5 sm:px-6"
+            >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-2xl bg-orange-50">
                 <Icon className="h-5 w-5 text-orange-500" />
               </div>
@@ -425,47 +464,66 @@ function PartnerSegmentsSection() {
 
         {/* Grid 2×3 */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {partnerSegments.map(({ icon: Icon, tag, headline, benefits, cta, iconBg, iconColor, tagBg, borderHover, shadowHover }) => (
-            <a
-              key={tag}
-              href="#hop-tac"
-              className={`group flex cursor-pointer flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl ${borderHover} ${shadowHover} focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200`}
-            >
-              {/* Icon + Tag row */}
-              <div className="mb-4 flex items-start justify-between gap-3">
-                <div className={`flex h-12 w-12 items-center justify-center rounded-2xl ${iconBg}`}>
-                  <Icon className={`h-6 w-6 ${iconColor}`} />
+          {partnerSegments.map(
+            ({
+              icon: Icon,
+              tag,
+              headline,
+              benefits,
+              cta,
+              iconBg,
+              iconColor,
+              tagBg,
+              borderHover,
+              shadowHover,
+            }) => (
+              <a
+                key={tag}
+                href="#hop-tac"
+                className={`group flex cursor-pointer flex-col rounded-[2rem] border border-slate-200 bg-white p-6 shadow-sm transition duration-200 hover:-translate-y-1 hover:shadow-xl ${borderHover} ${shadowHover} focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-200`}
+              >
+                {/* Icon + Tag row */}
+                <div className="mb-4 flex items-start justify-between gap-3">
+                  <div
+                    className={`flex h-12 w-12 items-center justify-center rounded-2xl ${iconBg}`}
+                  >
+                    <Icon className={`h-6 w-6 ${iconColor}`} />
+                  </div>
+                  <span
+                    className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${tagBg}`}
+                  >
+                    {tag}
+                  </span>
                 </div>
-                <span className={`rounded-full px-2.5 py-1 text-[11px] font-bold ${tagBg}`}>
-                  {tag}
-                </span>
-              </div>
 
-              {/* Headline */}
-              <h3 className="text-base font-black leading-snug text-slate-950 transition-colors group-hover:text-orange-600">
-                {headline}
-              </h3>
+                {/* Headline */}
+                <h3 className="text-base font-black leading-snug text-slate-950 transition-colors group-hover:text-orange-600">
+                  {headline}
+                </h3>
 
-              {/* Benefits */}
-              <ul className="mt-4 flex-1 space-y-2.5">
-                {benefits.map((b) => (
-                  <li key={b} className="flex items-start gap-2">
-                    <BadgeCheck
-                      className="mt-0.5 h-4 w-4 shrink-0 text-orange-500"
-                      aria-hidden="true"
-                    />
-                    <span className="text-sm leading-snug text-slate-600">{b}</span>
-                  </li>
-                ))}
-              </ul>
+                {/* Benefits */}
+                <ul className="mt-4 flex-1 space-y-2.5">
+                  {benefits.map((b) => (
+                    <li key={b} className="flex items-start gap-2">
+                      <BadgeCheck
+                        className="mt-0.5 h-4 w-4 shrink-0 text-orange-500"
+                        aria-hidden="true"
+                      />
+                      <span className="text-sm leading-snug text-slate-600">
+                        {b}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
 
-              {/* CTA — arrow only moves, no layout shift */}
-              <div className="mt-5 flex items-center gap-2 text-sm font-bold text-orange-600">
-                {cta}
-                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </div>
-            </a>
-          ))}
+                {/* CTA — arrow only moves, no layout shift */}
+                <div className="mt-5 flex items-center gap-2 text-sm font-bold text-orange-600">
+                  {cta}
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </div>
+              </a>
+            ),
+          )}
         </div>
 
         {/* Footer hint */}
@@ -509,10 +567,10 @@ function MarketSection() {
             </h2>
           </div>
           <p className="text-base leading-relaxed text-slate-300">
-            Ngành xây dựng Việt Nam tăng trưởng mạnh nhờ cao tốc Bắc-Nam, sân
-            bay Long Thành và làn sóng FDI. Nhưng logistics vận tải công trình
-            vẫn vận hành bằng điện thoại, phiếu giấy và Excel — đây là khoảng
-            trống BenHub đang lấp đầy.
+            Vận Tải công trình Việt Nam tăng trưởng mạnh nhờ cao tốc Bắc-Nam,
+            sân bay Long Thành và làn sóng FDI. Nhưng logistics vận tải công
+            trình vẫn vận hành bằng điện thoại, phiếu giấy và Excel — đây là
+            khoảng trống BenHub đang lấp đầy.
           </p>
         </div>
 
@@ -554,8 +612,8 @@ function MarketSection() {
               </p>
               <p className="mt-1 text-sm leading-relaxed text-slate-300">
                 Đây là đặc điểm hiếm có của một thị trường trưởng thành nhưng
-                chưa có nền tảng số nào thống trị. BenHub đang chiếm vị thế đó
-                — và đây là cơ hội cho mọi đối tác cùng tham gia.
+                chưa có nền tảng số nào thống trị. BenHub đang chiếm vị thế đó —
+                và đây là cơ hội cho mọi đối tác cùng tham gia.
               </p>
             </div>
           </div>
@@ -568,7 +626,10 @@ function MarketSection() {
 /* ── NEW: 3-step partnership process ── */
 function ProcessSection() {
   return (
-    <section className="bg-white py-10 md:py-14" aria-labelledby="process-heading">
+    <section
+      className="bg-white py-10 md:py-14"
+      aria-labelledby="process-heading"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 text-center">
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-orange-600">
@@ -641,7 +702,9 @@ function ProcessSection() {
                 </div>
 
                 <h3 className="text-lg font-black text-slate-950">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{desc}</p>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  {desc}
+                </p>
 
                 <div className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-orange-50 px-3 py-1.5 text-xs font-bold text-orange-600">
                   <CheckCircle2 className="h-3.5 w-3.5" />
@@ -668,7 +731,10 @@ function ProcessSection() {
 
 function AdvantagesSection() {
   return (
-    <section className="bg-slate-50 py-10 md:py-14" aria-labelledby="adv-heading">
+    <section
+      className="bg-slate-50 py-10 md:py-14"
+      aria-labelledby="adv-heading"
+    >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-12 max-w-2xl">
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-orange-600">
@@ -709,8 +775,12 @@ function AdvantagesSection() {
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-2xl bg-orange-50 transition group-hover:bg-orange-100">
                   <Icon className="h-5 w-5 text-orange-500" />
                 </div>
-                <h3 className="text-lg font-black leading-snug text-slate-950">{title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-600">{desc}</p>
+                <h3 className="text-lg font-black leading-snug text-slate-950">
+                  {title}
+                </h3>
+                <p className="mt-2 text-sm leading-relaxed text-slate-600">
+                  {desc}
+                </p>
                 <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-slate-100 px-3 py-1 text-xs font-bold text-slate-600">
                   <BadgeCheck className="h-3.5 w-3.5 text-orange-500" />
                   {metric}
@@ -844,8 +914,8 @@ function FormSection() {
               Một bước để gia nhập hệ sinh thái BenHub.
             </h2>
             <p className="mt-5 max-w-md text-base leading-relaxed text-slate-300">
-              Điền form và đội phát triển đối tác BenHub sẽ liên hệ trong vòng
-              1 ngày làm việc. Trao đổi mở, không ràng buộc, không mất phí.
+              Điền form và đội phát triển đối tác BenHub sẽ liên hệ trong vòng 1
+              ngày làm việc. Trao đổi mở, không ràng buộc, không mất phí.
             </p>
 
             {/* Process recap */}
@@ -859,7 +929,9 @@ function FormSection() {
                   <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-orange-500 text-sm font-black text-white shadow-lg shadow-orange-950/30">
                     {step}
                   </div>
-                  <p className="text-sm font-semibold text-slate-200">{label}</p>
+                  <p className="text-sm font-semibold text-slate-200">
+                    {label}
+                  </p>
                 </div>
               ))}
             </div>

@@ -7,9 +7,11 @@ export default defineConfig({
   schema: "prisma/schema.prisma",
   migrations: {
     path: "prisma/migrations",
-    seed: "ts-node --project tsconfig.json -e \"require('tsconfig-paths/register'); require('./prisma/seed.ts')\"",
+    seed: "node prisma/seed.mjs",
   },
   datasource: {
-    url: process.env["DATABASE_URL"],
+    // Fallback allows `prisma generate` to run at Docker build time
+    // (generate doesn't connect to DB; real URL is injected at runtime)
+    url: process.env["DATABASE_URL"] ?? "postgresql://build:build@localhost:5432/build",
   },
 });

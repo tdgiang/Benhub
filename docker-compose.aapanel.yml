@@ -13,14 +13,14 @@ services:
   # Tắt Docker nginx — system nginx của aaPanel đảm nhận
   nginx:
     profiles:
-      - standalone   # chỉ khởi động khi truyền --profile standalone
+      - standalone # chỉ khởi động khi truyền --profile standalone
 
-  # Expose frontend ra localhost để system nginx proxy vào
+  # Expose frontend ra localhost cho aaPanel nginx proxy
   frontend:
     ports:
       - "127.0.0.1:3000:3000"
 
-  # Expose backend ra localhost để system nginx proxy vào
+  # Expose backend ra localhost — aaPanel nginx proxy /api-backend/ và /uploads/
   backend:
     ports:
       - "127.0.0.1:4000:4000"

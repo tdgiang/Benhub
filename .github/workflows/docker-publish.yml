@@ -1,0 +1,62 @@
+name: Build & push Docker images
+
+# Images are built here instead of on the VPS: the production host runs
+# CentOS 7 (kernel 3.10), where Docker's seccomp profile blocks a syscall
+# Node 22 / pnpm needs during install (EPERM on write).
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_PREFIX: ghcr.io/tdgiang/benhub
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - service: backend
+            context: ./src/backend
+          - service: frontend
+            context: ./src/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Check APP_URL variable
+        if: matrix.service == 'frontend' && vars.APP_URL == ''
+        run: |
+          echo "::error::Repository variable APP_URL is not set (Settings → Secrets and variables → Actions → Variables)"
+          exit 1
+
+      - uses: docker/build-push-action@v6
+        with:
+          context: ${{ matrix.context }}
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ${{ env.IMAGE_PREFIX }}-${{ matrix.service }}:latest
+            ${{ env.IMAGE_PREFIX }}-${{ matrix.service }}:${{ github.sha }}
+          # NEXT_PUBLIC_* are baked into the frontend bundle at build time
+          build-args: |
+            NEXT_PUBLIC_API_URL=${{ vars.APP_URL }}/api-backend
+            NEXT_PUBLIC_APP_NAME=BenHub
+            NEXT_PUBLIC_APP_URL=${{ vars.APP_URL }}
+          cache-from: type=gha,scope=${{ matrix.service }}
+          cache-to: type=gha,mode=max,scope=${{ matrix.service }}

@@ -89,7 +89,7 @@ export const newsPosts: NewsPost[] = [
     isFeatured: true,
     title: 'Vì sao vận tải công trình cần một operating system riêng?',
     excerpt:
-      'Ngành xây dựng có quy mô lớn nhưng dữ liệu vận tải vẫn phân tán giữa điện thoại, phiếu giấy và bảng tính.',
+      'Vận Tải công trình có quy mô lớn nhưng dữ liệu vận tải vẫn phân tán giữa điện thoại, phiếu giấy và bảng tính.',
     sapo:
       'Một công trường có thể có hàng trăm chuyến xe mỗi ngày, nhiều điểm nhận - trả, nhiều đội xe và nhiều lớp đối soát. Khi mọi thứ vẫn chạy bằng cuộc gọi và phiếu giấy, dữ liệu vận hành bị mất ngay tại thời điểm nó được tạo ra.',
     date: '14.05.2026',

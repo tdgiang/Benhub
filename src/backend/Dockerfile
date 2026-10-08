@@ -10,7 +10,8 @@ COPY . .
 # Generate Prisma client, compile TypeScript, then strip dev deps
 RUN npx prisma generate \
  && npm run build \
- && npm prune --omit=dev
+ && npm prune --omit=dev \
+ && npx prisma generate
 
 # ─── Stage 2: Runtime ─────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
@@ -22,8 +23,13 @@ ENV NODE_ENV=production
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
+COPY --from=builder /app/prisma.config.mjs ./prisma.config.mjs
+COPY docker-entrypoint.sh ./docker-entrypoint.sh
+RUN chmod +x docker-entrypoint.sh
+
+RUN mkdir -p /app/uploads
 
 EXPOSE 4000
 
 # dist/src/main because prisma.config.ts at root shifts TypeScript rootDir to "."
-CMD ["node", "dist/src/main"]
+ENTRYPOINT ["./docker-entrypoint.sh"]

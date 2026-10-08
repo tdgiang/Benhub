@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Link from 'next/link'
+import { Link } from '@/i18n/navigation'
 import { ArrowRight, Truck } from 'lucide-react'
 import { useTranslations } from 'next-intl'
 
@@ -89,7 +89,7 @@ export function ArticleSidebar({ headings, relatedPosts }: ArticleSidebarProps) 
         <p className="text-sm font-bold text-white">{t('join_title')}</p>
         <p className="mt-2 text-xs leading-relaxed text-slate-400">{t('join_desc')}</p>
         <Link
-          href="/#register"
+          href="/doi-tac#partner-form"
           className="mt-4 inline-flex cursor-pointer items-center gap-2 rounded-xl bg-orange-500 px-4 py-2 text-xs font-bold text-white transition hover:-translate-y-0.5 hover:bg-orange-600"
         >
           {t('join_cta')}

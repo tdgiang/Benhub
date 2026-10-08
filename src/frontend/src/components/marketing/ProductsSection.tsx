@@ -8,12 +8,12 @@ import {
   Layers3,
   LayoutDashboard,
   Link2,
+  Mountain,
   Network,
-  Package,
   Smartphone,
   Truck,
 } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 
 /** 2×4 cell centers (viewBox 0–100) — lines radiate from shared Core hub */
@@ -95,14 +95,14 @@ export function ProductsSection() {
       featured: "finance",
     },
     {
-      icon: Package,
-      name: "BenHub Materials",
-      tag: "Marketplace",
-      description: t("materials_desc"),
-      features: [t("materials_f1"), t("materials_f2"), t("materials_f3")],
-      layer: t("materials_layer"),
-      accent: "from-amber-500 to-yellow-400",
-      dotClass: "bg-amber-400",
+      icon: Mountain,
+      name: "BenHub Mine",
+      tag: "Mining",
+      description: t("mine_desc"),
+      features: [t("mine_f1"), t("mine_f2"), t("mine_f3")],
+      layer: t("mine_layer"),
+      accent: "from-stone-400 to-amber-500",
+      dotClass: "bg-amber-500",
     },
     {
       icon: Cpu,

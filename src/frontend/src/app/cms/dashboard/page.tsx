@@ -5,10 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { FileText, Users, Inbox, Eye, TrendingUp, Clock } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { getServerBackendBaseUrl } from "@/lib/server-backend-url";
 
 export const metadata: Metadata = { title: "Dashboard — CMS" };
 
-const BACKEND = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const BACKEND = getServerBackendBaseUrl();
 
 interface DashboardStats {
   posts: { total: number; published: number; draft: number };

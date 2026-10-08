@@ -26,6 +26,7 @@ export function Navbar({ className }: { className?: string }) {
   const navLinks = [
     { label: t("nav_solution"), href: "/#solution" },
     { label: t("nav_products"), href: "/#products" },
+    { label: t("nav_mine"), href: "/benhub-mine" },
     { label: t("nav_ecosystem"), href: "/#ecosystem" },
     { label: t("nav_news"), href: "/tin-tuc" },
     { label: t("nav_driver"), href: "/dang-ky-tai-xe" },

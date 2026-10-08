@@ -1,0 +1,18 @@
+# Override cho local Docker testing (HTTP only, không cần SSL)
+# Dùng: docker compose -f docker-compose.production.yml -f docker-compose.local.yml up --build -d
+
+services:
+  frontend:
+    build:
+      args:
+        NEXT_PUBLIC_API_URL: http://localhost/api-backend
+        NEXT_PUBLIC_APP_NAME: BenHub
+        NEXT_PUBLIC_APP_URL: http://localhost
+    environment:
+      AUTH_URL: http://localhost
+
+  nginx:
+    volumes:
+      - ./deploy/nginx-http.conf:/etc/nginx/conf.d/default.conf:ro
+    ports:
+      - "80:80"

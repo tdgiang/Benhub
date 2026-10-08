@@ -1,8 +1,10 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ArrowRight, Clock3, Newspaper } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { getServerBackendBaseUrl } from "@/lib/server-backend-url";
+import { resolveUploadUrl } from "@/lib/utils";
 
-const BACKEND = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
+const BACKEND = getServerBackendBaseUrl();
 
 const GRADIENTS = [
   "linear-gradient(135deg, #c2410c 0%, #f97316 50%, #fb923c 100%)",
@@ -93,7 +95,7 @@ export async function NewsSection() {
               {post.coverImage ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={post.coverImage}
+                  src={resolveUploadUrl(post.coverImage)}
                   alt={post.title}
                   className="aspect-[16/9] w-full object-cover"
                 />

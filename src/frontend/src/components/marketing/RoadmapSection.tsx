@@ -10,7 +10,13 @@ export function RoadmapSection() {
       tagStyle: "bg-blue-500/20 text-blue-300 border border-blue-500/30",
       title: t("p1_title"),
       current: true,
-      kpis: [t("p1_k1"), t("p1_k2"), t("p1_k3"), t("p1_k4")],
+      kpis: [
+        t("p1_k1"),
+        t("p1_k2"),
+        t("p1_k3"),
+        t("p1_k4"),
+        t("p1_k5"),
+      ],
     },
     {
       period: t("p2_period"),

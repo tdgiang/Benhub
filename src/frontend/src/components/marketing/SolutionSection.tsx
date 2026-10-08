@@ -10,6 +10,7 @@ export function SolutionSection() {
     { before: t("s3_before"), after: t("s3_after") },
     { before: t("s4_before"), after: t("s4_after") },
     { before: t("s5_before"), after: t("s5_after") },
+    { before: t("s6_before"), after: t("s6_after") },
   ];
 
   return (
