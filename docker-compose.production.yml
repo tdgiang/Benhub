@@ -35,6 +35,7 @@ services:
 
   # ─── Backend (NestJS) ──────────────────────────────────────────────────────
   backend:
+    image: ghcr.io/tdgiang/benhub-backend:${IMAGE_TAG:-latest}
     build:
       context: ./src/backend
       dockerfile: Dockerfile
@@ -68,6 +69,7 @@ services:
 
   # ─── DB Migration (runs once) ──────────────────────────────────────────────
   migrate:
+    image: ghcr.io/tdgiang/benhub-backend:${IMAGE_TAG:-latest}
     build:
       context: ./src/backend
       dockerfile: Dockerfile
@@ -88,6 +90,7 @@ services:
 
   # ─── Frontend (Next.js) ────────────────────────────────────────────────────
   frontend:
+    image: ghcr.io/tdgiang/benhub-frontend:${IMAGE_TAG:-latest}
     build:
       context: ./src/frontend
       dockerfile: Dockerfile

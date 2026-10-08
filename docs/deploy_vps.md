@@ -651,11 +651,11 @@ Sau khi deploy lần đầu thành công, mỗi khi có code mới:
 ```bash
 cd /opt/benhub
 
-# 1. Pull code mới
+# 1. Pull code mới (compose file, nginx config...)
 git pull origin master
 
-# 2. Build lại images
-docker compose -f docker-compose.production.yml build backend frontend
+# 2. Pull images do GitHub Actions build sẵn (xem ghi chú bên dưới)
+docker compose -f docker-compose.production.yml pull backend migrate frontend
 
 # 3. Restart không downtime
 docker compose -f docker-compose.production.yml up -d --no-deps backend frontend
@@ -663,6 +663,13 @@ docker compose -f docker-compose.production.yml up -d --no-deps backend frontend
 # 4. Xem log xác nhận không có lỗi
 docker compose -f docker-compose.production.yml logs -f backend frontend
 ```
+
+> **Vì sao không build trên VPS:** CentOS 7 dùng kernel 3.10. Seccomp mặc định của Docker trên kernel này chặn một syscall mà Node 22/pnpm cần, nên `pnpm install` báo `EPERM: operation not permitted, write`. Images được build bởi `.github/workflows/docker-publish.yml` mỗi khi push lên `master` và đẩy lên `ghcr.io/tdgiang/benhub-{backend,frontend}`.
+>
+> - Đợi workflow chạy xong (tab **Actions** trên GitHub) rồi mới `pull`.
+> - Repo variable `APP_URL` (Settings → Secrets and variables → Actions → Variables) phải được đặt, vì `NEXT_PUBLIC_*` được nhúng vào bundle lúc build.
+> - Nếu package GHCR là private: `docker login ghcr.io -u <github_user>` với Personal Access Token có quyền `read:packages`.
+> - Rollback về bản cũ: `IMAGE_TAG=<commit_sha> docker compose -f docker-compose.production.yml up -d --no-deps backend frontend`.
 
 **Nếu có migration database mới:**
 
