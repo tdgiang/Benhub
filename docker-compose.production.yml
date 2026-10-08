@@ -3,6 +3,10 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: benhub_postgres
+    # CentOS 7 (kernel 3.10): Docker's default seccomp profile blocks a write
+    # syscall used by current Alpine images → EPERM. Remove after host OS upgrade.
+    security_opt:
+      - seccomp:unconfined
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-benhub}
@@ -40,6 +44,10 @@ services:
       context: ./src/backend
       dockerfile: Dockerfile
     container_name: benhub_backend
+    # CentOS 7 (kernel 3.10): Docker's default seccomp profile blocks a write
+    # syscall used by current Alpine images → EPERM. Remove after host OS upgrade.
+    security_opt:
+      - seccomp:unconfined
     restart: unless-stopped
     environment:
       NODE_ENV: production
@@ -74,6 +82,10 @@ services:
       context: ./src/backend
       dockerfile: Dockerfile
     container_name: benhub_migrate
+    # CentOS 7 (kernel 3.10): Docker's default seccomp profile blocks a write
+    # syscall used by current Alpine images → EPERM. Remove after host OS upgrade.
+    security_opt:
+      - seccomp:unconfined
     entrypoint: []
     command: >
       sh -c "./node_modules/.bin/prisma migrate deploy --config prisma.config.mjs &&
@@ -99,6 +111,10 @@ services:
         NEXT_PUBLIC_APP_NAME: BenHub
         NEXT_PUBLIC_APP_URL: ${APP_URL}
     container_name: benhub_frontend
+    # CentOS 7 (kernel 3.10): Docker's default seccomp profile blocks a write
+    # syscall used by current Alpine images → EPERM. Remove after host OS upgrade.
+    security_opt:
+      - seccomp:unconfined
     restart: unless-stopped
     environment:
       AUTH_SECRET: ${AUTH_SECRET}
