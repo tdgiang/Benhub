@@ -3,9 +3,19 @@ import { ArrowRight, Truck, User, Building2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 const CARDS = [
-  { key: "join_c1", icon: Truck, href: "/doi-tac#hinh-thuc", color: "#F0B429" },
+  {
+    key: "join_c1",
+    icon: Truck,
+    href: "/doi-tac/chu-doi-xe",
+    color: "#F0B429",
+  },
   { key: "join_c2", icon: User, href: "/dang-ky-tai-xe", color: "#F97316" },
-  { key: "join_c3", icon: Building2, href: "/doi-tac#hinh-thuc", color: "#3B82F6" },
+  {
+    key: "join_c3",
+    icon: Building2,
+    href: "/doi-tac/chu-dau-tu",
+    color: "#3B82F6",
+  },
 ] as const;
 
 export function JoinUsSection() {
@@ -41,8 +51,13 @@ export function JoinUsSection() {
 
       <div className="relative mx-auto max-w-4xl px-4 text-center sm:px-6 lg:px-8">
         {/* Label */}
-        <div className="mb-6 inline-flex items-center gap-2.5 rounded-full border px-4 py-2"
-          style={{ borderColor: "rgba(240,180,41,0.25)", background: "rgba(240,180,41,0.06)" }}>
+        <div
+          className="mb-6 inline-flex items-center gap-2.5 rounded-full border px-4 py-2"
+          style={{
+            borderColor: "rgba(240,180,41,0.25)",
+            background: "rgba(240,180,41,0.06)",
+          }}
+        >
           <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-[#F0B429]" />
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#F0B429]">
             Tham gia ngay
@@ -56,9 +71,13 @@ export function JoinUsSection() {
             fontSize: "clamp(2.8rem, 8vw, 6.5rem)",
           }}
         >
-          <span className="block" style={{ color: "rgba(255,255,255,0.5)" }}>{t("join_h2_1")}</span>
+          <span className="block" style={{ color: "rgba(255,255,255,0.5)" }}>
+            {t("join_h2_1")}
+          </span>
           <span className="block text-white">{t("join_h2_2")}</span>
-          <span className="block" style={{ color: "#F0B429" }}>{t("join_h2_accent")}</span>
+          <span className="block" style={{ color: "#F0B429" }}>
+            {t("join_h2_accent")}
+          </span>
         </h2>
 
         <p className="mx-auto mt-6 max-w-xl text-lg leading-relaxed text-slate-400">
@@ -90,11 +109,17 @@ export function JoinUsSection() {
 
         {/* Divider */}
         <div className="my-10 flex items-center gap-4">
-          <div className="flex-1 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }} />
+          <div
+            className="flex-1 border-t"
+            style={{ borderColor: "rgba(255,255,255,0.08)" }}
+          />
           <span className="text-xs font-medium uppercase tracking-widest text-white/25">
             Chọn vai trò của bạn
           </span>
-          <div className="flex-1 border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }} />
+          <div
+            className="flex-1 border-t"
+            style={{ borderColor: "rgba(255,255,255,0.08)" }}
+          />
         </div>
 
         {/* Role cards */}
@@ -111,7 +136,10 @@ export function JoinUsSection() {
             >
               <div
                 className="flex h-12 w-12 items-center justify-center rounded-2xl transition-transform duration-200 group-hover:scale-110"
-                style={{ background: `${color}18`, border: `1px solid ${color}25` }}
+                style={{
+                  background: `${color}18`,
+                  border: `1px solid ${color}25`,
+                }}
               >
                 <Icon className="h-6 w-6" style={{ color }} />
               </div>

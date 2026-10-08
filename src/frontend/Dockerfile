@@ -32,6 +32,14 @@ ENV NEXT_PUBLIC_APP_URL=$NEXT_PUBLIC_APP_URL
 
 RUN pnpm build
 
+# Flatten nested standalone output when Next.js picks the wrong tracing root
+RUN if [ ! -f .next/standalone/server.js ]; then \
+      SERVER_DIR="$(find .next/standalone -name server.js -not -path '*/node_modules/*' | head -1 | xargs dirname)"; \
+      if [ -n "$SERVER_DIR" ] && [ "$SERVER_DIR" != ".next/standalone" ]; then \
+        cp -a "$SERVER_DIR"/. .next/standalone/; \
+      fi; \
+    fi
+
 # ─── Stage 3: Runtime ─────────────────────────────────────────────────────────
 FROM node:22-alpine AS runner
 WORKDIR /app
