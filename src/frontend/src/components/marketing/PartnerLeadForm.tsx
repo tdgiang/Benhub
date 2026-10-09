@@ -83,9 +83,9 @@ export function PartnerLeadForm({ source }: { source: string }) {
 
     try {
       const apiUrl =
-        process.env.NEXT_PUBLIC_CRM_API_URL || "http://localhost:5048";
+        process.env.NEXT_PUBLIC_CRM_API_URL || "https://apitest.benhub.vn/api";
       const response = await fetch(
-        `${apiUrl}/api/partner-registration/submit`,
+        `${apiUrl}/partner-registration/submit`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
