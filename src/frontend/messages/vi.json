@@ -811,6 +811,7 @@
     "err_type": "Vui lòng chọn loại hình hợp tác",
     "err_note_max": "Ghi chú tối đa 400 ký tự",
     "err_server": "Không gửi được đăng ký. Vui lòng thử lại.",
-    "err_network": "Lỗi kết nối. Vui lòng kiểm tra mạng và thử lại."
+    "err_network": "Lỗi kết nối. Vui lòng kiểm tra mạng và thử lại.",
+    "err_rate_limit": "Bạn đã gửi quá nhiều lần. Vui lòng thử lại sau 10 phút."
   }
 }

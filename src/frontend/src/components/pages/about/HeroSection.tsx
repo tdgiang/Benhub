@@ -152,7 +152,7 @@ function HeroBackground() {
     <div className="pointer-events-none absolute inset-0" aria-hidden="true">
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/bg_login.png')" }}
+        style={{ backgroundImage: "url('/bg_login.webp')" }}
       />
       <div className="absolute inset-0 bg-slate-950/50" />
       <div className="absolute inset-0 bg-linear-to-b from-slate-950/55 via-slate-950/20 to-[#050B18]/70" />

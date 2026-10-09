@@ -142,7 +142,7 @@ function ArticleJsonLd({ post, url }: { post: ApiPost; url: string }) {
     publisher: {
       '@type': 'Organization',
       name: 'BenHub Việt Nam',
-      logo: { '@type': 'ImageObject', url: 'https://benhub.vn/logo.png' },
+      logo: { '@type': 'ImageObject', url: 'https://benhub.vn/logo.webp' },
     },
     description: post.excerpt ?? undefined,
     url,
@@ -255,7 +255,7 @@ export default async function NewsDetailPage({ params }: PageProps) {
         <div className="pointer-events-none absolute inset-0" aria-hidden="true">
           <div
             className="absolute inset-0 bg-cover bg-center opacity-18"
-            style={{ backgroundImage: "url('/bg_login.png')" }}
+            style={{ backgroundImage: "url('/bg_login.webp')" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/35 via-[#050B18]/88 to-[#050B18]" />
           <div className="absolute -left-28 top-24 h-96 w-96 rounded-full bg-orange-500/20 blur-[90px]" />

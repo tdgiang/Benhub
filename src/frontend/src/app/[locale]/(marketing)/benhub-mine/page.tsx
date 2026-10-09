@@ -619,7 +619,7 @@ export default async function BenHubMinePage({
         >
           <div
             className="absolute inset-0 bg-cover bg-center opacity-20"
-            style={{ backgroundImage: "url('/bg_login.png')" }}
+            style={{ backgroundImage: "url('/bg_login.webp')" }}
           />
           <div
             className="absolute -left-32 -top-20 h-[600px] w-[600px] rounded-full opacity-30"

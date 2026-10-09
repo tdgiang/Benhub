@@ -14,7 +14,7 @@ const jakartaSans = Be_Vietnam_Pro({
 
 const barlowCondensed = Barlow_Condensed({
   variable: "--font-barlow",
-  subsets: ["latin"],
+  subsets: ["latin", "vietnamese"],
   weight: ["600", "700", "800", "900"],
   display: "swap",
   style: "normal",

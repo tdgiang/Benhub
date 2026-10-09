@@ -24,9 +24,19 @@ const PARTNER_TYPES = [
 ] as const;
 type PartnerType = (typeof PARTNER_TYPES)[number];
 
+/** Matches the `CooperationType` enum in BenHub CMS. */
+const COOPERATION_TYPE: Record<PartnerType, number> = {
+  fleet: 1,
+  investor: 2,
+  finance: 3,
+  tech: 4,
+  investment: 5,
+  other: 99,
+};
+
 /**
- * Lead form for non-quarry partners. Stores a `partner` lead in the BenHub
- * backend (POST /api/v1/leads); the team follows up from /cms/leads.
+ * Lead form for non-quarry partners. Submits a partner registration to
+ * BenHub CMS (POST /api/partner-registration/submit); the team follows up there.
  */
 export function PartnerLeadForm({ source }: { source: string }) {
   const t = useTranslations("PartnerLeadForm");
@@ -50,6 +60,8 @@ export function PartnerLeadForm({ source }: { source: string }) {
           errorMap: () => ({ message: t("err_type") }),
         }),
         note: z.string().max(400, t("err_note_max")).optional(),
+        // Honeypot — hidden from humans; CMS silently drops submissions that fill it.
+        website: z.string().optional(),
       }),
     [t],
   );
@@ -70,26 +82,31 @@ export function PartnerLeadForm({ source }: { source: string }) {
     setErrorMessage("");
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
-      const response = await fetch(`${apiUrl}/api/v1/leads`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          segment: "partner",
-          fullName: values.fullName,
-          phone: values.phone,
-          email: values.email || undefined,
-          companyName: values.companyName,
-          projectScale: typeLabel(values.partnerType),
-          note: values.note?.trim() || undefined,
-          source,
-        }),
-      });
+      const apiUrl =
+        process.env.NEXT_PUBLIC_CRM_API_URL || "http://localhost:5048";
+      const response = await fetch(
+        `${apiUrl}/api/partner-registration/submit`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            company_name: values.companyName,
+            cooperation_type: COOPERATION_TYPE[values.partnerType],
+            contact_name: values.fullName,
+            phone: values.phone,
+            email: values.email || "",
+            note: values.note?.trim() || "",
+            source,
+            website: values.website ?? "",
+          }),
+        },
+      );
 
-      if (!response.ok) {
-        const body = await response.json().catch(() => ({}));
+      // CMS answers HTTP 200 even on failure; the outcome is in the body.
+      const body = await response.json().catch(() => null);
+      if (!response.ok || !body?.is_successful) {
         setErrorMessage(
-          typeof body.message === "string" ? body.message : t("err_server"),
+          body?.code === 429 ? t("err_rate_limit") : t("err_server"),
         );
         setSubmitState("error");
         return;
@@ -155,6 +172,15 @@ export function PartnerLeadForm({ source }: { source: string }) {
       </div>
 
       <div className="grid gap-6 p-6 md:p-8">
+        <input
+          type="text"
+          {...register("website")}
+          tabIndex={-1}
+          autoComplete="off"
+          aria-hidden="true"
+          className="absolute -left-2499.75 h-px w-px opacity-0"
+        />
+
         <div>
           <label htmlFor="lead-companyName" className={labelClass}>
             {t("label_company")}

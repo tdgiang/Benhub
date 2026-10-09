@@ -177,7 +177,7 @@ export default async function DriverSignupPage({
         >
           <div
             className="absolute inset-0 bg-cover bg-center opacity-20"
-            style={{ backgroundImage: "url('/bg_login.png')" }}
+            style={{ backgroundImage: "url('/bg_login.webp')" }}
           />
 
           <div

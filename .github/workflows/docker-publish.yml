@@ -58,5 +58,6 @@ jobs:
             NEXT_PUBLIC_API_URL=${{ vars.APP_URL }}/api-backend
             NEXT_PUBLIC_APP_NAME=BenHub
             NEXT_PUBLIC_APP_URL=${{ vars.APP_URL }}
+            NEXT_PUBLIC_CRM_API_URL=${{ vars.CRM_API_URL }}
           cache-from: type=gha,scope=${{ matrix.service }}
           cache-to: type=gha,mode=max,scope=${{ matrix.service }}

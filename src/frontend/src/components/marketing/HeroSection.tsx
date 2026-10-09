@@ -17,7 +17,7 @@ export function HeroSection() {
         {/* Construction site photo */}
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-100"
-          style={{ backgroundImage: "url('/bg_login.png')" }}
+          style={{ backgroundImage: "url('/bg_login.webp')" }}
         />
         <div className="absolute inset-0 bg-slate-950/45" />
         <div className="absolute inset-0 bg-linear-to-b from-slate-950/40 via-slate-950/12 to-[#050B18]/60" />

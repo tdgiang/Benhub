@@ -458,7 +458,7 @@ export function NewsListingContent() {
         >
           <div
             className="absolute inset-0 bg-cover bg-center opacity-20"
-            style={{ backgroundImage: "url('/bg_login.png')" }}
+            style={{ backgroundImage: "url('/bg_login.webp')" }}
           />
           <div className="absolute inset-0 bg-gradient-to-b from-slate-950/40 via-[#050B18]/65 to-[#050B18]" />
           <div className="absolute -left-24 top-24 h-96 w-96 rounded-full bg-orange-500/20 blur-[90px]" />

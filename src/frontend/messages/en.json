@@ -811,6 +811,7 @@
     "err_type": "Please select a partnership type",
     "err_note_max": "Notes can be at most 400 characters",
     "err_server": "Could not submit. Please try again.",
-    "err_network": "Network error. Please check your connection and try again."
+    "err_network": "Network error. Please check your connection and try again.",
+    "err_rate_limit": "Too many submissions. Please try again in 10 minutes."
   }
 }

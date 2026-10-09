@@ -239,7 +239,7 @@ function HeroSection() {
       <div className="pointer-events-none absolute inset-0" aria-hidden="true">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-15"
-          style={{ backgroundImage: "url('/bg_login.png')" }}
+          style={{ backgroundImage: "url('/bg_login.webp')" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-slate-950/60 via-[#050B18]/80 to-[#050B18]" />
         <div
